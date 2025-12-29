@@ -1,0 +1,46 @@
+<resources>
+    <!-- Dark theme - Darker felt table for night mode -->
+    <style name="Base.Theme.Le5aScorer" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary colors - Gold chip accents -->
+        <item name="colorPrimary">@color/chip_gold</item>
+        <item name="colorPrimaryVariant">@color/chip_gold_dark</item>
+        <item name="colorOnPrimary">@color/felt_green_900</item>
+
+        <!-- Secondary colors - Dark felt green -->
+        <item name="colorSecondary">@color/felt_green_800</item>
+        <item name="colorSecondaryVariant">@color/felt_green_900</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background colors - Darker felt for night -->
+        <item name="android:colorBackground">@color/felt_green_900</item>
+        <item name="colorSurface">@color/felt_green_800</item>
+        <item name="colorSurfaceVariant">@color/felt_green_900</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
+
+        <!-- Status bar - Deepest felt -->
+        <item name="android:statusBarColor">@color/felt_green_900</item>
+        <item name="android:navigationBarColor">@color/felt_green_900</item>
+
+        <!-- Material 3 shape system - rounded corners for card-like feel -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Le5aScorer.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Le5aScorer.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Le5aScorer.LargeComponent</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Le5aScorer.HeadlineLarge</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Le5aScorer.BodyLarge</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.Le5aScorer.Splash" parent="Base.Theme.Le5aScorer">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@drawable/bg_felt_table</item>
+        <item name="android:statusBarColor">@color/felt_green_900</item>
+        <item name="android:navigationBarColor">@color/felt_green_900</item>
+    </style>
+</resources>
+

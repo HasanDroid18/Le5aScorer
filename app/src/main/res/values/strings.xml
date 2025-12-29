@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">Le5a Scorer</string>
+
+    <!-- Match List -->
+    <string name="in_progress">In Progress</string>
+    <string name="completed">Completed</string>
+    <string name="no_games_in_progress">No games in progress</string>
+    <string name="no_completed_games">No completed games</string>
+    <string name="settings">Settings</string>
+
+    <!-- Match Item -->
+    <string name="rounds">Rounds: %d</string>
+    <string name="terminal_score">Terminal: %d</string>
+    <string name="rule_individual">Individual</string>
+    <string name="rule_team">Team</string>
+    <string name="duplicate">Duplicate</string>
+    <string name="delete">Delete</string>
+    <string name="delete_match_title">Delete Match</string>
+    <string name="delete_match_message">Are you sure you want to delete this match?</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
+    <!-- New Match -->
+    <string name="new_match">New Match</string>
+    <string name="first_team">First Team</string>
+    <string name="second_team">Second Team</string>
+    <string name="player_1">Player 1</string>
+    <string name="player_2">Player 2</string>
+    <string name="player_3">Player 3</string>
+    <string name="player_4">Player 4</string>
+    <string name="terminal_score_label">Terminal Score</string>
+    <string name="score_rule">Score Rule</string>
+    <string name="create_match">Create Match</string>
+    <string name="rule_individual_desc">Each player total determines result</string>
+    <string name="rule_team_desc">Sum of each team total determines result</string>
+    <string name="all_players_required">All 4 player names are required</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Scoreboard</string>
+    <string name="add_round">Add Round</string>
+    <string name="edit_round">Edit Round</string>
+    <string name="round_number">Round %d</string>
+    <string name="match_completed">Match Completed!</string>
+    <string name="winner">Winner: %s</string>
+
+    <!-- Round Entry -->
+    <string name="hearts">+1 Heart</string>
+    <string name="queen_spades">+13 Bnt Baston</string>
+    <string name="ten_diamonds">+10 Denare</string>
+    <string name="round_total">Round Total: %d</string>
+    <string name="save_round">Save Round</string>
+    <string name="select_cards">Select Cards</string>
+    <string name="double_detected">DOUBLE! 37 Points</string>
+    <string name="total_hearts">Total Hearts: %d/13</string>
+
+    <!-- Card Table UI -->
+    <string name="round_status">Round Status</string>
+    <string name="hearts_remaining">Hearts: %d/13</string>
+    <string name="q_assigned">Q♠: %s</string>
+    <string name="ten_assigned">10♦: %s</string>
+    <string name="not_assigned">—</string>
+    <string name="double_active">DOUBLE ACTIVE</string>
+    <string name="double_subtitle">Other players set to 0</string>
+    <string name="hearts_card">Hearts</string>
+    <string name="hearts_value">+1</string>
+    <string name="q_spades_card">Q♠</string>
+    <string name="q_spades_value">+13</string>
+    <string name="ten_diamonds_card">10♦</string>
+    <string name="ten_diamonds_value">+10</string>
+    <string name="double_card">DOUBLE</string>
+    <string name="double_value">37</string>
+    <string name="select_player_first">Select a player first</string>
+    <string name="tap_to_remove">Tap to remove</string>
+    <string name="long_press_for_five">Long press +5 hearts</string>
+    <string name="round_valid">✓ VALID</string>
+    <string name="round_invalid">Total: %d/36 or 37</string>
+    <string name="reset">Reset</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="alternating_player_order">Alternating player order</string>
+    <string name="show_individual_card_scores">Show individual card scores</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="placeholder">hasantahadroid@gmail.com</string>
+</resources>

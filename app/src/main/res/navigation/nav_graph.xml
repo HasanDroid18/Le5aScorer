@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/matchListFragment">
+
+    <fragment
+        android:id="@+id/matchListFragment"
+        android:name="com.hasandroid.le5ascorer.ui.matches.MatchListFragment"
+        android:label="Leekha Scores">
+        <action
+            android:id="@+id/action_matchListFragment_to_newMatchFragment"
+            app:destination="@id/newMatchFragment" />
+        <action
+            android:id="@+id/action_matchListFragment_to_scoreboardFragment"
+            app:destination="@id/scoreboardFragment" />
+        <action
+            android:id="@+id/action_matchListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newMatchFragment"
+        android:name="com.hasandroid.le5ascorer.ui.newmatch.NewMatchFragment"
+        android:label="New Match">
+        <action
+            android:id="@+id/action_newMatchFragment_to_scoreboardFragment"
+            app:destination="@id/scoreboardFragment"
+            app:popUpTo="@id/matchListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/scoreboardFragment"
+        android:name="com.hasandroid.le5ascorer.ui.scoreboard.ScoreboardFragment"
+        android:label="Scoreboard">
+        <argument
+            android:name="matchId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_scoreboardFragment_to_roundEntryFragment"
+            app:destination="@id/roundEntryFragment" />
+        <action
+            android:id="@+id/action_scoreboardFragment_to_matchListFragment"
+            app:destination="@id/matchListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/roundEntryFragment"
+        android:name="com.hasandroid.le5ascorer.ui.round.RoundEntryFragment"
+        android:label="Round Entry">
+        <argument
+            android:name="matchId"
+            app:argType="long" />
+        <argument
+            android:name="roundId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="playerNames"
+            app:argType="string[]" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.hasandroid.le5ascorer.ui.settings.SettingsFragment"
+        android:label="Settings" />
+
+</navigation>
+

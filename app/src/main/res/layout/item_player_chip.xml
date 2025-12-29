@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chipCard"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
+    app:rippleColor="@color/glow_gold">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:minWidth="100dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textPlayerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 1"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/suit_black"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/textPlayerScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutCardIcons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/iconHearts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="♥"
+                android:textSize="16sp"
+                android:textColor="@color/suit_red"
+                android:visibility="gone"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/textHeartCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="×5"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/suit_red"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/iconQSpades"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Q♠"
+                android:textSize="14sp"
+                android:textColor="@color/suit_black"
+                android:visibility="gone"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/iconTenDiamonds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10♦"
+                android:textSize="14sp"
+                android:textColor="@color/suit_red"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
