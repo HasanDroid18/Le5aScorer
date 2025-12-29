@@ -39,8 +39,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@drawable/bg_felt_table</item>
-        <item name="android:statusBarColor">@color/felt_green_900</item>
-        <item name="android:navigationBarColor">@color/felt_green_900</item>
+
+        <!-- Edge-to-edge -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>
-

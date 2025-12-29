@@ -1,0 +1,6 @@
+<resources>
+    <!-- API 27+ only: allow drawing into display cutouts (notches/U-shape cameras) -->
+    <style name="Theme.Le5aScorer.Splash">
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>
