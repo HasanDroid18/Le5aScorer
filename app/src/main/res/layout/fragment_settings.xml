@@ -35,92 +35,42 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <!-- Support -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="1dp"
-                app:strokeColor="#40FFFFFF">
+                android:text="Support"
+                android:textColor="#B0FFFFFF"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="10dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/alternating_player_order"
-                        android:textSize="16sp"
-                        android:textColor="@color/white" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchAlternatingOrder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="1dp"
-                app:strokeColor="#40FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/show_individual_card_scores"
-                        android:textSize="16sp"
-                        android:textColor="@color/white" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchShowCardScores"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
                 android:id="@+id/layoutContactSupport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@drawable/bg_settings_row"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="1dp"
-                app:strokeColor="#40FFFFFF">
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_mail"
+                    app:tint="@color/chip_gold"
+                    android:contentDescription="@string/contact_support" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginStart="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -133,32 +83,46 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/placeholder"
+                        android:text="Email us with app &amp; device details"
                         android:textSize="12sp"
                         android:textColor="#B0FFFFFF"
                         android:layout_marginTop="4dp" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"
+                    android:contentDescription="@string/contact_support" />
 
-            <com.google.android.material.card.MaterialCardView
+            </LinearLayout>
+
+            <!-- Rate -->
+            <LinearLayout
                 android:id="@+id/layoutRateApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@drawable/bg_settings_row_accent"
                 android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="2dp"
-                app:strokeColor="@color/chip_gold_dark">
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/chip_gold"
+                    android:contentDescription="@string/rate_this_app" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginStart="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,14 +135,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/placeholder"
+                        android:text="Deal us a 5-star hand — or share it with friends"
                         android:textSize="12sp"
                         android:textColor="#B0FFFFFF"
                         android:layout_marginTop="4dp" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_share"
+                    android:contentDescription="@string/rate_this_app" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

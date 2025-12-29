@@ -32,8 +32,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        setupSwitches()
-        setupPlaceholders()
+        setupActions()
     }
 
     private fun setupToolbar() {
@@ -42,64 +41,85 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setupSwitches() {
-        // Load saved preferences (placeholder - could use SharedPreferences or DataStore)
-        binding.switchAlternatingOrder.isChecked = false
-        binding.switchShowCardScores.isChecked = false
-
-        // Listeners for switches (placeholder - could save to preferences)
-        binding.switchAlternatingOrder.setOnCheckedChangeListener { _, isChecked ->
-            // Save preference
-        }
-
-        binding.switchShowCardScores.setOnCheckedChangeListener { _, isChecked ->
-            // Save preference
-        }
-    }
-
-    private fun setupPlaceholders() {
-        binding.layoutContactSupport.setOnClickListener {
-            openEmailSupport()
-        }
-
-        binding.layoutRateApp.setOnClickListener {
-            openPlayStore()
-        }
+    private fun setupActions() {
+        binding.layoutContactSupport.setOnClickListener { openEmailSupport() }
+        binding.layoutRateApp.setOnClickListener { showRateOrShareChooser() }
     }
 
     private fun openEmailSupport() {
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
+        val pm = requireContext().packageManager
+        val packageName = requireContext().packageName
+        val versionName = try {
+            @Suppress("DEPRECATION")
+            pm.getPackageInfo(packageName, 0).versionName ?: "unknown"
+        } catch (_: Exception) {
+            "unknown"
+        }
+
+        val body = buildString {
+            appendLine("Hi Support Team,")
+            appendLine()
+            appendLine("Please describe your issue below:")
+            appendLine("--------------------------------")
+            appendLine()
+            appendLine()
+            appendLine("Diagnostics (auto-filled):")
+            appendLine("• App: Le5a Scorer $versionName")
+            appendLine("• Android: ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})")
+            appendLine("• Device: ${Build.MANUFACTURER} ${Build.MODEL}")
+            appendLine("• Locale: ${java.util.Locale.getDefault()}")
+        }
+
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_EMAIL, arrayOf("hasantahadroid@gmail.com"))
-            putExtra(Intent.EXTRA_SUBJECT, "Le5a Scorer - Support Request")
-            putExtra(Intent.EXTRA_TEXT, """
-                App Version: ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}
-                Android Version: ${Build.VERSION.RELEASE}
-                Device: ${Build.MANUFACTURER} ${Build.MODEL}
-                
-                Please describe your issue below:
-                
-            """.trimIndent())
+            putExtra(Intent.EXTRA_SUBJECT, "Le5a Scorer — Support")
+            putExtra(Intent.EXTRA_TEXT, body)
         }
 
         try {
-            startActivity(Intent.createChooser(intent, "Send email via..."))
-        } catch (e: Exception) {
+            startActivity(Intent.createChooser(emailIntent, "Contact support"))
+        } catch (_: Exception) {
             Toast.makeText(requireContext(), "No email app found", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun openPlayStore() {
+    private fun showRateOrShareChooser() {
+        // Creative, lightweight flow:
+        // 1) Prefer Play Store (if available)
+        // 2) Also offer a share intent with a fun card-themed message
         val packageName = requireContext().packageName
+        val playStoreUri = Uri.parse("market://details?id=$packageName")
+        val webUri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+
+        val shareText = """
+            I’m keeping score with Le5a Scorer 🎴
+            Fast rounds, clean scoreboard.
+
+            Deal yourself a download:
+            $webUri
+        """.trimIndent()
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Le5a Scorer")
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+
+        val marketIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
+        val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+
+        // Build a chooser that starts with sharing, and includes store options.
+        val chooser = Intent.createChooser(shareIntent, "Deal us some love")
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(marketIntent, webIntent))
+
         try {
-            // Try to open Play Store app
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-        } catch (e: Exception) {
-            // Fallback to browser if Play Store not installed
+            startActivity(chooser)
+        } catch (_: Exception) {
             try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Unable to open Play Store", Toast.LENGTH_SHORT).show()
+                startActivity(webIntent)
+            } catch (_: Exception) {
+                Toast.makeText(requireContext(), "Unable to open rating/share", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -109,4 +129,3 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 }
-
