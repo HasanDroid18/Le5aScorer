@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.hasandroid.le5ascorer"
+    namespace = "com.hasanDroid.le5ascorer"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.hasandroid.le5ascorer"
+        applicationId = "com.hasanDroid.le5ascorer"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

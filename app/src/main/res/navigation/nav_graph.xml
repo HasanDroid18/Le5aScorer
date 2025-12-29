@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/matchListFragment"
-        android:name="com.hasandroid.le5ascorer.ui.matches.MatchListFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.matches.MatchListFragment"
         android:label="Leekha Scores">
         <action
             android:id="@+id/action_matchListFragment_to_newMatchFragment"
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/newMatchFragment"
-        android:name="com.hasandroid.le5ascorer.ui.newmatch.NewMatchFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.newmatch.NewMatchFragment"
         android:label="New Match">
         <action
             android:id="@+id/action_newMatchFragment_to_scoreboardFragment"
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/scoreboardFragment"
-        android:name="com.hasandroid.le5ascorer.ui.scoreboard.ScoreboardFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.scoreboard.ScoreboardFragment"
         android:label="Scoreboard">
         <argument
             android:name="matchId"
@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/roundEntryFragment"
-        android:name="com.hasandroid.le5ascorer.ui.round.RoundEntryFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.round.RoundEntryFragment"
         android:label="Round Entry">
         <argument
             android:name="matchId"
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.hasandroid.le5ascorer.ui.settings.SettingsFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.settings.SettingsFragment"
         android:label="Settings" />
 
 </navigation>
