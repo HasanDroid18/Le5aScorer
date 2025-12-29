@@ -1,7 +1,7 @@
 package com.hasandroid.le5ascorer.data.local.dao
 
 import androidx.room.*
-import com.hasandroid.le5ascorer.data.local.entity.ScoreActionEntity
+import com.hasandroid.le5ascorer.data.local.entity.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,5 +24,7 @@ interface ScoreActionDao {
 
     @Query("SELECT * FROM score_actions WHERE roundId IN (:roundIds)")
     suspend fun getActionsByRoundIds(roundIds: List<Long>): List<ScoreActionEntity>
-}
 
+    @Query("SELECT * FROM score_actions")
+    fun observeAllScoreActions(): Flow<List<ScoreActionEntity>>
+}

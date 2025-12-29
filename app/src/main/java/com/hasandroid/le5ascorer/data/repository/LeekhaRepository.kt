@@ -104,8 +104,18 @@ class LeekhaRepository @Inject constructor(
     }
 
     fun getMatchesByStatus(status: MatchStatus): Flow<List<Match>> {
-        return matchDao.getMatchesByStatus(status).map { entities ->
-            entities.map { matchEntity ->
+        // IMPORTANT: `leadingPlayerName/leadingScore` are derived from rounds + score actions.
+        // Previously we used only `matchDao.getMatchesByStatus()`; that Flow does NOT re-emit
+        // when rounds/actions change, so the RecyclerView never got updated until restart.
+        //
+        // We combine with lightweight table Flows to force re-emission whenever the underlying
+        // scoring data changes.
+        return combine(
+            matchDao.getMatchesByStatus(status),
+            roundDao.observeAllRounds(),
+            scoreActionDao.observeAllScoreActions()
+        ) { matchEntities, _, _ ->
+            matchEntities.map { matchEntity ->
                 val players = listOfNotNull(
                     playerDao.getPlayerById(matchEntity.player1Id),
                     playerDao.getPlayerById(matchEntity.player2Id),
@@ -297,4 +307,3 @@ class LeekhaRepository @Inject constructor(
         )
     }
 }
-

@@ -33,5 +33,7 @@ interface RoundDao {
 
     @Query("SELECT COUNT(*) FROM rounds WHERE matchId = :matchId")
     suspend fun getRoundCount(matchId: Long): Int
-}
 
+    @Query("SELECT * FROM rounds")
+    fun observeAllRounds(): Flow<List<RoundEntity>>
+}
