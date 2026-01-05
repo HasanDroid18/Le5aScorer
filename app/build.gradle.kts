@@ -14,7 +14,7 @@ android {
         applicationId = "com.hasanDroid.le5ascorer"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -51,7 +51,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Hilt
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
