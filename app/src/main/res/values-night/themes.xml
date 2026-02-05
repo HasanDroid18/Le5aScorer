@@ -22,6 +22,11 @@
         <item name="android:statusBarColor">@color/felt_green_900</item>
         <item name="android:navigationBarColor">@color/felt_green_900</item>
 
+        <!-- Ensure status bar icons/text are white -->
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Notch / display cutout support is provided via values-night-v27/ themes.xml -->
+
         <!-- Material 3 shape system - rounded corners for card-like feel -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Le5aScorer.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Le5aScorer.MediumComponent</item>
@@ -37,7 +42,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@drawable/bg_felt_table</item>
 
         <!-- Edge-to-edge -->
