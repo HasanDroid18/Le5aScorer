@@ -1,0 +1,16 @@
+<resources>
+
+    <!--
+      Fullscreen transparent dialog theme.
+      Purpose: remove any platform/material dialog "container" background and inset framing.
+    -->
+    <style name="Theme.Le5aScorer.TransparentFullscreenDialog" parent="ThemeOverlay.Material3">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>

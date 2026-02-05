@@ -78,4 +78,22 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+
+    <!-- End-game dialog theme overlay (NO dim scrim; confetti should stay bright) -->
+    <style name="ThemeOverlay.Le5aScorer.EndGameDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0.0</item>
+
+        <!-- Remove Material dialog's default surface/insets that can show as a white container -->
+        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="alertDialogStyle">@style/Widget.Le5aScorer.TransparentAlertDialog</item>
+    </style>
+
+    <style name="Widget.Le5aScorer.TransparentAlertDialog" parent="@style/ThemeOverlay.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

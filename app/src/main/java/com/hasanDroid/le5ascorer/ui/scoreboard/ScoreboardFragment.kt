@@ -1,5 +1,6 @@
 package com.hasanDroid.le5ascorer.ui.scoreboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.lottie.LottieAnimationView
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentScoreboardBinding
+import com.hasanDroid.le5ascorer.ui.common.EndGameDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,12 +31,22 @@ class ScoreboardFragment : Fragment() {
 
     private lateinit var adapter: ScoreboardAdapter
 
+    private var endGameDialogShown = false
+
+    private val prefs by lazy {
+        requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScoreboardBinding.inflate(inflater, container, false)
+
+        // Ensure overlay is hidden when returning to this screen
+        binding.confettiOverlay.root.visibility = View.GONE
+
         return binding.root
     }
 
@@ -129,14 +142,40 @@ class ScoreboardFragment : Fragment() {
                         if (state.gameOver != null) {
                             // Game is over, show loser and hide Add Round button
                             binding.cardWinner.visibility = View.VISIBLE
-                            binding.textWinner.text = "❌ LOSER: ${state.gameOver.loserNames.joinToString(", ")}"
+                            binding.textWinner.text = getString(
+                                R.string.label_loser_names,
+                                state.gameOver.loserNames.joinToString(", ")
+                            )
                             binding.buttonAddRound.visibility = View.GONE
                             binding.buttonBackToHome.visibility = View.VISIBLE
+
+                            // Only show the dialog when the match is actually completed,
+                            // and only once per match (persisted).
+                            val matchCompleted = detail.match.status ==
+                                com.hasanDroid.le5ascorer.data.local.entity.MatchStatus.COMPLETED
+
+                            // Show when just completed OR when editing changed who lost.
+                            val loserSignature = state.gameOver.loserNames.joinToString("|")
+                            val shouldShowForLoserChange =
+                                matchCompleted && loserSignature != getLastShownLoserSignature(detail.match.id)
+
+                            if (shouldShowForLoserChange) {
+                                setLastShownLoserSignature(detail.match.id, loserSignature)
+                                playFullScreenConfetti()
+                                showEndGameDialog(state.gameOver.loserNames)
+                            }
                         } else {
+                            // Game is no longer over (after editing) -> clear signature
+                            detail.match.let {
+                                clearLastShownLoserSignature(it.id)
+                            }
+
                             // Game in progress, show Add Round button
                             binding.cardWinner.visibility = View.GONE
                             binding.buttonAddRound.visibility = View.VISIBLE
                             binding.buttonBackToHome.visibility = View.GONE
+
+                            endGameDialogShown = false
                         }
                     }
 
@@ -146,9 +185,65 @@ class ScoreboardFragment : Fragment() {
         }
     }
 
+    private fun getLastShownLoserSignature(matchId: Long): String? {
+        return prefs.getString(lastLoserKey(matchId), null)
+    }
+
+    private fun setLastShownLoserSignature(matchId: Long, signature: String) {
+        prefs.edit().putString(lastLoserKey(matchId), signature).apply()
+    }
+
+    private fun clearLastShownLoserSignature(matchId: Long) {
+        prefs.edit().remove(lastLoserKey(matchId)).apply()
+    }
+
+    private fun lastLoserKey(matchId: Long): String = "end_game_last_loser_$matchId"
+
+    private fun showEndGameDialog(loserNames: List<String>) {
+        val dialog = EndGameDialogFragment.newInstance(loserNames).apply {
+            onShowRoundScores = {
+                // User asked: go to scoreboard (i.e., keep/show this screen), not to a new round.
+                // To make it feel responsive, we just scroll to the top.
+                binding.scrollView.smoothScrollTo(0, 0)
+            }
+        }
+
+        dialog.show(childFragmentManager, "EndGameDialog")
+    }
+
+    private fun playFullScreenConfetti() {
+        val overlay = binding.confettiOverlay.root
+        val lottie = overlay.findViewById<LottieAnimationView>(R.id.lottieConfetti)
+
+        overlay.visibility = View.VISIBLE
+        overlay.alpha = 0f
+        overlay.animate().alpha(1f).setDuration(180).start()
+
+        lottie.setAnimation(R.raw.confetti)
+        lottie.repeatCount = 0
+        lottie.playAnimation()
+
+        // Fade out the overlay shortly after the animation finishes
+        lottie.addAnimatorListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                overlay.animate()
+                    .alpha(0f)
+                    .setDuration(350)
+                    .withEndAction {
+                        overlay.visibility = View.GONE
+                    }
+                    .start()
+                lottie.removeAllAnimatorListeners()
+            }
+        })
+    }
+
+    companion object {
+        private const val PREFS_NAME = "le5a_scorer_prefs"
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-

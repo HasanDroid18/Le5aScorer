@@ -81,4 +81,11 @@
     <string name="contact_support">Contact Support</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="placeholder">hasantahadroid@gmail.com</string>
+
+    <!-- End-game dialog -->
+    <string name="end_game_title">Game Over</string>
+    <string name="end_game_loser_label">Loser</string>
+    <string name="end_game_show_round_scores">Show Round Scores</string>
+    <string name="player_default">Player</string>
+    <string name="label_loser_names">\u274c LOSER: %s</string>
 </resources>
