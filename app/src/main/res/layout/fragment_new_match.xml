@@ -13,18 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/felt_green_900"
-        android:elevation="2dp">
+        android:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
+            android:layout_height="match_parent"
+            android:background="@color/felt_green_900"
             app:title="@string/new_match"
             app:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
             app:navigationIcon="@drawable/ic_back"
             app:navigationIconTint="@color/white" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Scrollable Content -->
@@ -32,26 +32,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:paddingBottom="96dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="100dp"
             android:clipToPadding="false">
 
             <!-- Card A: Teams & Players -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="2dp"
+                app:cardElevation="6dp"
                 app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="#30FFFFFF">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/chip_gold_dark">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,18 +62,38 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Section Title -->
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Team 1 Section Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/first_team"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="8dp"
-                        android:drawableStart="@android:drawable/ic_menu_sort_by_size"
-                        android:drawableTint="@color/white"
-                        android:drawablePadding="8dp"
-                        android:alpha="0.9" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/emoji_team"
+                            android:textSize="20sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/first_team"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="@color/chip_gold"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="2dp"
+                            android:background="@color/chip_gold_dark"
+                            android:alpha="0.5" />
+
+                    </LinearLayout>
 
                     <!-- Player 1 Input -->
                     <com.google.android.material.textfield.TextInputLayout
@@ -78,18 +101,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="@string/player_1"
+                        app:boxBackgroundMode="outline"
                         app:boxBackgroundColor="@android:color/transparent"
-                        app:boxStrokeColor="@color/white"
+                        app:boxStrokeColor="@color/chip_gold_dark"
                         app:boxStrokeWidth="1dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        app:startIconTint="@color/white"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:startIconDrawable="@drawable/ic_star"
+                        app:startIconTint="@color/chip_gold"
                         app:endIconMode="clear_text"
-                        app:endIconTint="@color/white"
-                        app:hintTextColor="@color/white"
+                        app:endIconTint="#80FFFFFF"
+                        app:hintTextColor="@color/chip_gold"
+                        app:placeholderText="e.g. Ahmad"
+                        app:placeholderTextColor="#50FFFFFF"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -108,20 +135,24 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="4dp"
                         android:hint="@string/player_2"
+                        app:boxBackgroundMode="outline"
                         app:boxBackgroundColor="@android:color/transparent"
-                        app:boxStrokeColor="@color/white"
+                        app:boxStrokeColor="@color/chip_gold_dark"
                         app:boxStrokeWidth="1dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        app:startIconTint="@color/white"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:startIconDrawable="@drawable/ic_star"
+                        app:startIconTint="@color/chip_gold"
                         app:endIconMode="clear_text"
-                        app:endIconTint="@color/white"
-                        app:hintTextColor="@color/white"
+                        app:endIconTint="#80FFFFFF"
+                        app:hintTextColor="@color/chip_gold"
+                        app:placeholderText="e.g. Sara"
+                        app:placeholderTextColor="#50FFFFFF"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -136,25 +167,72 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Divider -->
-                    <View
+                    <!-- VS Separator -->
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#20FFFFFF"
-                        android:layout_marginVertical="6dp" />
-
-                    <!-- Section Title -->
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/second_team"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="16dp"
-                        android:drawableStart="@android:drawable/ic_menu_sort_by_size"
-                        android:drawableTint="@color/white"
-                        android:drawablePadding="8dp"
-                        android:alpha="0.9" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginVertical="16dp">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/divider_gold_fade" />
+
+                        <TextView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:gravity="center"
+                            android:text="@string/vs_label"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/chip_gold"
+                            android:fontFamily="sans-serif-black"
+                            android:background="@drawable/bg_vs_badge"
+                            android:layout_marginHorizontal="16dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/divider_gold_fade" />
+
+                    </LinearLayout>
+
+                    <!-- Team 2 Section Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/emoji_team"
+                            android:textSize="20sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/second_team"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="@color/chip_gold"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="2dp"
+                            android:background="@color/chip_gold_dark"
+                            android:alpha="0.5" />
+
+                    </LinearLayout>
 
                     <!-- Player 3 Input -->
                     <com.google.android.material.textfield.TextInputLayout
@@ -162,18 +240,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="@string/player_3"
+                        app:boxBackgroundMode="outline"
                         app:boxBackgroundColor="@android:color/transparent"
-                        app:boxStrokeColor="@color/white"
+                        app:boxStrokeColor="@color/chip_gold_dark"
                         app:boxStrokeWidth="1dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        app:startIconTint="@color/white"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:startIconDrawable="@drawable/ic_star"
+                        app:startIconTint="@color/chip_gold"
                         app:endIconMode="clear_text"
-                        app:endIconTint="@color/white"
-                        app:hintTextColor="@color/white"
+                        app:endIconTint="#80FFFFFF"
+                        app:hintTextColor="@color/chip_gold"
+                        app:placeholderText="e.g. Khaled"
+                        app:placeholderTextColor="#50FFFFFF"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -193,18 +275,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/player_4"
+                        app:boxBackgroundMode="outline"
                         app:boxBackgroundColor="@android:color/transparent"
-                        app:boxStrokeColor="@color/white"
+                        app:boxStrokeColor="@color/chip_gold_dark"
                         app:boxStrokeWidth="1dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        app:startIconTint="@color/white"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:startIconDrawable="@drawable/ic_star"
+                        app:startIconTint="@color/chip_gold"
                         app:endIconMode="clear_text"
-                        app:endIconTint="@color/white"
-                        app:hintTextColor="@color/white"
+                        app:endIconTint="#80FFFFFF"
+                        app:hintTextColor="@color/chip_gold"
+                        app:placeholderText="e.g. Fatima"
+                        app:placeholderTextColor="#50FFFFFF"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -227,12 +313,12 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="2dp"
+                app:cardElevation="6dp"
                 app:cardBackgroundColor="@color/felt_green_800"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="#30FFFFFF">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/chip_gold_dark">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -240,15 +326,32 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Terminal Score Section -->
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Terminal Score Section Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/terminal_score_label"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="16dp"
-                        android:alpha="0.9" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/emoji_target"
+                            android:textSize="20sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/terminal_score_label"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="@color/chip_gold"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggleTerminalScore"
@@ -269,6 +372,10 @@
                             android:textStyle="bold"
                             android:minHeight="48dp"
                             android:contentDescription="Terminal score 51"
+                            android:textColor="@color/toggle_gold_text"
+                            app:iconTint="@color/toggle_gold_text"
+                            app:backgroundTint="@color/toggle_gold_bg"
+                            app:strokeColor="@color/toggle_gold_stroke"
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             tools:ignore="HardcodedText" />
 
@@ -282,6 +389,10 @@
                             android:textStyle="bold"
                             android:minHeight="48dp"
                             android:contentDescription="Terminal score 101"
+                            android:textColor="@color/toggle_gold_text"
+                            app:iconTint="@color/toggle_gold_text"
+                            app:backgroundTint="@color/toggle_gold_bg"
+                            app:strokeColor="@color/toggle_gold_stroke"
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             tools:ignore="HardcodedText" />
 
@@ -295,26 +406,54 @@
                             android:textStyle="bold"
                             android:minHeight="48dp"
                             android:contentDescription="Terminal score 151"
+                            android:textColor="@color/toggle_gold_text"
+                            app:iconTint="@color/toggle_gold_text"
+                            app:backgroundTint="@color/toggle_gold_bg"
+                            app:strokeColor="@color/toggle_gold_stroke"
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             tools:ignore="HardcodedText" />
 
                     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                    <!-- Score Rule Section -->
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Fade divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/divider_gold_fade"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- Score Rule Section Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/score_rule"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="16dp"
-                        android:alpha="0.9" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/emoji_scale"
+                            android:textSize="20sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/score_rule"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="@color/chip_gold"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggleScoreRule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="12dp"
                         app:singleSelection="true"
                         app:selectionRequired="true"
                         app:checkedButton="@id/buttonIndividual">
@@ -325,12 +464,16 @@
                             android:layout_height="52dp"
                             android:layout_weight="1"
                             android:text="@string/rule_individual"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:minHeight="48dp"
-                            android:contentDescription="Individual scoring rule"
+                            android:contentDescription="@string/cd_individual_rule"
+                            android:textColor="@color/toggle_gold_text"
+                            app:iconTint="@color/toggle_gold_text"
+                            app:backgroundTint="@color/toggle_gold_bg"
+                            app:strokeColor="@color/toggle_gold_stroke"
                             app:icon="@android:drawable/ic_menu_myplaces"
                             app:iconGravity="textStart"
-                            app:iconSize="20dp"
+                            app:iconSize="18dp"
                             app:iconPadding="4dp"
                             style="@style/Widget.Material3.Button.OutlinedButton" />
 
@@ -340,32 +483,49 @@
                             android:layout_height="52dp"
                             android:layout_weight="1"
                             android:text="@string/rule_team"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:minHeight="48dp"
-                            android:contentDescription="Team scoring rule"
+                            android:contentDescription="@string/cd_team_rule"
+                            android:textColor="@color/toggle_gold_text"
+                            app:iconTint="@color/toggle_gold_text"
+                            app:backgroundTint="@color/toggle_gold_bg"
+                            app:strokeColor="@color/toggle_gold_stroke"
                             app:icon="@android:drawable/ic_menu_sort_by_size"
                             app:iconGravity="textStart"
-                            app:iconSize="20dp"
+                            app:iconSize="18dp"
                             app:iconPadding="4dp"
                             style="@style/Widget.Material3.Button.OutlinedButton" />
 
                     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                    <!-- Helper Text -->
-                    <TextView
-                        android:id="@+id/textRuleDescription"
+                    <!-- Info Tip -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/rule_individual_desc"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="@color/white"
-                        android:alpha="0.7"
-                        android:padding="5dp"
-                        android:background="#10000000"
-                        android:drawableStart="@android:drawable/ic_dialog_info"
-                        android:drawableTint="@color/white"
-                        android:drawablePadding="8dp"
-                        android:lineSpacingMultiplier="1.2" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_info_tip"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/emoji_lightbulb"
+                            android:textSize="16sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:id="@+id/textRuleDescription"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/rule_individual_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="#D0FFFFFF"
+                            android:lineSpacingMultiplier="1.3"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -375,15 +535,23 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Bottom fade gradient behind button -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_fade"
+        android:translationZ="4dp" />
+
     <!-- Sticky Create Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonCreate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:minHeight="56dp"
         android:paddingVertical="16dp"
         android:text="@string/create_match"
@@ -392,10 +560,10 @@
         android:textColor="@color/felt_green_900"
         android:enabled="false"
         android:stateListAnimator="@null"
-        android:contentDescription="Create new match"
+        android:contentDescription="@string/cd_create_match"
         app:backgroundTint="@color/chip_gold"
         app:cornerRadius="28dp"
-        app:elevation="8dp"
+        app:elevation="10dp"
         app:icon="@drawable/ic_cards"
         app:iconSize="24dp"
         app:iconTint="@color/felt_green_900"

@@ -1,28 +1,26 @@
 <resources>
-    <!-- Dark theme - Darker felt table for night mode -->
-    <style name="Base.Theme.Le5aScorer" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Night resources mirror light theme (no dark mode) -->
+    <style name="Base.Theme.Le5aScorer" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary colors - Gold chip accents -->
         <item name="colorPrimary">@color/chip_gold</item>
         <item name="colorPrimaryVariant">@color/chip_gold_dark</item>
         <item name="colorOnPrimary">@color/felt_green_900</item>
 
         <!-- Secondary colors - Dark felt green -->
-        <item name="colorSecondary">@color/felt_green_800</item>
-        <item name="colorSecondaryVariant">@color/felt_green_900</item>
+        <item name="colorSecondary">@color/felt_green_700</item>
+        <item name="colorSecondaryVariant">@color/felt_green_800</item>
         <item name="colorOnSecondary">@color/white</item>
 
         <!-- Background colors - Darker felt for night -->
-        <item name="android:colorBackground">@color/felt_green_900</item>
-        <item name="colorSurface">@color/felt_green_800</item>
-        <item name="colorSurfaceVariant">@color/felt_green_900</item>
-        <item name="colorOnSurface">@color/white</item>
+        <item name="android:colorBackground">@color/felt_green_800</item>
+        <item name="colorSurface">@color/card_ivory</item>
+        <item name="colorSurfaceVariant">@color/felt_green_700</item>
+        <item name="colorOnSurface">@color/suit_black</item>
         <item name="colorOnSurfaceVariant">@color/white</item>
 
         <!-- Status bar - Deepest felt -->
         <item name="android:statusBarColor">@color/felt_green_900</item>
-        <item name="android:navigationBarColor">@color/felt_green_900</item>
-
-        <!-- Ensure status bar icons/text are white -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- Notch / display cutout support is provided via values-night-v27/ themes.xml -->
@@ -36,6 +34,8 @@
         <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Le5aScorer.HeadlineLarge</item>
         <item name="textAppearanceBodyLarge">@style/TextAppearance.Le5aScorer.BodyLarge</item>
     </style>
+
+    <style name="Theme.Le5aScorer" parent="Base.Theme.Le5aScorer" />
 
     <!-- Splash Screen Theme -->
     <style name="Theme.Le5aScorer.Splash" parent="Base.Theme.Le5aScorer">

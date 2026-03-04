@@ -22,6 +22,16 @@
 
     <!-- New Match -->
     <string name="new_match">New Match</string>
+    <string name="new_match_header_emoji">🃏</string>
+    <string name="new_match_subtitle">Set up your game</string>
+    <string name="emoji_team">👥</string>
+    <string name="vs_label">VS</string>
+    <string name="emoji_target">🎯</string>
+    <string name="emoji_scale">⚖️</string>
+    <string name="emoji_lightbulb">💡</string>
+    <string name="cd_individual_rule">Individual scoring rule</string>
+    <string name="cd_team_rule">Team scoring rule</string>
+    <string name="cd_create_match">Create new match</string>
     <string name="first_team">First Team</string>
     <string name="second_team">Second Team</string>
     <string name="player_1">Player 1</string>
