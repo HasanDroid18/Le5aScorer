@@ -98,4 +98,9 @@
     <string name="end_game_show_round_scores">Show Round Scores</string>
     <string name="player_default">Player</string>
     <string name="label_loser_names">\u274c LOSER: %s</string>
+
+    <!-- Round Entry Format Strings -->
+    <string name="heart_count_format">×%d</string>
+    <string name="round_total_format">%d/36</string>
+    <string name="round_total_format_double">%d/37</string>
 </resources>

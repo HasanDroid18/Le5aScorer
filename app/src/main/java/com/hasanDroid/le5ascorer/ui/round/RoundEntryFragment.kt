@@ -182,7 +182,7 @@ class RoundEntryFragment : Fragment() {
         // Update card indicators
         if (player.heartCount > 0) {
             rowBinding.layoutHearts.visibility = View.VISIBLE
-            rowBinding.textHeartCount.text = "×${player.heartCount}"
+            rowBinding.textHeartCount.text = getString(R.string.heart_count_format, player.heartCount)
         } else {
             rowBinding.layoutHearts.visibility = View.GONE
         }
@@ -228,12 +228,12 @@ class RoundEntryFragment : Fragment() {
         val isDouble = totalRound == 37 && doublePlayerIndex != -1
 
         // Update progress and total
-        binding.textRoundTotal.text = "$totalRound/36"
+        binding.textRoundTotal.text = getString(R.string.round_total_format, totalRound)
         binding.progressRound.progress = totalRound
 
         if (isDouble) {
             binding.progressRound.max = 37
-            binding.textRoundTotal.text = "$totalRound/37"
+            binding.textRoundTotal.text = getString(R.string.round_total_format_double, totalRound)
         } else {
             binding.progressRound.max = 36
         }
@@ -333,6 +333,7 @@ class RoundEntryFragment : Fragment() {
         return Chip(requireContext()).apply {
             this.text = text
             isCloseIconVisible = true
+            closeIconTint = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
             setOnCloseIconClickListener {
                 when (actionType) {
                     ActionType.HEARTS -> viewModel.decrementHeart(playerIndex)
