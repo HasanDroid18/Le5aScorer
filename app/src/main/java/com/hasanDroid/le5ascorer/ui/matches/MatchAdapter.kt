@@ -1,5 +1,6 @@
 package com.hasanDroid.le5ascorer.ui.matches
 
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hasanDroid.le5ascorer.domain.model.Match
 import com.hasanDroid.le5ascorer.databinding.ItemMatchBinding
+import java.io.File
 
 class MatchAdapter(
     private val onMatchClick: (Match) -> Unit,
@@ -64,14 +66,29 @@ class MatchAdapter(
                 binding.textStatus.visibility = android.view.View.GONE
             }
 
-            // Display leading player and score
-            if (match.leadingPlayerName != null && match.leadingScore != null) {
-                binding.cardLeadingPlayer.visibility = android.view.View.VISIBLE
-                binding.textLeaderName.text = match.leadingPlayerName
-                binding.textLeaderScore.text = match.leadingScore.toString()
-            } else {
-                binding.cardLeadingPlayer.visibility = android.view.View.GONE
-            }
+             // Display leading player and score
+             if (match.leadingPlayerName != null && match.leadingScore != null) {
+                 binding.cardLeadingPlayer.visibility = android.view.View.VISIBLE
+                 binding.textLeaderName.text = match.leadingPlayerName
+                 binding.textLeaderScore.text = match.leadingScore.toString()
+
+                 // Load loser image if available, otherwise show default placeholder
+                 if (!match.loserImagePath.isNullOrEmpty()) {
+                     val imageFile = File(match.loserImagePath)
+                     if (imageFile.exists()) {
+                         val bitmap = BitmapFactory.decodeFile(match.loserImagePath)
+                         binding.loserImage.setImageBitmap(bitmap)
+                     } else {
+                         // Image file not found, show default
+                         binding.loserImage.setImageResource(android.R.drawable.ic_menu_gallery)
+                     }
+                 } else {
+                     // No image captured, show default placeholder
+                     binding.loserImage.setImageResource(android.R.drawable.ic_menu_gallery)
+                 }
+             } else {
+                 binding.cardLeadingPlayer.visibility = android.view.View.GONE
+             }
 
             // Display date
             val dateFormat = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())

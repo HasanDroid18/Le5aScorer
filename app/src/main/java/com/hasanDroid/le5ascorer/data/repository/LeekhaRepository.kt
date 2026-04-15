@@ -103,6 +103,13 @@ class LeekhaRepository @Inject constructor(
         )
     }
 
+    suspend fun saveLoserImage(matchId: Long, imagePath: String) {
+        val match = matchDao.getMatchById(matchId) ?: return
+        matchDao.update(
+            match.copy(loserImagePath = imagePath)
+        )
+    }
+
     fun getMatchesByStatus(status: MatchStatus): Flow<List<Match>> {
         // IMPORTANT: `leadingPlayerName/leadingScore` are derived from rounds + score actions.
         // Previously we used only `matchDao.getMatchesByStatus()`; that Flow does NOT re-emit
@@ -188,7 +195,8 @@ class LeekhaRepository @Inject constructor(
                     status = matchEntity.status,
                     roundCount = roundCount,
                     leadingPlayerName = leadingPlayerName,
-                    leadingScore = leadingScore
+                    leadingScore = leadingScore,
+                    loserImagePath = matchEntity.loserImagePath
                 )
             }
         }
@@ -215,16 +223,17 @@ class LeekhaRepository @Inject constructor(
                 Round(roundEntity.id, roundEntity.matchId, roundEntity.roundIndex, actions)
             }
 
-            val match = Match(
-                id = matchEntity.id,
-                createdAt = matchEntity.createdAt,
-                completedAt = matchEntity.completedAt,
-                terminalScore = matchEntity.terminalScore,
-                scoreRule = matchEntity.scoreRule,
-                players = players,
-                status = matchEntity.status,
-                roundCount = rounds.size
-            )
+             val match = Match(
+                 id = matchEntity.id,
+                 createdAt = matchEntity.createdAt,
+                 completedAt = matchEntity.completedAt,
+                 terminalScore = matchEntity.terminalScore,
+                 scoreRule = matchEntity.scoreRule,
+                 players = players,
+                 status = matchEntity.status,
+                 roundCount = rounds.size,
+                 loserImagePath = matchEntity.loserImagePath
+             )
 
             MatchDetail(match, rounds, emptyList())
         }
@@ -250,7 +259,8 @@ class LeekhaRepository @Inject constructor(
             scoreRule = matchEntity.scoreRule,
             players = players,
             status = matchEntity.status,
-            roundCount = roundCount
+            roundCount = roundCount,
+            loserImagePath = matchEntity.loserImagePath
         )
     }
 

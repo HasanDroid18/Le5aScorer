@@ -96,58 +96,26 @@
         <!-- Right Side: Leading Player Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLeadingPlayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
             app:cardBackgroundColor="@color/card_ivory"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/chip_gold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPlayers"
             tools:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="80dp"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:letterSpacing="0.1"
-                    android:text="Leading"
-                    android:textAllCaps="true"
-                    android:textColor="#80000000"
-                    android:textSize="9sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textLeaderName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/suit_black"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    tools:text="Ahmad" />
-
-                <TextView
-                    android:id="@+id/textLeaderScore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/chip_gold_dark"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="45" />
-
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/loserImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/leading_player_avatar"
+                tools:srcCompat="@tools:sample/avatars" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -161,6 +129,49 @@
             app:layout_constraintTop_toBottomOf="@id/layoutInfo"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Nov 30, 2025 15:30" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/textDate"
+            app:layout_constraintTop_toBottomOf="@+id/layoutInfo">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="Leading"
+                android:textAllCaps="true"
+                android:textColor="#80000000"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textLeaderName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:layout_marginStart="4dp"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="Ahmad" />
+
+            <TextView
+                android:id="@+id/textLeaderScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/chip_gold_dark"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp"
+                tools:text="45" />
+
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

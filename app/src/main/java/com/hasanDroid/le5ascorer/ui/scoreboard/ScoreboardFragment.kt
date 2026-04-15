@@ -199,17 +199,23 @@ class ScoreboardFragment : Fragment() {
 
     private fun lastLoserKey(matchId: Long): String = "end_game_last_loser_$matchId"
 
-    private fun showEndGameDialog(loserNames: List<String>) {
-        val dialog = EndGameDialogFragment.newInstance(loserNames).apply {
-            onShowRoundScores = {
-                // User asked: go to scoreboard (i.e., keep/show this screen), not to a new round.
-                // To make it feel responsive, we just scroll to the top.
-                binding.scrollView.smoothScrollTo(0, 0)
-            }
-        }
+      private fun showEndGameDialog(loserNames: List<String>) {
+          val dialog = EndGameDialogFragment.newInstance(loserNames, args.matchId).apply {
+              onShowRoundScores = {
+                  // User asked: go to scoreboard (i.e., keep/show this screen), not to a new round.
+                  // To make it feel responsive, we just scroll to the top.
+                  binding.scrollView.smoothScrollTo(0, 0)
+              }
+              onPhotoSaved = { imagePath ->
+                  // Photo was saved, update the match with this image path
+                  viewModel.saveLoserImage(imagePath)
+                  // Navigate to scores view by scrolling to top
+                  binding.scrollView.smoothScrollTo(0, 0)
+              }
+          }
 
-        dialog.show(childFragmentManager, "EndGameDialog")
-    }
+          dialog.show(childFragmentManager, "EndGameDialog")
+      }
 
     private fun playFullScreenConfetti() {
         val overlay = binding.confettiOverlay.root

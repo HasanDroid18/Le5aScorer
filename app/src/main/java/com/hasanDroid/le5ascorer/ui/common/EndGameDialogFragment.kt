@@ -1,13 +1,20 @@
 package com.hasanDroid.le5ascorer.ui.common
 
 import android.app.Dialog
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.hasanDroid.le5ascorer.R
+import com.hasanDroid.le5ascorer.util.ImageUtil
 import kotlin.random.Random
 
 /**
@@ -20,14 +27,50 @@ import kotlin.random.Random
  * Notes:
  * - Not cancelable via back press or outside touch.
  * - Shows a fun, light teasing sentence picked randomly.
+ * - Allows capturing loser's photo via camera.
  */
 class EndGameDialogFragment : DialogFragment() {
 
     var onShowRoundScores: (() -> Unit)? = null
+    var onPhotoSaved: ((String) -> Unit)? = null
+
+    private var matchId: Long = 0
+
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            launchCameraIntent()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Camera permission is required to capture a photo",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private val cameraLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            @Suppress("DEPRECATION")
+            val bitmap = result.data?.getParcelableExtra<Bitmap>("data")
+            if (bitmap != null) {
+                val imagePath = ImageUtil.saveBitmapToFile(requireContext(), bitmap, matchId)
+                if (imagePath != null) {
+                    // Close dialog and navigate to scores
+                    dismissAllowingStateLoss()
+                    onPhotoSaved?.invoke(imagePath)
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
+        matchId = arguments?.getLong(ARG_MATCH_ID, 0) ?: 0
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -40,6 +83,10 @@ class EndGameDialogFragment : DialogFragment() {
             loserNames.joinToString(", ").ifBlank { getString(R.string.player_default) }
 
         view.findViewById<TextView>(R.id.textTease).text = pickTeaseLine()
+
+        view.findViewById<View>(R.id.buttonCapturePhoto).setOnClickListener {
+            launchCamera()
+        }
 
         view.findViewById<View>(R.id.buttonShowRoundScores).setOnClickListener {
             dismissAllowingStateLoss()
@@ -74,38 +121,70 @@ class EndGameDialogFragment : DialogFragment() {
 
     private fun pickTeaseLine(): String {
         val lines = listOf(
-            "Oof… that one stings a little. Rematch?",
-            "It’s not a loss — it’s a dramatic plot twist!",
-            "Legend says this was ‘totally calculated’.",
-            "No worries… the table remembers everything.",
-            "Spicy round! Let’s see how it happened.",
-            "Hey, at least it was entertaining!",
-            "Your strategy was bold. The cards were bolder.",
-            "That was *this* close to greatness… like, millimeters.",
-            "Consider this a warm-up for your comeback arc.",
-            "The good news: snacks taste better after a dramatic finish.",
-            "Okay okay… who shuffled the universe?",
-            "Plot twist: the score had other plans.",
-            "You didn’t lose — you just donated points generously.",
-            "This is the part where you say: ‘Run it back!’",
-            "The table demanded chaos. You delivered.",
-            "It’s fine. Confidence resets every new match.",
-            "Certified cinematic ending. 10/10 drama.",
-            "If the cards had a group chat, they’d be giggling.",
-            "Tiny setback. Huge comeback loading…",
-            "Somebody call the referee… oh wait, it’s just math.",
-            "One more game. For science."
+            "يا زلمة شو هاللعب؟ كنت معنا ولا ضدنا؟ 😂",
+            "واضح إنك راهنت على الحظ… والحظ خانك 😅",
+            "اللعبة كانت حلوة… بس نهايتك أحلى 😏",
+            "في شي غلط بالورق… أو فيك؟ 🤔",
+            "ولا يهمك… في ناس بتتعلّم من الخسارة 😄",
+            "حسّيتك عم تجرّب أشياء جديدة… كلها غلط 😂",
+            "خسارة محترمة… بس ضحك أكتر 🤣",
+            "إنت اليوم كنت عامل guest appearance بس 🎭",
+            "ما تزعل… في ناس أسوأ منك… قليل بس في 😆",
+            "الورق كان عم يحكي مع الكل… إلا معك 😜",
+            "واضح إنك جاي تتمرّن مش تربح 😏",
+            "حلوة الروح الرياضية… لأن اللعب مش ماشي 😄",
+            "في أمل بالجيم الجاي… يمكن 😂",
+            "خسرت بس بثقة عالية… منقدّرها 👏",
+            "حاولت… وهيدا أهم شي… تقريباً 😅",
+            "لو في جائزة لأسوأ حظ… ربحتها 🏆",
+            "اللعبة بسيطة… بس شكلك معقّدها 😂",
+            "كنت قريب تفهم اللعبة… قريب كتير 😜",
+            "في شي درامي صار… إسمه نتيجتك 😆",
+            "واضح إنك عم تلعب مود الصعوبة: مستحيل 😏",
+            "خسارة بتعلّم… بس إنت بدك كورس كامل 😂",
+            "عم نعطيك boost للجيم الجاي 😄",
+            "مش غلط… بس مش صح كمان 😅",
+            "النية كانت تربح… التنفيذ كان قصة تانية 😂",
+            "يمكن لو غيرنا الورق… أو اللاعب 😏",
+            "في تقدم… بس بالعكس 😆",
+            "لو الحظ مادة بالجامعة… رسبت فيها 😜",
+            "عم تلعب challenge مع حالك؟ 😂",
+            "خسارة اليوم… meme لبكرا 😄",
+            "ولا مرة شفت حدا يخسر بهالإبداع 🤣"
         )
-        return lines[Random.nextInt(lines.size)]
-    }
+         return lines[Random.nextInt(lines.size)]
+     }
 
-    companion object {
-        private const val ARG_LOSER_NAMES = "loserNames"
+     private fun launchCamera() {
+         if (ContextCompat.checkSelfPermission(
+             requireContext(),
+             android.Manifest.permission.CAMERA
+         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+         ) {
+             // Permission already granted
+             launchCameraIntent()
+         } else {
+             // Request permission
+             permissionLauncher.launch(android.Manifest.permission.CAMERA)
+         }
+     }
 
-        fun newInstance(loserNames: List<String>): EndGameDialogFragment {
-            return EndGameDialogFragment().apply {
-                arguments = bundleOf(ARG_LOSER_NAMES to ArrayList(loserNames))
-            }
-        }
-    }
-}
+     private fun launchCameraIntent() {
+         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+         cameraLauncher.launch(takePictureIntent)
+     }
+
+     companion object {
+         private const val ARG_LOSER_NAMES = "loserNames"
+         private const val ARG_MATCH_ID = "matchId"
+
+         fun newInstance(loserNames: List<String>, matchId: Long = 0): EndGameDialogFragment {
+             return EndGameDialogFragment().apply {
+                 arguments = bundleOf(
+                     ARG_LOSER_NAMES to ArrayList(loserNames),
+                     ARG_MATCH_ID to matchId
+                 )
+             }
+         }
+     }
+ }

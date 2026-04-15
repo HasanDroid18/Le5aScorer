@@ -8,6 +8,7 @@ import com.hasanDroid.le5ascorer.domain.model.MatchDetail
 import com.hasanDroid.le5ascorer.domain.usecase.CompleteMatchUseCase
 import com.hasanDroid.le5ascorer.domain.usecase.GetMatchDetailUseCase
 import com.hasanDroid.le5ascorer.domain.usecase.ReopenMatchUseCase
+import com.hasanDroid.le5ascorer.domain.usecase.SaveLoserImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ class ScoreboardViewModel @Inject constructor(
     private val getMatchDetailUseCase: GetMatchDetailUseCase,
     private val completeMatchUseCase: CompleteMatchUseCase,
     private val reopenMatchUseCase: ReopenMatchUseCase,
+    private val saveLoserImageUseCase: SaveLoserImageUseCase,
     private val scoreEngine: ScoreEngine
 ) : ViewModel() {
 
@@ -60,5 +62,11 @@ class ScoreboardViewModel @Inject constructor(
             }
         }
     }
-}
 
+    fun saveLoserImage(imagePath: String) {
+        val matchId = uiState.value.matchDetail?.match?.id ?: return
+        viewModelScope.launch {
+            saveLoserImageUseCase(matchId, imagePath)
+        }
+    }
+}

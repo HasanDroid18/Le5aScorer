@@ -19,7 +19,8 @@ data class Match(
     val status: MatchStatus,
     val roundCount: Int = 0,
     val leadingPlayerName: String? = null,
-    val leadingScore: Int? = null
+    val leadingScore: Int? = null,
+    val loserImagePath: String? = null
 )
 
 data class Round(

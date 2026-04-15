@@ -64,13 +64,21 @@ class GetPlayerSuggestionsUseCase @Inject constructor(
     }
 }
 
+class SaveLoserImageUseCase @Inject constructor(
+    private val repository: LeekhaRepository
+) {
+    suspend operator fun invoke(matchId: Long, imagePath: String) {
+        repository.saveLoserImage(matchId, imagePath)
+    }
+}
 
 class MatchUseCases @Inject constructor(
     private val getMatchesUseCase: GetMatchesUseCase,
     private val createMatchUseCase: CreateMatchUseCase,
     private val deleteMatchUseCase: DeleteMatchUseCase,
     private val duplicateMatchUseCase: DuplicateMatchUseCase,
-    private val getPlayerSuggestionsUseCase: GetPlayerSuggestionsUseCase
+    private val getPlayerSuggestionsUseCase: GetPlayerSuggestionsUseCase,
+    private val saveLoserImageUseCase: SaveLoserImageUseCase
 ) {
     fun getInProgressMatches(): Flow<List<Match>> = getMatchesUseCase.getInProgressMatches()
 
@@ -90,5 +98,6 @@ class MatchUseCases @Inject constructor(
     suspend fun duplicateMatch(matchId: Long): Long? = duplicateMatchUseCase(matchId)
 
     fun getPlayerSuggestions(query: String): Flow<List<String>> = getPlayerSuggestionsUseCase(query)
-}
 
+    suspend fun saveLoserImage(matchId: Long, imagePath: String) = saveLoserImageUseCase(matchId, imagePath)
+}

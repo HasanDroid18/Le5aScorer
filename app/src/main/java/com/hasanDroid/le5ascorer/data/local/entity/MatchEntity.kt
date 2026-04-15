@@ -15,6 +15,7 @@ data class MatchEntity(
     val player2Id: Long,
     val player3Id: Long,
     val player4Id: Long,
-    val status: MatchStatus = MatchStatus.IN_PROGRESS
+    val status: MatchStatus = MatchStatus.IN_PROGRESS,
+    val loserImagePath: String? = null // Path to loser's photo
 )
 
