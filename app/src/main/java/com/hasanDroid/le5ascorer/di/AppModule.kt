@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.hasanDroid.le5ascorer.data.local.LeekhaDatabase
 import com.hasanDroid.le5ascorer.data.local.dao.*
 import com.hasanDroid.le5ascorer.domain.ScoreEngine
+import com.hasanDroid.le5ascorer.util.VersionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,13 @@ object AppModule {
             context,
             LeekhaDatabase::class.java,
             "leekha_database"
-        ).build()
+        )
+        // If a migration is needed in the future, add it here:
+        // .addMigrations(MIGRATION_1_2)
+        // For schema compatibility issues, allow destructive migration as last resort
+        // (with proper data backup via backup_rules.xml)
+        .fallbackToDestructiveMigration()
+        .build()
     }
 
     @Provides
@@ -54,6 +61,12 @@ object AppModule {
     @Singleton
     fun provideScoreEngine(): ScoreEngine {
         return ScoreEngine()
+    }
+
+    @Provides
+    @Singleton
+    fun provideVersionManager(@ApplicationContext context: Context, database: LeekhaDatabase): VersionManager {
+        return VersionManager(context, database)
     }
 }
 

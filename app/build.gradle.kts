@@ -14,8 +14,8 @@ android {
         applicationId = "com.hasanDroid.le5ascorer"
         minSdk = 24
         targetSdk = 36
-        versionCode = 6
-        versionName = "2.0"
+        versionCode = 7
+        versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +38,13 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+
+    // Configure Room to export schema for migration tracking
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 }
 

@@ -31,5 +31,8 @@ interface MatchDao {
 
     @Query("DELETE FROM matches WHERE id = :matchId")
     suspend fun deleteById(matchId: Long)
+
+    @Query("SELECT * FROM matches ORDER BY createdAt DESC")
+    fun getAllMatchesSync(): List<MatchEntity>
 }
 

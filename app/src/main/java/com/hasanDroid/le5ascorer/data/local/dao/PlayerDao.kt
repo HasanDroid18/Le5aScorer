@@ -24,5 +24,8 @@ interface PlayerDao {
 
     @Query("SELECT * FROM players WHERE name = :name LIMIT 1")
     suspend fun getPlayerByName(name: String): PlayerEntity?
+
+    @Query("SELECT * FROM players ORDER BY lastUsedAt DESC")
+    fun getAllPlayersSync(): List<PlayerEntity>
 }
 

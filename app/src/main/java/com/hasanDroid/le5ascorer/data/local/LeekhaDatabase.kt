@@ -14,7 +14,7 @@ import com.hasanDroid.le5ascorer.data.local.entity.*
         ScoreActionEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class LeekhaDatabase : RoomDatabase() {
