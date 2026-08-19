@@ -22,7 +22,19 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        showVersion()
         setupAnimation()
+    }
+
+    private fun showVersion() {
+        val versionName = try {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).versionName
+        } catch (_: Exception) {
+            null
+        }
+        binding.textVersion.text =
+            versionName?.let { getString(R.string.version_format, it) }.orEmpty()
     }
 
     private fun setupAnimation() {

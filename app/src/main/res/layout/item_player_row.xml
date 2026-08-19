@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  One of the four player tiles on the round-entry screen.
+
+  Tapping a tile chooses who the next card goes to, so selection has to be
+  unmistakable: the selected tile fills with brass and flips to ink text
+  (applied in RoundEntryFragment, which also sets the stroke and elevation from
+  dimen resources rather than raw pixel values).
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,128 +16,126 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:strokeWidth="0dp"
-    app:rippleColor="@color/glow_gold">
+    android:minHeight="@dimen/touch_min"
+    app:cardBackgroundColor="@color/felt_700"
+    app:cardCornerRadius="@dimen/radius_md"
+    app:cardElevation="@dimen/elev_raised"
+    app:rippleColor="@color/overlay_ripple_brass"
+    app:strokeColor="@color/felt_outline"
+    app:strokeWidth="@dimen/stroke_hairline">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:orientation="vertical"
+        android:padding="@dimen/space_md">
 
-        <!-- Left Column: Name and Score stacked -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/textPlayerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Title.Small"
+            tools:text="Ahmad" />
+
+        <TextView
+            android:id="@+id/textPlayerScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginEnd="12dp">
+            android:layout_marginTop="@dimen/space_xs"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+            tools:text="13" />
 
-            <TextView
-                android:id="@+id/textPlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Player 1"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/suit_black"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="Ahmad" />
-
-            <TextView
-                android:id="@+id/textPlayerScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="@color/suit_red"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp"
-                tools:text="13" />
-
-        </LinearLayout>
-
-        <!-- Right Column: Card Indicators in stair pattern -->
+        <!-- What this player has taken so far this round. -->
         <LinearLayout
             android:id="@+id/layoutCardIcons"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="end">
+            android:layout_marginTop="@dimen/space_sm"
+            android:orientation="horizontal">
 
-            <!-- First row: 1 card indicator -->
             <LinearLayout
+                android:id="@+id/layoutHearts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:layout_marginBottom="3dp">
+                android:visibility="gone"
+                tools:visibility="visible">
 
-                <LinearLayout
-                    android:id="@+id/layoutHearts"
+                <ImageView
+                    android:id="@+id/iconHearts"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:contentDescription="@string/cd_hearts"
+                    app:srcCompat="@drawable/ic_suit_heart"
+                    app:tint="@color/ink_red" />
+
+                <TextView
+                    android:id="@+id/textHeartCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="#10FF0000"
-                    android:gravity="right"
-                    android:padding="6dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <TextView
-                        android:id="@+id/iconHearts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="♥"
-                        android:textSize="12sp"
-                        android:textColor="@color/suit_red"
-                        android:layout_marginEnd="3dp" />
-
-                    <TextView
-                        android:id="@+id/textHeartCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="×5"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/suit_red" />
-
-                </LinearLayout>
+                    android:layout_marginStart="2dp"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+                    android:textColor="@color/ink_red"
+                    tools:text="×5" />
 
             </LinearLayout>
 
-            <!-- Second row: 2 card indicators -->
             <LinearLayout
+                android:id="@+id/layoutQSpades"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginEnd="@dimen/space_xs"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
+                    android:id="@+id/textQSpadesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_queen"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Small" />
+
+                <ImageView
                     android:id="@+id/iconQSpades"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Q♠"
-                    android:textSize="12sp"
-                    android:textColor="@color/suit_black"
-                    android:visibility="gone"
-                    android:background="#10000000"
-                    android:padding="6dp"
-                    android:layout_marginEnd="4dp"
-                    tools:visibility="visible" />
+                    android:layout_width="11dp"
+                    android:layout_height="11dp"
+                    android:layout_marginStart="1dp"
+                    android:contentDescription="@string/cd_queen_spades"
+                    app:srcCompat="@drawable/ic_suit_spade" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutTenDiamonds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/iconTenDiamonds"
+                    android:id="@+id/textTenLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10♦"
-                    android:textSize="12sp"
-                    android:textColor="@color/suit_red"
-                    android:visibility="gone"
-                    android:background="#10FF0000"
-                    android:padding="6dp"
-                    tools:visibility="visible" />
+                    android:text="@string/label_ten"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+                    android:textColor="@color/ink_red" />
+
+                <ImageView
+                    android:id="@+id/iconTenDiamonds"
+                    android:layout_width="11dp"
+                    android:layout_height="11dp"
+                    android:layout_marginStart="1dp"
+                    android:contentDescription="@string/cd_ten_diamonds"
+                    app:srcCompat="@drawable/ic_suit_diamond"
+                    app:tint="@color/ink_red" />
 
             </LinearLayout>
 
@@ -138,4 +144,3 @@
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-

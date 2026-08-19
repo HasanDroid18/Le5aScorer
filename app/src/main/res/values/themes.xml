@@ -1,99 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Le5a Scorer theme.
+
+  The base parent is deliberately Material3 *Dark*. The app has always been
+  visually dark (dark felt surfaces, light text), but previously inherited from
+  Theme.Material3.Light — so every component the app did not style by hand
+  (AlertDialog, PopupMenu, Snackbar, text fields) resolved light defaults and
+  rendered as a white box in a dark app.
+
+  There is no light variant by design, so this file is the single source of
+  truth and there are no values-night/ duplicates to keep in sync.
+-->
 <resources>
-    <!-- Base application theme - Card Table / Solitaire Design -->
-    <style name="Base.Theme.Le5aScorer" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Primary colors - Gold chip accents -->
-        <item name="colorPrimary">@color/chip_gold</item>
-        <item name="colorPrimaryVariant">@color/chip_gold_dark</item>
-        <item name="colorOnPrimary">@color/felt_green_900</item>
 
-        <!-- Secondary colors - Felt green -->
-        <item name="colorSecondary">@color/felt_green_700</item>
-        <item name="colorSecondaryVariant">@color/felt_green_800</item>
-        <item name="colorOnSecondary">@color/white</item>
+    <style name="Base.Theme.Le5aScorer" parent="Theme.Material3.Dark.NoActionBar">
 
-        <!-- Background colors - Felt table -->
-        <!-- first one for default splash screen-->
-        <item name="android:colorBackground">@color/felt_green_800</item>
-        <item name="colorSurface">@color/card_ivory</item>
-        <item name="colorSurfaceVariant">@color/felt_green_700</item>
-        <item name="colorOnSurface">@color/suit_black</item>
-        <item name="colorOnSurfaceVariant">@color/white</item>
+        <!-- ================= Primary: brass ================= -->
+        <item name="colorPrimary">@color/brass_400</item>
+        <item name="colorOnPrimary">@color/felt_950</item>
+        <item name="colorPrimaryContainer">@color/brass_900</item>
+        <item name="colorOnPrimaryContainer">@color/brass_300</item>
+        <item name="colorPrimaryInverse">@color/brass_600</item>
 
-        <!-- Status bar - Dark felt (match top bars) -->
-        <item name="android:statusBarColor">@color/felt_green_900</item>
+        <!-- ================= Secondary / tertiary: felt ================= -->
+        <item name="colorSecondary">@color/brass_300</item>
+        <item name="colorOnSecondary">@color/felt_950</item>
+        <item name="colorSecondaryContainer">@color/felt_700</item>
+        <item name="colorOnSecondaryContainer">@color/text_primary</item>
+        <item name="colorTertiary">@color/success</item>
+        <item name="colorOnTertiary">@color/felt_950</item>
+        <item name="colorTertiaryContainer">@color/success_container</item>
+        <item name="colorOnTertiaryContainer">@color/success</item>
+
+        <!-- ================= Surfaces ================= -->
+        <!-- colorBackground also paints the window before the first frame. -->
+        <item name="android:colorBackground">@color/felt_900</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        <item name="android:windowBackground">@drawable/bg_felt_table</item>
+
+        <item name="colorSurface">@color/felt_800</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/felt_700</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorSurfaceInverse">@color/bone</item>
+        <item name="colorOnSurfaceInverse">@color/ink</item>
+
+        <item name="colorSurfaceContainerLowest">@color/felt_950</item>
+        <item name="colorSurfaceContainerLow">@color/felt_900</item>
+        <item name="colorSurfaceContainer">@color/felt_800</item>
+        <item name="colorSurfaceContainerHigh">@color/felt_700</item>
+        <item name="colorSurfaceContainerHighest">@color/felt_600</item>
+
+        <item name="colorOutline">@color/felt_outline</item>
+        <item name="colorOutlineVariant">@color/felt_outline_soft</item>
+
+        <!-- ================= Semantic ================= -->
+        <item name="colorError">@color/danger</item>
+        <item name="colorOnError">@color/text_primary</item>
+        <item name="colorErrorContainer">@color/danger_container</item>
+        <item name="colorOnErrorContainer">@color/danger</item>
+
+        <!-- ================= System bars =================
+             Transparent so app bars can draw underneath; each screen applies
+             its own window insets. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-
-        <!-- Ensure status bar icons/text are white -->
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Notch / display cutout support is provided via values-v27/ themes.xml -->
+        <!-- ================= Shape ================= -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Le5a.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Le5a.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Le5a.Large</item>
 
-        <!-- Material 3 shape system - rounded corners for card-like feel -->
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Le5aScorer.SmallComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Le5aScorer.MediumComponent</item>
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Le5aScorer.LargeComponent</item>
+        <!-- ================= Type =================
+             The family (not a single weight) so any widget that asks for bold
+             gets the real bold cut instead of a synthetic one. -->
+        <item name="android:fontFamily">@font/le5a_sans</item>
+        <item name="fontFamily">@font/le5a_sans</item>
 
-        <!-- Typography - Clean, readable for cards -->
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Le5aScorer.HeadlineLarge</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.Le5aScorer.BodyLarge</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Le5a.Display</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Le5a.Headline</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Le5a.Headline</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Le5a.Title</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Le5a.Title.Small</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Le5a.Body</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Le5a.Body</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Le5a.Body.Small</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Le5a.Label</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Le5a.Label.Small</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Le5a.Overline</item>
+
+        <!-- ================= Component defaults =================
+             So widgets that carry no explicit style still land on-system. -->
+        <item name="materialCardViewStyle">@style/Widget.Le5a.Card</item>
+        <item name="materialButtonStyle">@style/Widget.Le5a.Button.Primary</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Le5a.Button.Outlined</item>
+        <item name="borderlessButtonStyle">@style/Widget.Le5a.Button.Text</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Le5a.Fab</item>
+        <item name="toolbarStyle">@style/Widget.Le5a.Toolbar</item>
+        <item name="tabStyle">@style/Widget.Le5a.TabLayout</item>
+        <item name="chipStyle">@style/Widget.Le5a.Chip.Action</item>
+        <item name="textInputStyle">@style/Widget.Le5a.TextInput</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Le5a.Dialog</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Le5a.Dialog</item>
+        <item name="popupMenuStyle">@style/Widget.Le5a.PopupMenu</item>
+        <item name="android:popupMenuStyle">@style/Widget.Le5a.PopupMenu</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.Le5a.Progress.Circular</item>
+
     </style>
 
     <style name="Theme.Le5aScorer" parent="Base.Theme.Le5aScorer" />
 
-    <!-- Shape Appearances - Card-like rounded corners -->
-    <style name="ShapeAppearance.Le5aScorer.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
-    </style>
+    <!-- ===================================================================
+         Splash.
 
-    <style name="ShapeAppearance.Le5aScorer.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
-    </style>
-
-    <style name="ShapeAppearance.Le5aScorer.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item>
-    </style>
-
-    <!-- Typography -->
-    <style name="TextAppearance.Le5aScorer.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="fontFamily">sans-serif-medium</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextAppearance.Le5aScorer.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
-        <item name="fontFamily">sans-serif</item>
-    </style>
-
-    <!-- Splash Screen Theme -->
-    <style name="Theme.Le5aScorer.Splash" parent="Theme.Le5aScorer">
+         SplashBase carries every attribute; Theme.Le5aScorer.Splash is a thin
+         alias over it. This split exists because Android resolves a style name
+         to exactly one best-matching entry — qualifier buckets do not merge.
+         The previous values-v27/themes.xml redeclared Theme.Le5aScorer.Splash
+         with only the cutout attribute, so on API 27+ (in practice, every
+         device) the splash silently lost its felt background, fullscreen flag
+         and translucent window.
+         =================================================================== -->
+    <style name="Theme.Le5aScorer.SplashBase" parent="Base.Theme.Le5aScorer">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@drawable/bg_felt_table</item>
-
-        <!-- Edge-to-edge -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- End-game dialog theme overlay (NO dim scrim; confetti should stay bright) -->
-    <style name="ThemeOverlay.Le5aScorer.EndGameDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:backgroundDimAmount">0.0</item>
+    <style name="Theme.Le5aScorer.Splash" parent="Theme.Le5aScorer.SplashBase" />
 
-        <!-- Remove Material dialog's default surface/insets that can show as a white container -->
-        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.Material3.BodyMedium</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.Material3.TitleMedium</item>
-        <item name="alertDialogStyle">@style/Widget.Le5aScorer.TransparentAlertDialog</item>
-    </style>
-
-    <style name="Widget.Le5aScorer.TransparentAlertDialog" parent="@style/ThemeOverlay.AppCompat.Dialog">
+    <!-- ===================================================================
+         Full-screen transparent dialog host (end-game dialog). The confetti
+         plays behind the card, so the window must not dim or draw a container.
+         =================================================================== -->
+    <style name="Theme.Le5aScorer.TransparentFullscreenDialog" parent="ThemeOverlay.Material3">
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fontFamily">@font/le5a_sans</item>
+        <item name="fontFamily">@font/le5a_sans</item>
     </style>
+
 </resources>

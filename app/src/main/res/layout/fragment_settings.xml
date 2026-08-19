@@ -2,151 +2,180 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_felt_table">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/felt_green_900"
-        android:elevation="4dp">
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:title="@string/settings_title"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="@color/white" />
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/settings_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/screen_margin">
 
-            <!-- Support -->
+            <!-- ==================== Support ==================== -->
             <TextView
+                style="@style/Widget.Le5a.SectionHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Support"
-                android:textColor="#B0FFFFFF"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:letterSpacing="0.08"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="@dimen/space_md"
+                android:text="@string/settings_section_support" />
 
             <LinearLayout
                 android:id="@+id/layoutContactSupport"
+                style="@style/Widget.Le5a.Row"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
-                android:background="@drawable/bg_settings_row"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginBottom="12dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_mail"
-                    app:tint="@color/chip_gold"
-                    android:contentDescription="@string/contact_support" />
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_mail"
+                    app:tint="@color/brass_400" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_md"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/contact_support"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white" />
+                        android:textAppearance="@style/TextAppearance.Le5a.Title.Small" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email us with app &amp; device details"
-                        android:textSize="12sp"
-                        android:textColor="#B0FFFFFF"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="2dp"
+                        android:text="@string/contact_support_subtitle"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small" />
 
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"
-                    android:contentDescription="@string/contact_support" />
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
 
             </LinearLayout>
 
-            <!-- Rate -->
             <LinearLayout
                 android:id="@+id/layoutRateApp"
+                style="@style/Widget.Le5a.Row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
-                android:background="@drawable/bg_settings_row_accent"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_marginTop="@dimen/space_sm">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_star"
-                    app:tint="@color/chip_gold"
-                    android:contentDescription="@string/rate_this_app" />
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_star"
+                    app:tint="@color/brass_400" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_md"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rate_this_app"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white" />
+                        android:textAppearance="@style/TextAppearance.Le5a.Title.Small" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Deal us a 5-star hand — or share it with friends"
-                        android:textSize="12sp"
-                        android:textColor="#B0FFFFFF"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="2dp"
+                        android:text="@string/rate_this_app_subtitle"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small" />
 
                 </LinearLayout>
 
+                <!-- This icon previously had no tint override and inherited the
+                     tint baked into the vector, which resolved to near-black on
+                     the dark row. -->
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_share"
-                    android:contentDescription="@string/rate_this_app" />
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_share"
+                    app:tint="@color/text_tertiary" />
+
+            </LinearLayout>
+
+            <!-- ==================== About ==================== -->
+            <TextView
+                style="@style/Widget.Le5a.SectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:layout_marginBottom="@dimen/space_md"
+                android:text="@string/settings_section_about" />
+
+            <LinearLayout
+                android:id="@+id/layoutVersion"
+                style="@style/Widget.Le5a.Row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_info_note"
+                android:clickable="false"
+                android:focusable="false">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_info"
+                    app:tint="@color/text_tertiary" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_md"
+                    android:layout_weight="1"
+                    android:text="@string/app_version"
+                    android:textAppearance="@style/TextAppearance.Le5a.Title.Small" />
+
+                <TextView
+                    android:id="@+id/textVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+                    android:textColor="@color/text_secondary"
+                    tools:text="2.0.2 (8)" />
 
             </LinearLayout>
 
@@ -155,4 +184,3 @@
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

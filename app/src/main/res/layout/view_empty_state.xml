@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared empty state: mark, title, supporting line.
+
+  Included (not copy-pasted) by the match list and the scoreboard, so all three
+  empty states in the app are typographically identical. Height is wrap_content
+  so it composes inside a scrolling parent — the previous version was
+  match_parent inside a wrap_content LinearLayout.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_2xl"
+    android:paddingVertical="@dimen/space_3xl">
+
+    <ImageView
+        android:id="@+id/imageEmpty"
+        android:layout_width="@dimen/icon_empty_state"
+        android:layout_height="@dimen/icon_empty_state"
+        android:alpha="0.5"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_cards_empty"
+        app:tint="@color/text_tertiary" />
+
+    <TextView
+        android:id="@+id/textEmptyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_lg"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Le5a.Title"
+        tools:text="@string/no_games_in_progress" />
+
+    <TextView
+        android:id="@+id/textEmptyBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+        android:textColor="@color/text_tertiary"
+        tools:text="@string/no_games_in_progress_hint" />
+
+</LinearLayout>

@@ -3,8 +3,6 @@ package com.hasanDroid.le5ascorer
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.hasanDroid.le5ascorer.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,16 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Apply system bar insets so all screens are safe on notches/U-shaped cutouts
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(
-                systemBarsInsets.left,
-                systemBarsInsets.top,
-                systemBarsInsets.right,
-                systemBarsInsets.bottom
-            )
-            insets
-        }
+        // Insets are applied per screen (see ui/common/WindowInsetsExt.kt) rather
+        // than as padding on this root. Padding here meant no screen could draw
+        // under the status bar, so every app bar stopped short of it and the
+        // status bar showed as a flat band of the window background.
     }
 }

@@ -1,40 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Le5a Scorer palette.
+
+  The app is a card table: a deep, desaturated felt surface with brass accents and
+  bone-white playing cards laid on it. Every colour used anywhere in the app is
+  named here — layouts must never inline a hex value, so the whole app can be
+  retinted from this one file.
+
+  Ramps are ordered light -> dark within each family, matching the Material
+  convention (higher number = darker for felt, = darker for brass).
+-->
 <resources>
-    <color name="black">#FF000000</color>
+
+    <!-- ===================================================================
+         Felt — the table surface. Desaturated so brass can sit on it without
+         vibrating, and dark enough that bone cards read as lit objects.
+         =================================================================== -->
+    <color name="felt_950">#FF06170F</color>  <!-- scrim, status bar, deepest well -->
+    <color name="felt_900">#FF0A2318</color>  <!-- window background -->
+    <color name="felt_850">#FF0B2A1C</color>  <!-- app bar -->
+    <color name="felt_800">#FF0E2E20</color>  <!-- resting card surface -->
+    <color name="felt_700">#FF143B29</color>  <!-- raised surface -->
+    <color name="felt_600">#FF1B4A34</color>  <!-- pressed / highest surface -->
+    <color name="felt_outline">#FF2A5B44</color>
+    <color name="felt_outline_soft">#FF1E4732</color>
+
+    <!-- ===================================================================
+         Brass — the accent. Replaces the previous pure #FFD700 gold, which
+         vibrated against saturated green and read as costume jewellery.
+         =================================================================== -->
+    <color name="brass_300">#FFF0CC74</color>  <!-- hover / light text on felt -->
+    <color name="brass_400">#FFE3B341</color>  <!-- primary -->
+    <color name="brass_600">#FFA87B2A</color>  <!-- stroke, pressed -->
+    <color name="brass_900">#FF3A2C10</color>  <!-- primary container on felt -->
+
+    <!-- ===================================================================
+         Playing card face — warm bone rather than clinical white, with ink
+         and ink-red for the printed suits.
+         =================================================================== -->
+    <color name="bone">#FFF4EFE4</color>
+    <color name="bone_shade">#FFE4DCCB</color>
+    <color name="ink">#FF171412</color>
+    <color name="ink_muted">#FF5C554D</color>
+    <color name="ink_red">#FFB3271E</color>
+
+    <!-- ===================================================================
+         Text on felt. These replace the old #B0FFFFFF / #80FFFFFF /
+         #E0FFFFFF / #D0FFFFFF / #50FFFFFF family of near-duplicate alphas.
+         =================================================================== -->
+    <color name="text_primary">#FFF5F1E8</color>
+    <color name="text_secondary">#FFB9C7BE</color>
+    <color name="text_tertiary">#FF8A9C90</color>
+    <color name="text_disabled">#FF5F6F65</color>
+
+    <!-- ===================================================================
+         Semantic. Muted enough to live on felt without competing with brass.
+         =================================================================== -->
+    <color name="success">#FF4E9C6B</color>
+    <color name="success_container">#FF12321F</color>
+    <color name="warning">#FFD9A441</color>
+    <color name="warning_container">#FF33280F</color>
+    <color name="danger">#FFC4453C</color>
+    <color name="danger_strong">#FF9E3229</color>
+    <color name="danger_container">#FF3A1512</color>
+
+    <!-- ===================================================================
+         Fixed neutrals and translucent overlays. The overlays are named by
+         intent, not by opacity, so their alpha can be tuned in one place.
+         =================================================================== -->
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
 
-    <!-- Material 3 Purple colors -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
+    <color name="overlay_scrim">#B306170F</color>       <!-- dialog / sheet scrim -->
+    <color name="overlay_well">#33000000</color>        <!-- inset play area -->
+    <color name="overlay_ripple_light">#26F5F1E8</color>
+    <color name="overlay_ripple_brass">#33E3B341</color>
+    <color name="overlay_divider">#332A5B44</color>
 
-    <!-- Material 3 Teal colors -->
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-
-    <!-- Card Table Theme -->
-    <color name="felt_green_900">#0A3A2A</color>
-    <color name="felt_green_800">#0D4D38</color>
-    <color name="felt_green_700">#116B47</color>
-    <color name="felt_green_600">#158A5A</color>
-    <color name="card_ivory">#FFFEF8F0</color>
-    <color name="card_shadow">#40000000</color>
-    <color name="chip_gold">#FFD700</color>
-    <color name="chip_gold_dark">#B8860B</color>
-    <color name="chip_silver">#E8E8E8</color>
-    <color name="chip_blue">#4A90E2</color>
-    <color name="chip_red">#E24A4A</color>
-    <color name="chip_green">#4AE26B</color>
-    <color name="suit_red">#DC143C</color>
-    <color name="suit_black">#1A1A1A</color>
-    <color name="danger_red_700">#C62828</color>
-    <color name="danger_red_800">#B71C1C</color>
-    <color name="double_gradient_start">#D32F2F</color>
-    <color name="double_gradient_end">#B71C1C</color>
-    <color name="glow_blue">#4D81D4FF</color>
-    <color name="glow_gold">#4DFFD700</color>
-    <color name="status_valid_bg">#1B5E20</color>
-    <color name="status_valid_text">#4CAF50</color>
-    <color name="status_invalid_bg">#424242</color>
-    <color name="status_invalid_text">#9E9E9E</color>
 </resources>

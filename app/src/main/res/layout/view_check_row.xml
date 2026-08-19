@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One condition in the round-entry checklist.
+
+  Included three times (hearts / Q♠ / 10♦). Before this, the only feedback that
+  a round was incomplete was a bare "0/36" and a colour change, so a disabled
+  Save button gave no clue about which condition was still unmet.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/space_xs">
+
+    <ImageView
+        android:id="@+id/iconCheck"
+        android:layout_width="@dimen/icon_sm"
+        android:layout_height="@dimen/icon_sm"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_circle_outline"
+        app:tint="@color/text_tertiary" />
+
+    <TextView
+        android:id="@+id/textCheck"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+        tools:text="Hearts 13 / 13" />
+
+</LinearLayout>

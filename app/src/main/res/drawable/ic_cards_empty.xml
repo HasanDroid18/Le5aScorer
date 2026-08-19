@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  72dp empty-state mark: a single face-up card, drawn as outline so it reads as
+  an empty slot waiting to be filled. Replaces the 🃏 / 🎴 / 🏆 emoji that
+  previously stood in for illustrations.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineJoin="round"
+        android:pathData="M22,8 L38,8 A4,4 0 0 1 42,12 L42,38 A4,4 0 0 1 38,42 L22,42 A4,4 0 0 1 18,38 L18,12 A4,4 0 0 1 22,8 z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M30,32 C30,32 22,26.5 22,21.5 C22,18.8 24.1,17 26.3,17 C27.9,17 29.3,17.9 30,19.2 C30.7,17.9 32.1,17 33.7,17 C35.9,17 38,18.8 38,21.5 C38,26.5 30,32 30,32 z" />
+</vector>

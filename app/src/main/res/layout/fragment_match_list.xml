@@ -2,103 +2,73 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_felt_table">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/felt_green_900"
-        android:elevation="4dp">
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat"
+        app:liftOnScroll="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/white"
-            app:menu="@menu/menu_match_list" />
+            app:menu="@menu/menu_match_list"
+            app:title="@string/app_name" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:tabMode="fixed"
-            app:tabGravity="fill"
-            app:tabTextColor="#80FFFFFF"
-            app:tabSelectedTextColor="@color/chip_gold"
-            app:tabIndicatorColor="@color/chip_gold"
-            app:tabIndicatorHeight="3dp" />
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- In Progress Tab Content -->
-        <LinearLayout
+        <!-- ===================== In progress ===================== -->
+        <FrameLayout
             android:id="@+id/layoutInProgress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
+            <!-- Bottom padding (rather than padding on the parent) keeps the
+                 last card scrollable clear of the FAB instead of clipping the
+                 list short. -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewInProgress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="8dp" />
+                android:paddingTop="@dimen/space_sm"
+                android:paddingBottom="@dimen/fab_scroll_clearance"
+                tools:listitem="@layout/item_match" />
 
-            <LinearLayout
+            <include
                 android:id="@+id/emptyStateInProgress"
+                layout="@layout/view_empty_state"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:visibility="gone"
-                android:padding="32dp">
+                tools:visibility="visible" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🃏"
-                    android:textSize="64sp"
-                    android:layout_marginBottom="16dp" />
+        </FrameLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_games_in_progress"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tap + to start a new match"
-                    android:textSize="14sp"
-                    android:textColor="#B0FFFFFF"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Completed Tab Content -->
-        <LinearLayout
+        <!-- ====================== Completed ====================== -->
+        <FrameLayout
             android:id="@+id/layoutCompleted"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -106,58 +76,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="8dp" />
+                android:paddingTop="@dimen/space_sm"
+                android:paddingBottom="@dimen/fab_scroll_clearance"
+                tools:listitem="@layout/item_match" />
 
-            <LinearLayout
+            <include
                 android:id="@+id/emptyStateCompleted"
+                layout="@layout/view_empty_state"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:padding="32dp">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🏆"
-                    android:textSize="64sp"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_completed_games"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Finished matches will appear here"
-                    android:textSize="14sp"
-                    android:textColor="#B0FFFFFF"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </FrameLayout>
 
     </FrameLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/chip_gold"
-        app:tint="@color/felt_green_900"
+        android:layout_margin="@dimen/screen_margin"
         android:contentDescription="@string/new_match"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:text="@string/new_match"
+        android:textAppearance="@style/TextAppearance.Le5a.Label"
+        app:backgroundTint="@color/brass_400"
+        app:icon="@drawable/ic_add"
+        app:iconTint="@color/felt_950"
+        app:elevation="@dimen/elev_float"
+        android:textColor="@color/felt_950" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

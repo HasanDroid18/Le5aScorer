@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Round entry.
+
+  Three questions have to be answerable at a glance: how far along is the round,
+  who am I scoring for, and what is still missing before I can save. The status
+  card answers the first and third (running total plus an explicit checklist),
+  and the "Scoring for" line above the play area answers the second.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,75 +15,74 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_felt_table">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/felt_green_900"
-        android:elevation="4dp"
-        app:title="@string/select_cards"
-        app:titleTextColor="@color/white"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/buttonReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:text="@string/reset"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            style="@style/Widget.Material3.Button.TextButton" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/select_cards">
 
-    </com.google.android.material.appbar.MaterialToolbar>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonReset"
+                style="@style/Widget.Le5a.Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:text="@string/reset"
+                app:icon="@drawable/ic_undo"
+                app:iconSize="@dimen/icon_sm" />
 
-    <!-- Scrollable Content -->
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:paddingBottom="@dimen/space_lg"
         app:layout_constraintBottom_toTopOf="@id/buttonSave"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:paddingBottom="16dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingTop="@dimen/space_md">
 
-            <!-- Round Status Card -->
+            <!-- ==================== Status ==================== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardStatus"
+                style="@style/Widget.Le5a.Card.Raised"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/status_invalid_bg"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/card_padding">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -88,112 +95,78 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/round_status"
-                                android:textSize="12sp"
-                                android:textColor="@color/status_invalid_text"
-                                android:textStyle="bold" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
 
                             <TextView
                                 android:id="@+id/textRoundTotal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0/36"
-                                android:textSize="32sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/white"
-                                android:layout_marginTop="4dp" />
+                                android:layout_marginTop="@dimen/space_xs"
+                                android:textAppearance="@style/TextAppearance.Le5a.Score.Display"
+                                tools:text="24 / 36" />
 
                         </LinearLayout>
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
                             android:id="@+id/progressRound"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:progress="0"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
                             android:max="36"
-                            app:indicatorSize="80dp"
-                            app:trackThickness="8dp"
-                            app:indicatorColor="?attr/colorPrimary"
-                            app:trackColor="#40FFFFFF" />
+                            android:progress="0"
+                            app:indicatorSize="64dp" />
 
                     </LinearLayout>
 
-                    <!-- Normal status badges (hidden when Double active) -->
+                    <!-- Checklist: what still has to be true to save. -->
                     <LinearLayout
                         android:id="@+id/layoutNormalStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <!-- Status badges row -->
-                        <LinearLayout
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="@dimen/space_md"
+                            android:background="@color/felt_outline" />
+
+                        <TextView
+                            style="@style/Widget.Le5a.SectionHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/round_checklist_title" />
+
+                        <include
+                            android:id="@+id/checkHearts"
+                            layout="@layout/view_check_row"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="12dp"
-                            android:gravity="center_vertical">
+                            android:layout_marginTop="@dimen/space_sm" />
 
-                            <TextView
-                                android:id="@+id/textHeartsRemaining"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/hearts_remaining"
-                                android:textSize="12sp"
-                                android:textColor="@color/white"
-                                android:drawableStart="@android:drawable/ic_menu_info_details"
-                                android:drawableTint="@color/suit_red"
-                                android:drawablePadding="4dp"
-                                tools:text="Hearts: 8/13" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <include
+                            android:id="@+id/checkQueen"
+                            layout="@layout/view_check_row"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
+                            android:layout_height="wrap_content" />
 
-                            <TextView
-                                android:id="@+id/textQAssigned"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="8dp"
-                                android:text="Q♠: —"
-                                android:textSize="12sp"
-                                android:textColor="@color/white"
-                                android:background="#20FFFFFF"
-                                android:padding="8dp"
-                                android:gravity="center"
-                                tools:text="Q♠: Player 1" />
-
-                            <TextView
-                                android:id="@+id/textTenAssigned"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="8dp"
-                                android:text="10♦: —"
-                                android:textSize="12sp"
-                                android:textColor="@color/white"
-                                android:background="#20FFFFFF"
-                                android:padding="8dp"
-                                android:gravity="center"
-                                tools:text="10♦: Player 2" />
-
-                        </LinearLayout>
+                        <include
+                            android:id="@+id/checkTen"
+                            layout="@layout/view_check_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
-                    <!-- Double status badge -->
+                    <!-- Double: one player takes everything, so the checklist
+                         does not apply. -->
                     <LinearLayout
                         android:id="@+id/layoutDoubleStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:background="@drawable/bg_pill_danger"
                         android:orientation="vertical"
-                        android:background="@color/danger_red_700"
-                        android:padding="12dp"
-                        android:layout_marginTop="12dp"
+                        android:padding="@dimen/space_md"
                         android:visibility="gone"
                         tools:visibility="visible">
 
@@ -201,300 +174,297 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/double_active"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/white" />
+                            android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                            android:textColor="@color/danger" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_xs"
+                            android:text="@string/double_subtitle"
+                            android:textAppearance="@style/TextAppearance.Le5a.Body.Small" />
+
                     </LinearLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Player Grid - 2x2 -->
+            <!-- ==================== Players ==================== -->
+            <TextView
+                android:id="@+id/textScoringForLabel"
+                style="@style/Widget.Le5a.SectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:text="@string/round_scoring_for" />
+
+            <TextView
+                android:id="@+id/textScoringFor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.Le5a.Title"
+                android:textColor="@color/brass_300"
+                tools:text="Ahmad" />
+
             <GridLayout
                 android:id="@+id/layoutPlayerRows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginTop="@dimen/space_md"
                 android:alignmentMode="alignMargins"
                 android:columnCount="2"
                 android:columnOrderPreserved="false"
                 android:rowCount="2"
-                android:useDefaultMargins="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardStatus">
+                android:useDefaultMargins="false">
 
-                <!-- Player 1 Block -->
                 <include
                     android:id="@+id/rowPlayer1"
                     layout="@layout/item_player_row"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_row="0"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    android:layout_margin="4dp" />
+                    android:layout_margin="@dimen/space_xs"
+                    android:layout_row="0" />
 
-                <!-- Player 2 Block -->
                 <include
                     android:id="@+id/rowPlayer2"
                     layout="@layout/item_player_row"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_row="0"
                     android:layout_column="1"
                     android:layout_columnWeight="1"
-                    android:layout_margin="4dp" />
+                    android:layout_margin="@dimen/space_xs"
+                    android:layout_row="0" />
 
-                <!-- Player 3 Block -->
                 <include
                     android:id="@+id/rowPlayer3"
                     layout="@layout/item_player_row"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_row="1"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    android:layout_margin="4dp" />
+                    android:layout_margin="@dimen/space_xs"
+                    android:layout_row="1" />
 
-                <!-- Player 4 Block -->
                 <include
                     android:id="@+id/rowPlayer4"
                     layout="@layout/item_player_row"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_row="1"
                     android:layout_column="1"
                     android:layout_columnWeight="1"
-                    android:layout_margin="4dp" />
+                    android:layout_margin="@dimen/space_xs"
+                    android:layout_row="1" />
 
             </GridLayout>
 
-            <!-- Play Area Container -->
+            <!-- ==================== Play area ====================
+                 A recess cut into the felt where the four cards lie. -->
             <FrameLayout
                 android:id="@+id/containerPlayArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_play_area"
-                android:padding="12dp"
-                app:layout_constraintTop_toBottomOf="@id/layoutPlayerRows"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_marginTop="@dimen/space_lg"
+                android:background="@drawable/bg_well"
+                android:padding="@dimen/space_md">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                    <!-- Hearts Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardHearts"
+                        style="@style/Widget.Le5a.Card.Playing.Clickable"
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
-                        android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="6dp"
-                        app:cardBackgroundColor="@color/card_ivory"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="#E0E0E0">
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:layout_weight="1">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_sm">
+
+                            <ImageView
+                                android:layout_width="@dimen/icon_lg"
+                                android:layout_height="@dimen/icon_lg"
+                                android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_suit_heart"
+                                app:tint="@color/ink_red" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="♥"
-                                android:textSize="36sp"
-                                android:textColor="@color/suit_red"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xs"
                                 android:text="@string/hearts_card"
-                                android:textSize="11sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/suit_black"
-                                android:layout_marginTop="2dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                                android:textColor="@color/ink" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/hearts_value"
-                                android:textSize="10sp"
-                                android:textColor="@color/suit_red"
-                                android:layout_marginTop="1dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                                android:textColor="@color/ink_muted" />
 
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Q Spades Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardQSpades"
+                        style="@style/Widget.Le5a.Card.Playing.Clickable"
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
-                        android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="6dp"
-                        app:cardBackgroundColor="@color/card_ivory"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="#E0E0E0">
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:layout_weight="1">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_sm">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/label_queen"
+                                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                                    android:textColor="@color/ink" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/icon_sm"
+                                    android:layout_height="@dimen/icon_sm"
+                                    android:layout_marginStart="2dp"
+                                    android:contentDescription="@null"
+                                    app:srcCompat="@drawable/ic_suit_spade"
+                                    app:tint="@color/ink" />
+
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xs"
                                 android:text="@string/q_spades_card"
-                                android:textSize="32sp"
-                                android:textColor="@color/suit_black"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bnt"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/suit_black"
-                                android:layout_marginTop="2dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                                android:textColor="@color/ink" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/q_spades_value"
-                                android:textSize="10sp"
-                                android:textColor="@color/suit_black"
-                                android:layout_marginTop="1dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                                android:textColor="@color/ink_muted" />
 
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- 10 Diamonds Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardTenDiamonds"
+                        style="@style/Widget.Le5a.Card.Playing.Clickable"
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
-                        android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="6dp"
-                        app:cardBackgroundColor="@color/card_ivory"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="#E0E0E0">
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:layout_weight="1">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_sm">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/label_ten"
+                                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                                    android:textColor="@color/ink_red" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/icon_sm"
+                                    android:layout_height="@dimen/icon_sm"
+                                    android:layout_marginStart="2dp"
+                                    android:contentDescription="@null"
+                                    app:srcCompat="@drawable/ic_suit_diamond"
+                                    app:tint="@color/ink_red" />
+
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xs"
                                 android:text="@string/ten_diamonds_card"
-                                android:textSize="26sp"
-                                android:textColor="@color/suit_red"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Denare"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/suit_black"
-                                android:layout_marginTop="2dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                                android:textColor="@color/ink" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/ten_diamonds_value"
-                                android:textSize="10sp"
-                                android:textColor="@color/suit_red"
-                                android:layout_marginTop="1dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                                android:textColor="@color/ink_muted" />
 
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Double Card -->
+                    <!-- The Double is not a card you take; it is a whole-round
+                         outcome, so it is styled as a face-down red back. -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardDouble"
+                        style="@style/Widget.Le5a.Card.Playing.Clickable"
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
+                        android:layout_height="@dimen/action_card_height"
                         android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="8dp"
-                        app:cardBackgroundColor="@color/danger_red_700"
-                        app:strokeWidth="2dp"
-                        app:strokeColor="@color/danger_red_800">
+                        app:cardBackgroundColor="@color/danger_strong"
+                        app:strokeColor="@color/danger"
+                        app:strokeWidth="@dimen/stroke_hairline">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_double_action">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/double_card"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/white" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Q+10"
-                                android:textSize="11sp"
-                                android:textColor="#E0FFFFFF"
-                                android:layout_marginTop="2dp" />
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_sm">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/double_value"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/white"
-                                android:layout_marginTop="4dp" />
+                                android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xs"
+                                android:text="@string/double_card"
+                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                                android:textColor="@color/text_primary" />
 
                         </LinearLayout>
 
@@ -504,63 +474,57 @@
 
             </FrameLayout>
 
-            <!-- Selected Actions Preview -->
+            <!-- Makes the +5 shortcut discoverable. The string for this gesture
+                 already existed but was never shown anywhere. -->
             <TextView
-                android:id="@+id/labelSelectedActions"
+                android:id="@+id/textHeartsHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Selected Actions"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/containerPlayArea"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_sm"
+                android:drawablePadding="@dimen/space_xs"
+                android:gravity="center_vertical"
+                android:text="@string/hearts_hint"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/text_tertiary"
+                app:drawableStartCompat="@drawable/ic_info"
+                app:drawableTint="@color/text_tertiary" />
+
+            <!-- ==================== Taken this round ==================== -->
+            <TextView
+                android:id="@+id/labelSelectedActions"
+                style="@style/Widget.Le5a.SectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:text="@string/selected_actions" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="4dp"
-                app:layout_constraintTop_toBottomOf="@id/labelSelectedActions"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                android:layout_marginTop="@dimen/space_sm"
+                app:chipSpacingHorizontal="@dimen/space_sm"
+                app:chipSpacingVertical="@dimen/space_xs" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </ScrollView>
 
-    <!-- Save Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSave"
+        style="@style/Widget.Le5a.Button.Primary"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/save_round"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/screen_margin"
         android:enabled="false"
-        android:backgroundTint="@color/felt_green_700"
-        app:icon="@android:drawable/ic_menu_save"
+        android:text="@string/save_round"
+        app:cornerRadius="@dimen/radius_pill"
+        app:icon="@drawable/ic_check"
         app:iconGravity="textStart"
-        app:iconTint="@color/white"
-        app:cornerRadius="16dp"
-        app:elevation="6dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/chip_gold_dark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

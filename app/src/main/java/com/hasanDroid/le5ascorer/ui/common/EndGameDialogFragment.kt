@@ -44,7 +44,7 @@ class EndGameDialogFragment : DialogFragment() {
         } else {
             Toast.makeText(
                 requireContext(),
-                "Camera permission is required to capture a photo",
+                R.string.camera_permission_required,
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -120,40 +120,9 @@ class EndGameDialogFragment : DialogFragment() {
     }
 
     private fun pickTeaseLine(): String {
-        val lines = listOf(
-            "يا زلمة شو هاللعب؟ كنت معنا ولا ضدنا؟ 😂",
-            "واضح إنك راهنت على الحظ… والحظ خانك 😅",
-            "اللعبة كانت حلوة… بس نهايتك أحلى 😏",
-            "في شي غلط بالورق… أو فيك؟ 🤔",
-            "ولا يهمك… في ناس بتتعلّم من الخسارة 😄",
-            "حسّيتك عم تجرّب أشياء جديدة… كلها غلط 😂",
-            "خسارة محترمة… بس ضحك أكتر 🤣",
-            "إنت اليوم كنت عامل guest appearance بس 🎭",
-            "ما تزعل… في ناس أسوأ منك… قليل بس في 😆",
-            "الورق كان عم يحكي مع الكل… إلا معك 😜",
-            "واضح إنك جاي تتمرّن مش تربح 😏",
-            "حلوة الروح الرياضية… لأن اللعب مش ماشي 😄",
-            "في أمل بالجيم الجاي… يمكن 😂",
-            "خسرت بس بثقة عالية… منقدّرها 👏",
-            "حاولت… وهيدا أهم شي… تقريباً 😅",
-            "لو في جائزة لأسوأ حظ… ربحتها 🏆",
-            "اللعبة بسيطة… بس شكلك معقّدها 😂",
-            "كنت قريب تفهم اللعبة… قريب كتير 😜",
-            "في شي درامي صار… إسمه نتيجتك 😆",
-            "واضح إنك عم تلعب مود الصعوبة: مستحيل 😏",
-            "خسارة بتعلّم… بس إنت بدك كورس كامل 😂",
-            "عم نعطيك boost للجيم الجاي 😄",
-            "مش غلط… بس مش صح كمان 😅",
-            "النية كانت تربح… التنفيذ كان قصة تانية 😂",
-            "يمكن لو غيرنا الورق… أو اللاعب 😏",
-            "في تقدم… بس بالعكس 😆",
-            "لو الحظ مادة بالجامعة… رسبت فيها 😜",
-            "عم تلعب challenge مع حالك؟ 😂",
-            "خسارة اليوم… meme لبكرا 😄",
-            "ولا مرة شفت حدا يخسر بهالإبداع 🤣"
-        )
-         return lines[Random.nextInt(lines.size)]
-     }
+        val lines = resources.getStringArray(R.array.end_game_tease_lines)
+        return lines[Random.nextInt(lines.size)]
+    }
 
      private fun launchCamera() {
          if (ContextCompat.checkSelfPermission(

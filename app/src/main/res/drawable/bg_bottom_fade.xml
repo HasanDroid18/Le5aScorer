@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Sits behind a sticky bottom button so scrolling content dissolves into the
+     table instead of being clipped by a hard edge. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <gradient
         android:type="linear"
         android:angle="270"
-        android:startColor="#00000000"
-        android:endColor="#CC000000" />
+        android:startColor="@color/transparent"
+        android:centerColor="@color/overlay_scrim"
+        android:endColor="@color/felt_950" />
 </shape>
-

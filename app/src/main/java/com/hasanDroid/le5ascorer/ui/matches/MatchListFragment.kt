@@ -12,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayout
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentMatchListBinding
-import com.google.android.material.tabs.TabLayout
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,29 +42,38 @@ class MatchListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        applyInsets()
         setupToolbar()
         setupTabs()
+        setupEmptyStates()
         setupRecyclerViews()
         setupFab()
         setupBackPressHandler()
         observeUiState()
     }
 
+    /** App bar takes the status bar; lists and FAB take the navigation bar. */
+    private fun applyInsets() {
+        binding.appBarLayout.applySystemBarInsets(top = true)
+        binding.recyclerViewInProgress.applySystemBarInsets(bottom = true)
+        binding.recyclerViewCompleted.applySystemBarInsets(bottom = true)
+        binding.fab.applySystemBarInsets(bottom = true, sides = false)
+    }
+
     private fun setupBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            // Exit app when back pressed on home screen
+            // Home screen: back exits the app.
             requireActivity().finish()
         }
     }
 
     private fun setupToolbar() {
-        binding.toolbar.title = getString(R.string.app_name)
-
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_settings -> {
-                    val action = MatchListFragmentDirections.actionMatchListFragmentToSettingsFragment()
-                    findNavController().navigate(action)
+                    findNavController().navigate(
+                        MatchListFragmentDirections.actionMatchListFragmentToSettingsFragment()
+                    )
                     true
                 }
                 else -> false
@@ -70,75 +81,60 @@ class MatchListFragment : Fragment() {
         }
     }
 
-
     private fun setupTabs() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.in_progress))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.completed))
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.position) {
-                    0 -> {
-                        binding.layoutInProgress.visibility = View.VISIBLE
-                        binding.layoutCompleted.visibility = View.GONE
-                        updateEmptyStates(
-                            inProgressAdapter.currentList.isEmpty(),
-                            completedAdapter.currentList.isEmpty()
-                        )
-                    }
-                    1 -> {
-                        binding.layoutInProgress.visibility = View.GONE
-                        binding.layoutCompleted.visibility = View.VISIBLE
-                        updateEmptyStates(
-                            inProgressAdapter.currentList.isEmpty(),
-                            completedAdapter.currentList.isEmpty()
-                        )
-                    }
-                }
+                val showInProgress = tab?.position == 0
+                binding.layoutInProgress.visibility =
+                    if (showInProgress) View.VISIBLE else View.GONE
+                binding.layoutCompleted.visibility =
+                    if (showInProgress) View.GONE else View.VISIBLE
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
         })
     }
 
-    private fun setupRecyclerViews() {
-        inProgressAdapter = MatchAdapter(
-            onMatchClick = { match ->
-                val action = MatchListFragmentDirections.actionMatchListFragmentToScoreboardFragment(match.id)
-                findNavController().navigate(action)
-            },
-            onDuplicateClick = { match ->
-                viewModel.duplicateMatch(match.id)
-            },
-            onDeleteClick = { match ->
-                showDeleteConfirmation(match.id)
-            }
-        )
+    private fun setupEmptyStates() {
+        with(binding.emptyStateInProgress) {
+            imageEmpty.setImageResource(R.drawable.ic_cards_empty)
+            textEmptyTitle.setText(R.string.no_games_in_progress)
+            textEmptyBody.setText(R.string.no_games_in_progress_hint)
+        }
+        with(binding.emptyStateCompleted) {
+            imageEmpty.setImageResource(R.drawable.ic_trophy)
+            textEmptyTitle.setText(R.string.no_completed_games)
+            textEmptyBody.setText(R.string.no_completed_games_hint)
+        }
+    }
 
-        completedAdapter = MatchAdapter(
-            onMatchClick = { match ->
-                val action = MatchListFragmentDirections.actionMatchListFragmentToScoreboardFragment(match.id)
-                findNavController().navigate(action)
-            },
-            onDuplicateClick = { match ->
-                viewModel.duplicateMatch(match.id)
-            },
-            onDeleteClick = { match ->
-                showDeleteConfirmation(match.id)
-            }
-        )
+    private fun setupRecyclerViews() {
+        inProgressAdapter = buildAdapter()
+        completedAdapter = buildAdapter()
 
         binding.recyclerViewInProgress.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = inProgressAdapter
         }
-
         binding.recyclerViewCompleted.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = completedAdapter
         }
     }
+
+    private fun buildAdapter() = MatchAdapter(
+        onMatchClick = { match ->
+            findNavController().navigate(
+                MatchListFragmentDirections.actionMatchListFragmentToScoreboardFragment(match.id)
+            )
+        },
+        onDuplicateClick = { match -> viewModel.duplicateMatch(match.id) },
+        onDeleteClick = { match -> showDeleteConfirmation(match.id) }
+    )
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
@@ -153,36 +149,33 @@ class MatchListFragment : Fragment() {
                     inProgressAdapter.submitList(state.inProgressMatches)
                     completedAdapter.submitList(state.completedMatches)
 
-                    // Update empty states visibility
-                    updateEmptyStates(state.inProgressMatches.isEmpty(), state.completedMatches.isEmpty())
+                    // Both tabs are updated regardless of which is on screen, so
+                    // switching tabs never shows a stale empty state.
+                    toggleEmptyState(
+                        isEmpty = state.inProgressMatches.isEmpty(),
+                        list = binding.recyclerViewInProgress,
+                        empty = binding.emptyStateInProgress.root
+                    )
+                    toggleEmptyState(
+                        isEmpty = state.completedMatches.isEmpty(),
+                        list = binding.recyclerViewCompleted,
+                        empty = binding.emptyStateCompleted.root
+                    )
                 }
             }
         }
     }
 
-    private fun updateEmptyStates(inProgressEmpty: Boolean, completedEmpty: Boolean) {
-        // Check which tab is selected
-        val selectedTab = binding.tabLayout.selectedTabPosition
-
-        if (selectedTab == 0) {
-            // In Progress tab
-            binding.recyclerViewInProgress.visibility = if (inProgressEmpty) View.GONE else View.VISIBLE
-            binding.emptyStateInProgress.visibility = if (inProgressEmpty) View.VISIBLE else View.GONE
-        } else {
-            // Completed tab
-            binding.recyclerViewCompleted.visibility = if (completedEmpty) View.GONE else View.VISIBLE
-            binding.emptyStateCompleted.visibility = if (completedEmpty) View.VISIBLE else View.GONE
-        }
+    private fun toggleEmptyState(isEmpty: Boolean, list: View, empty: View) {
+        list.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        empty.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-
     private fun showDeleteConfirmation(matchId: Long) {
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_match_title)
             .setMessage(R.string.delete_match_message)
-            .setPositiveButton(R.string.ok) { _, _ ->
-                viewModel.deleteMatch(matchId)
-            }
+            .setPositiveButton(R.string.delete_confirm) { _, _ -> viewModel.deleteMatch(matchId) }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
@@ -192,4 +185,3 @@ class MatchListFragment : Fragment() {
         _binding = null
     }
 }
-

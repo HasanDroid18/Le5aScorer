@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.databinding.FragmentNewMatchBinding
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,6 +44,7 @@ class NewMatchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        applyInsets()
         setupToolbar()
         setupInputs()
         setupTerminalScoreSelector()
@@ -50,6 +52,12 @@ class NewMatchFragment : Fragment() {
         setupCreateButton()
         observeUiState()
         playEntranceAnimation()
+    }
+
+    private fun applyInsets() {
+        binding.appBarLayout.applySystemBarInsets(top = true)
+        binding.scrollView.applySystemBarInsets(bottom = true)
+        binding.buttonCreate.applySystemBarInsets(bottom = true, sides = false)
     }
 
     private fun setupToolbar() {
@@ -140,32 +148,33 @@ class NewMatchFragment : Fragment() {
         }
     }
 
+    /**
+     * Cards rise in sequence, then the primary action. Views are referenced by
+     * id rather than by child index — the previous version walked
+     * `getChildAt(1).getChildAt(0)` and would have animated the wrong views (or
+     * crashed) the moment the layout's child order changed.
+     */
     private fun playEntranceAnimation() {
-        val scrollContent = (binding.root as ViewGroup).getChildAt(1) // NestedScrollView
-        val contentContainer = (scrollContent as ViewGroup).getChildAt(0) as ViewGroup
-
-        for (i in 0 until contentContainer.childCount) {
-            val child = contentContainer.getChildAt(i)
+        val staggered = listOf(binding.cardPlayers, binding.cardRules)
+        staggered.forEachIndexed { index, child ->
             child.alpha = 0f
-            child.translationY = 60f
-
+            child.translationY = ENTRANCE_RISE
             child.animate()
                 .alpha(1f)
                 .translationY(0f)
                 .setDuration(450)
-                .setStartDelay((i * 100L))
+                .setStartDelay(index * 90L)
                 .setInterpolator(DecelerateInterpolator(1.5f))
                 .start()
         }
 
-        // Animate the create button sliding up
         binding.buttonCreate.alpha = 0f
-        binding.buttonCreate.translationY = 80f
+        binding.buttonCreate.translationY = ENTRANCE_RISE * 1.5f
         binding.buttonCreate.animate()
             .alpha(1f)
             .translationY(0f)
             .setDuration(500)
-            .setStartDelay(350)
+            .setStartDelay(280)
             .setInterpolator(DecelerateInterpolator(2f))
             .start()
     }
@@ -184,6 +193,10 @@ class NewMatchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        const val ENTRANCE_RISE = 56f
     }
 }
 
