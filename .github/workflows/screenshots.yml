@@ -76,12 +76,16 @@ jobs:
       - name: Capture screenshots on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
-          target: google_apis
+          # API 33 with the plain AOSP image rather than google_apis: the app has
+          # no Play-services dependency, and the smaller image boots noticeably
+          # more reliably on CI. A previous run timed out waiting for boot.
+          api-level: 33
+          target: default
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-boot-timeout: 900
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save -camera-back none
           script: |
             adb shell settings put global window_animation_scale 0
             adb shell settings put global transition_animation_scale 0
@@ -125,6 +129,12 @@ jobs:
       - name: Commit screenshots
         if: always()
         run: |
+          # The emulator can fail before the script ever runs, in which case the
+          # directory does not exist at all — guard rather than dying on git add.
+          if [ -z "$(ls -A docs/screenshots 2>/dev/null)" ]; then
+            echo "No screenshots were captured; nothing to commit."
+            exit 0
+          fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f docs/screenshots/
