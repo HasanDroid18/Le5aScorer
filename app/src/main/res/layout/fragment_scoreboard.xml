@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Scoreboard.
+
+  The header and every row are built from the same three column dimensions
+  (scoreboard_round_col / scoreboard_gutter / scoreboard_action_col) with equal
+  card margins and padding, so the player columns line up structurally. They
+  previously matched only because two independently chosen sets of numbers
+  happened to add up the same.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,98 +16,114 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_felt_table">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/felt_green_900"
-        android:elevation="4dp"
-        app:title="@string/scoreboard"
-        app:titleTextColor="@color/white"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Winner Banner -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/scoreboard" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Result banner. This announces who *lost*, so it is styled as an error
+         state — it used to be a green "success" card carrying the loser's name. -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardWinner"
+        style="@style/Widget.Le5a.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/space_md"
         android:visibility="gone"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@color/status_valid_bg"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:cardBackgroundColor="@color/danger_container"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:strokeColor="@color/danger"
         tools:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/textWinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                tools:text="Winner: Ahmad" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Player Names Header Card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardPlayerNames"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/felt_green_800"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardWinner">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:padding="@dimen/card_padding">
 
-            <!-- Round Label -->
+            <ImageView
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_trophy"
+                app:tint="@color/danger" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_md"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/match_over_title"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                    android:textColor="@color/danger" />
+
+                <TextView
+                    android:id="@+id/textWinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textAppearance="@style/TextAppearance.Le5a.Title"
+                    tools:text="Ahmad reached the target" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- ==================== Column header ==================== -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardPlayerNames"
+        style="@style/Widget.Le5a.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/space_md"
+        app:cardBackgroundColor="@color/felt_850"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardWinner">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_md">
+
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="@dimen/scoreboard_round_col"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Rnd"
-                android:textColor="@color/chip_gold"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:text="@string/scoreboard_round_column"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
 
-            <!-- Player Names -->
             <LinearLayout
                 android:id="@+id/layoutPlayerNamesHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="@dimen/scoreboard_gutter"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
@@ -110,9 +135,8 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                    android:textColor="@color/text_primary"
                     tools:text="Ahmad" />
 
                 <TextView
@@ -123,10 +147,9 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    tools:text="Sarah" />
+                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                    android:textColor="@color/text_primary"
+                    tools:text="Sara" />
 
                 <TextView
                     android:id="@+id/textHeaderPlayer3"
@@ -136,9 +159,8 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                    android:textColor="@color/text_primary"
                     tools:text="Khaled" />
 
                 <TextView
@@ -149,133 +171,110 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                    android:textColor="@color/text_primary"
                     tools:text="Fatima" />
 
             </LinearLayout>
 
-            <!-- Edit Spacer -->
+            <!-- Mirrors the edit button's column on each row. -->
             <View
-                android:layout_width="48dp"
-                android:layout_height="1dp" />
+                android:layout_width="@dimen/scoreboard_action_col"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/scoreboard_gutter" />
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Scrollable Content Area -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/cardPlayerNames"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_lg"
         app:layout_constraintBottom_toTopOf="@id/layoutButtons"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cardPlayerNames">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="4dp"
-            android:paddingBottom="16dp">
+            android:orientation="vertical">
 
-            <!-- Rounds RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_scoreboard_row" />
 
-            <!-- Empty State -->
             <include
                 android:id="@+id/emptyState"
-                layout="@layout/empty_scoreboard"
+                layout="@layout/view_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Progress Bar -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/space_2xl"
+                android:indeterminateTint="@color/brass_400"
                 android:visibility="gone" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Buttons Container -->
     <LinearLayout
         android:id="@+id/layoutButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="16dp"
+        android:paddingHorizontal="@dimen/screen_margin"
+        android:paddingBottom="@dimen/screen_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Add Round Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonAddRound"
+            style="@style/Widget.Le5a.Button.Primary"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:text="@string/add_round"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/felt_green_700"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconGravity="textStart"
-            app:iconTint="@color/white"
-            app:cornerRadius="16dp"
-            app:elevation="6dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/chip_gold_dark" />
+            app:cornerRadius="@dimen/radius_pill"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart" />
 
-        <!-- Back to Home Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonBackToHome"
+            style="@style/Widget.Le5a.Button.Secondary"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="8dp"
-            android:text="Back to Matches"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/felt_green_700"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_matches"
             android:visibility="gone"
-            app:icon="@drawable/ic_back"
-            app:iconGravity="textStart"
-            app:iconTint="@color/white"
-            app:cornerRadius="16dp"
-            app:elevation="6dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/chip_gold_dark" />
+            app:cornerRadius="@dimen/radius_pill"
+            app:icon="@drawable/ic_arrow_back"
+            app:iconGravity="textStart" />
 
     </LinearLayout>
 
-    <!-- Full-screen confetti overlay (shown only when game ends) -->
     <include
         android:id="@+id/confettiOverlay"
         layout="@layout/view_fullscreen_confetti"
         android:visibility="gone"
-        android:elevation="50dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

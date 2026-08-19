@@ -19,6 +19,8 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.hasandroid.le5ascorer", appContext.packageName)
+        // applicationId is com.hasanDroid.le5ascorer — note the capital D. This
+        // assertion had it lowercase, so the test could never have passed.
+        assertEquals("com.hasanDroid.le5ascorer", appContext.packageName)
     }
 }

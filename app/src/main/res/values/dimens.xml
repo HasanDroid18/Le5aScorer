@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Spacing, radius and elevation scales.
+
+  Before this file the app used ad-hoc values (4/6/8/10/12/14/16/18/20/24/32dp
+  for spacing, 10/12/14/16/20/24/26/28dp for corners, 3/4/6/8/10/12dp for
+  elevation). Layouts now pick from these steps only.
+-->
+<resources>
+
+    <!-- Spacing — a 4dp base grid. -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">12dp</dimen>
+    <dimen name="space_lg">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_2xl">32dp</dimen>
+    <dimen name="space_3xl">48dp</dimen>
+
+    <!-- Corner radii. -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">14dp</dimen>
+    <dimen name="radius_lg">20dp</dimen>
+    <dimen name="radius_pill">100dp</dimen>
+
+    <!-- Elevation. Depth carries hierarchy now that cards no longer all
+         wear a gold stroke. -->
+    <dimen name="elev_flat">0dp</dimen>
+    <dimen name="elev_raised">2dp</dimen>
+    <dimen name="elev_card">4dp</dimen>
+    <dimen name="elev_float">8dp</dimen>
+    <dimen name="elev_dialog">16dp</dimen>
+
+    <!-- Strokes. -->
+    <dimen name="stroke_none">0dp</dimen>
+    <dimen name="stroke_hairline">1dp</dimen>
+    <dimen name="stroke_selected">2dp</dimen>
+
+    <!-- Layout constants. -->
+    <dimen name="screen_margin">16dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="touch_min">48dp</dimen>
+    <dimen name="icon_sm">18dp</dimen>
+    <dimen name="icon_md">24dp</dimen>
+    <dimen name="icon_lg">32dp</dimen>
+    <dimen name="icon_empty_state">72dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+
+    <!-- Scoreboard grid. The round column and the trailing action column are
+         shared by fragment_scoreboard's header and item_scoreboard_row, so the
+         columns line up structurally instead of by coincidence. -->
+    <dimen name="scoreboard_round_col">44dp</dimen>
+    <dimen name="scoreboard_action_col">48dp</dimen>
+    <dimen name="scoreboard_gutter">12dp</dimen>
+
+    <!-- Round entry. -->
+    <dimen name="action_card_height">112dp</dimen>
+    <dimen name="match_avatar">72dp</dimen>
+
+    <!-- Clearance so scrolling content is not hidden behind the FAB or a
+         sticky bottom button. -->
+    <dimen name="fab_scroll_clearance">88dp</dimen>
+    <dimen name="sticky_button_clearance">104dp</dimen>
+
+</resources>

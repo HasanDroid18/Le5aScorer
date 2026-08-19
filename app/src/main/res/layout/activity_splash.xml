@@ -2,55 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_felt_table">
 
-    <!-- Lottie Animation View -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimation"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:scaleType="fitCenter"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.6"
         app:layout_constraintHeight_percent="0.5"
-        app:lottie_rawRes="@raw/splash_animation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.6"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
+        app:lottie_rawRes="@raw/splash_animation"
         app:lottie_speed="1.0" />
 
-    <!-- App Name (fallback) -->
     <TextView
         android:id="@+id/textAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="32sp"
-        android:textStyle="bold"
+        android:layout_marginTop="@dimen/space_xl"
         android:alpha="0"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintTop_toBottomOf="@id/lottieAnimation"
+        android:letterSpacing="0.02"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.Le5a.Display"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/lottieAnimation" />
 
-    <!-- Version Info -->
+    <!-- Filled from the package's real versionName; this used to be a hardcoded
+         "v2.0" that had already drifted from the shipped version. -->
     <TextView
         android:id="@+id/textVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:text="v2.0"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:layout_marginBottom="@dimen/space_2xl"
+        android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+        android:textColor="@color/text_tertiary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="v2.0.2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

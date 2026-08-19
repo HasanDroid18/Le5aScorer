@@ -1,179 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  A match card.
+
+  Reading order: who is playing -> what the rules are -> who is ahead ->
+  when and what state. The leader block sits in its own row rather than
+  floating over the metadata (the previous 80dp avatar was constrained only to
+  the players line and could overlap the date on narrow screens), and a barrier
+  guarantees the footer clears whichever of the two is taller.
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card.Clickable"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="6dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardBackgroundColor="@color/felt_green_800"
-    app:strokeWidth="2dp"
-    app:strokeColor="@color/chip_gold_dark">
+    android:layout_marginHorizontal="@dimen/screen_margin"
+    android:layout_marginVertical="@dimen/space_xs">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingStart="@dimen/card_padding"
+        android:paddingTop="@dimen/space_md"
+        android:paddingEnd="@dimen/space_xs"
+        android:paddingBottom="@dimen/card_padding">
 
         <TextView
             android:id="@+id/textPlayers"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/space_xs"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Le5a.Title"
             app:layout_constraintEnd_toStartOf="@id/buttonMenu"
-            tools:text="Hasan, Mahdi, Ali, Hadi" />
-
-        <ImageButton
-            android:id="@+id/buttonMenu"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="-12dp"
-            android:layout_marginTop="-12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_more_vert"
-            app:tint="@color/chip_gold"
-            android:contentDescription="@string/settings"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            tools:text="Ahmad, Sara, Khaled, Fatima" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonMenu"
+            style="@style/Widget.Le5a.Button.Icon"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            android:contentDescription="@string/cd_match_options"
+            app:icon="@drawable/ic_more_vert"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textRuleSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            android:textColor="#E0FFFFFF"
-            app:layout_constraintTop_toBottomOf="@id/textPlayers"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/space_xs"
+            android:layout_marginEnd="@dimen/space_md"
+            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Terminal: 101 • Individual" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPlayers"
+            tools:text="Target 101 · Individual" />
 
-        <!-- Left Side: Rounds and Status -->
-        <LinearLayout
-            android:id="@+id/layoutInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/textRuleSummary"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <TextView
-                android:id="@+id/textRounds"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="#B0FFFFFF"
-                android:drawableStart="@drawable/ic_cards"
-                android:drawablePadding="4dp"
-                android:drawableTint="@color/chip_gold"
-                tools:text="5 Rounds" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="12dp"
-                android:background="#40FFFFFF" />
-
-            <TextView
-                android:id="@+id/textStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="#4CAF50"
-                tools:text="Completed" />
-
-        </LinearLayout>
-
-        <!-- Right Side: Leading Player Card -->
+        <!-- ===================== Leader block =====================
+             Every view here belongs to groupLeader, so the adapter shows or
+             hides the label, name and score together with the photo. -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLeadingPlayer"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/card_ivory"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/chip_gold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPlayers"
-            tools:visibility="visible">
+            android:layout_width="@dimen/match_avatar"
+            android:layout_height="@dimen/match_avatar"
+            android:layout_marginTop="@dimen/space_lg"
+            app:cardBackgroundColor="@color/felt_700"
+            app:cardCornerRadius="@dimen/radius_md"
+            app:cardElevation="@dimen/elev_flat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textRuleSummary"
+            app:strokeColor="@color/felt_outline"
+            app:strokeWidth="@dimen/stroke_hairline">
 
             <ImageView
                 android:id="@+id/loserImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/cd_leading_player_photo"
+                android:padding="@dimen/space_lg"
                 android:scaleType="centerCrop"
-                android:contentDescription="@string/leading_player_avatar"
+                app:srcCompat="@drawable/ic_person"
+                app:tint="@color/text_tertiary"
                 tools:srcCompat="@tools:sample/avatars" />
 
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/textDate"
+            android:id="@+id/textLeadingLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="12sp"
-            android:textColor="#80FFFFFF"
-            app:layout_constraintTop_toBottomOf="@id/layoutInfo"
+            android:layout_marginStart="@dimen/space_md"
+            android:text="@string/match_leading_label"
+            android:textAppearance="@style/TextAppearance.Le5a.Overline"
+            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
+            app:layout_constraintTop_toTopOf="@id/cardLeadingPlayer" />
+
+        <TextView
+            android:id="@+id/textLeaderName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_xs"
+            android:layout_marginEnd="@dimen/space_md"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
+            app:layout_constraintTop_toBottomOf="@id/textLeadingLabel"
+            tools:text="Ahmad" />
+
+        <TextView
+            android:id="@+id/textLeaderScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_md"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+            android:textColor="@color/brass_300"
+            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
+            app:layout_constraintTop_toBottomOf="@id/textLeaderName"
+            tools:text="45" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupLeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="cardLeadingPlayer,textLeadingLabel,textLeaderName,textLeaderScore"
+            tools:visibility="visible" />
+
+        <!-- The footer sits below whichever is taller: the leader block or the
+             rule summary when there is no leader yet. -->
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierLeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierAllowsGoneWidgets="false"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="cardLeadingPlayer,textLeaderScore,textRuleSummary" />
+
+        <!-- ======================= Footer ======================= -->
+        <TextView
+            android:id="@+id/textRounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:drawablePadding="@dimen/space_xs"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+            app:drawableStartCompat="@drawable/ic_card_stack"
+            app:drawableTint="@color/text_tertiary"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrierLeader"
+            tools:text="5 rounds" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_md"
+            android:layout_marginEnd="@dimen/space_sm"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+            android:textColor="@color/text_tertiary"
+            app:layout_constraintBottom_toBottomOf="@id/textRounds"
+            app:layout_constraintEnd_toStartOf="@id/textStatus"
+            app:layout_constraintStart_toEndOf="@id/textRounds"
+            app:layout_constraintTop_toTopOf="@id/textRounds"
             tools:text="Nov 30, 2025 15:30" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@+id/textDate"
-            app:layout_constraintTop_toBottomOf="@+id/layoutInfo">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:letterSpacing="0.1"
-                android:text="Leading"
-                android:textAllCaps="true"
-                android:textColor="#80000000"
-                android:textSize="9sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textLeaderName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:layout_marginStart="4dp"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                tools:text="Ahmad" />
-
-            <TextView
-                android:id="@+id/textLeaderScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/chip_gold_dark"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginStart="4dp"
-                tools:text="45" />
-
-
-        </LinearLayout>
+            android:layout_marginEnd="@dimen/space_md"
+            android:background="@drawable/bg_pill_neutral"
+            android:paddingHorizontal="@dimen/space_md"
+            android:paddingVertical="@dimen/space_xs"
+            android:textAppearance="@style/TextAppearance.Le5a.Overline"
+            app:layout_constraintBottom_toBottomOf="@id/textRounds"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textRounds"
+            tools:text="In Progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
-

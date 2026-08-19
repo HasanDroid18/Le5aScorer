@@ -1,6 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 27+ only: let the splash draw into display cutouts (notches, U-shaped
+  cameras).
+
+  This inherits SplashBase explicitly. A style name resolves to exactly one
+  best-matching entry — buckets do not merge — so the previous parentless
+  redeclaration here silently stripped the splash's background, fullscreen flag
+  and translucency on every API 27+ device.
+-->
 <resources>
-    <!-- API 27+ only: allow drawing into display cutouts (notches/U-shape cameras) -->
-    <style name="Theme.Le5aScorer.Splash">
+    <style name="Theme.Le5aScorer.Splash" parent="Theme.Le5aScorer.SplashBase">
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 </resources>

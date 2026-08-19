@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  The table. A soft radial fall-off from a slightly lifted centre to a dark
+  edge, so the surface reads as lit from above rather than as a flat fill.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:type="radial"
-        android:gradientRadius="800dp"
-        android:centerColor="@color/felt_green_700"
-        android:startColor="@color/felt_green_600"
-        android:endColor="@color/felt_green_900" />
+        android:gradientRadius="640dp"
+        android:centerX="0.5"
+        android:centerY="0.32"
+        android:startColor="@color/felt_800"
+        android:centerColor="@color/felt_900"
+        android:endColor="@color/felt_950" />
 </shape>
-

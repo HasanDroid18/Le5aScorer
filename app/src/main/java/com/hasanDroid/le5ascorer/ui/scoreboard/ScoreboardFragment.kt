@@ -17,6 +17,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentScoreboardBinding
 import com.hasanDroid.le5ascorer.ui.common.EndGameDialogFragment
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -53,7 +54,9 @@ class ScoreboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        applyInsets()
         setupToolbar()
+        setupEmptyState()
         setupRecyclerView()
         setupAddRoundButton()
 
@@ -61,10 +64,21 @@ class ScoreboardFragment : Fragment() {
         observeUiState()
     }
 
+    private fun applyInsets() {
+        binding.appBarLayout.applySystemBarInsets(top = true)
+        binding.layoutButtons.applySystemBarInsets(bottom = true)
+    }
+
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    private fun setupEmptyState() {
+        binding.emptyState.imageEmpty.setImageResource(R.drawable.ic_cards_empty)
+        binding.emptyState.textEmptyTitle.setText(R.string.no_rounds_yet)
+        binding.emptyState.textEmptyBody.setText(R.string.no_rounds_yet_hint)
     }
 
     private fun setupRecyclerView() {
@@ -115,35 +129,30 @@ class ScoreboardFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     state.matchDetail?.let { detail ->
-                        binding.toolbar.title = "Scoreboard"
-
                         // Set player names in header
                         val playerNames = detail.match.players.map { it.name }
-                        binding.textHeaderPlayer1.text = playerNames.getOrNull(0) ?: "P1"
-                        binding.textHeaderPlayer2.text = playerNames.getOrNull(1) ?: "P2"
-                        binding.textHeaderPlayer3.text = playerNames.getOrNull(2) ?: "P3"
-                        binding.textHeaderPlayer4.text = playerNames.getOrNull(3) ?: "P4"
-
-                        // Submit data to adapter
-                        adapter.submitData(playerNames, detail.scoreboard, detail.rounds)
-
-                        // Show/hide empty state
-                        if (detail.scoreboard.isEmpty()) {
-                            binding.emptyState.root.visibility = View.VISIBLE
-                            binding.recyclerView.visibility = View.GONE
-                            binding.cardPlayerNames.visibility = View.VISIBLE
-                        } else {
-                            binding.emptyState.root.visibility = View.GONE
-                            binding.recyclerView.visibility = View.VISIBLE
-                            binding.cardPlayerNames.visibility = View.VISIBLE
+                        val headers = listOf(
+                            binding.textHeaderPlayer1, binding.textHeaderPlayer2,
+                            binding.textHeaderPlayer3, binding.textHeaderPlayer4
+                        )
+                        headers.forEachIndexed { index, view ->
+                            view.text = playerNames.getOrNull(index).orEmpty()
                         }
+
+                        adapter.submitData(detail.scoreboard, detail.rounds)
+
+                        val hasRounds = detail.scoreboard.isNotEmpty()
+                        binding.emptyState.root.visibility =
+                            if (hasRounds) View.GONE else View.VISIBLE
+                        binding.recyclerView.visibility =
+                            if (hasRounds) View.VISIBLE else View.GONE
 
                         // Check if game is over (someone reached target = LOSER)
                         if (state.gameOver != null) {
                             // Game is over, show loser and hide Add Round button
                             binding.cardWinner.visibility = View.VISIBLE
                             binding.textWinner.text = getString(
-                                R.string.label_loser_names,
+                                R.string.match_over_loser,
                                 state.gameOver.loserNames.joinToString(", ")
                             )
                             binding.buttonAddRound.visibility = View.GONE

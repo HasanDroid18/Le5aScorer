@@ -1,92 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  End-game dialog. Sits in a transparent full-screen window so the confetti
+  plays behind it rather than behind a dimmed scrim.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
-    android:background="@android:color/transparent">
-
-    <!-- Semi-transparent scrim handled by the dialog window background in the theme overlay -->
+    android:background="@android:color/transparent"
+    android:padding="@dimen/space_xl">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
+        style="@style/Widget.Le5a.Card.Raised"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
-        app:cardBackgroundColor="@color/card_ivory">
+        app:cardCornerRadius="@dimen/radius_lg"
+        app:cardElevation="@dimen/elev_dialog">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="@dimen/space_xl">
 
-            <!-- Confetti animation is shown full-screen (outside this card) -->
+            <ImageView
+                android:layout_width="@dimen/icon_lg"
+                android:layout_height="@dimen/icon_lg"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_trophy"
+                app:tint="@color/brass_400" />
 
             <TextView
                 android:id="@+id/textTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/space_md"
                 android:gravity="center"
                 android:text="@string/end_game_title"
-                android:textColor="@color/suit_black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.Le5a.Headline" />
 
             <TextView
                 android:id="@+id/textLoserLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/space_lg"
                 android:gravity="center"
                 android:text="@string/end_game_loser_label"
-                android:textColor="@color/status_invalid_text"
-                android:textSize="14sp" />
+                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
 
             <TextView
                 android:id="@+id/textLoser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
                 android:gravity="center"
-                android:text="@string/not_assigned"
-                android:textColor="@color/danger_red_800"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.Le5a.Display"
+                android:textColor="@color/danger"
+                tools:text="Ahmad" />
 
             <TextView
                 android:id="@+id/textTease"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/space_md"
                 android:gravity="center"
-                android:textColor="@color/suit_black"
-                android:textSize="15sp"
-                android:text="" />
+                android:textAppearance="@style/TextAppearance.Le5a.Body"
+                tools:text="ولا مرة شفت حدا يخسر بهالإبداع" />
 
-             <com.google.android.material.button.MaterialButton
-                 android:id="@+id/buttonCapturePhoto"
-                 android:layout_width="match_parent"
-                 android:layout_height="56dp"
-                 android:layout_marginTop="18dp"
-                 android:text="📸 Capture Loser Photo"
-                 android:textStyle="bold"
-                 android:backgroundTint="@color/chip_gold"
-                 android:textColor="@color/suit_black"
-                 app:cornerRadius="16dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCapturePhoto"
+                style="@style/Widget.Le5a.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:text="@string/end_game_capture_photo"
+                app:cornerRadius="@dimen/radius_pill"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textStart" />
 
-             <com.google.android.material.button.MaterialButton
-                 android:id="@+id/buttonShowRoundScores"
-                 android:layout_width="match_parent"
-                 android:layout_height="56dp"
-                 android:layout_marginTop="12dp"
-                 android:text="@string/end_game_show_round_scores"
-                 android:textStyle="bold"
-                 android:backgroundTint="@color/felt_green_900"
-                 android:textColor="@color/white"
-                 app:cornerRadius="16dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonShowRoundScores"
+                style="@style/Widget.Le5a.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/end_game_show_round_scores"
+                app:cornerRadius="@dimen/radius_pill" />
 
         </LinearLayout>
 

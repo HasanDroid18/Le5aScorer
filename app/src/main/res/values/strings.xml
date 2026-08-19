@@ -1,107 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  All user-visible copy. Nothing is hardcoded in layouts or in Kotlin any more,
+  so the app can be translated without touching code.
+-->
 <resources>
     <string name="app_name">Le5a Scorer</string>
 
-    <!-- Match List -->
+    <!-- ==================== Match list ==================== -->
     <string name="in_progress">In Progress</string>
     <string name="completed">Completed</string>
     <string name="no_games_in_progress">No games in progress</string>
+    <string name="no_games_in_progress_hint">Tap the + button to deal a new match</string>
     <string name="no_completed_games">No completed games</string>
+    <string name="no_completed_games_hint">Finished matches land here</string>
     <string name="settings">Settings</string>
+    <string name="new_match">New Match</string>
 
-    <!-- Match Item -->
-    <string name="rounds">Rounds: %d</string>
-    <string name="terminal_score">Terminal: %d</string>
+    <!-- ==================== Match card ==================== -->
     <string name="rule_individual">Individual</string>
     <string name="rule_team">Team</string>
+    <!-- e.g. "Target 101 · Individual" -->
+    <string name="match_rule_summary">Target %1$d · %2$s</string>
+    <plurals name="match_round_count">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <string name="match_leading_label">Leading</string>
     <string name="duplicate">Duplicate</string>
     <string name="delete">Delete</string>
-    <string name="delete_match_title">Delete Match</string>
-    <string name="delete_match_message">Are you sure you want to delete this match?</string>
+    <string name="delete_match_title">Delete match?</string>
+    <string name="delete_match_message">This match and all of its rounds will be permanently removed.</string>
     <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="leading_player_avatar">Leading player avatar</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="cd_match_options">Match options</string>
+    <string name="cd_leading_player_photo">Leading player photo</string>
 
-    <!-- New Match -->
-    <string name="new_match">New Match</string>
-    <string name="new_match_header_emoji">🃏</string>
-    <string name="new_match_subtitle">Set up your game</string>
-    <string name="emoji_team">👥</string>
-    <string name="vs_label">VS</string>
-    <string name="emoji_target">🎯</string>
-    <string name="emoji_scale">⚖️</string>
-    <string name="emoji_lightbulb">💡</string>
-    <string name="cd_individual_rule">Individual scoring rule</string>
-    <string name="cd_team_rule">Team scoring rule</string>
-    <string name="cd_create_match">Create new match</string>
+    <!-- ==================== New match ==================== -->
     <string name="first_team">First Team</string>
     <string name="second_team">Second Team</string>
+    <string name="vs_label">VS</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="player_3">Player 3</string>
     <string name="player_4">Player 4</string>
-    <string name="terminal_score_label">Terminal Score</string>
-    <string name="score_rule">Score Rule</string>
+    <string name="player_hint_1">e.g. Ahmad</string>
+    <string name="player_hint_2">e.g. Sara</string>
+    <string name="player_hint_3">e.g. Khaled</string>
+    <string name="player_hint_4">e.g. Fatima</string>
+    <string name="terminal_score_label">Target Score</string>
+    <string name="terminal_51">51</string>
+    <string name="terminal_101">101</string>
+    <string name="terminal_151">151</string>
+    <string name="cd_terminal_51">Target score 51</string>
+    <string name="cd_terminal_101">Target score 101</string>
+    <string name="cd_terminal_151">Target score 151</string>
+    <string name="score_rule">Scoring</string>
     <string name="create_match">Create Match</string>
-    <string name="rule_individual_desc">Each player total determines result</string>
-    <string name="rule_team_desc">Sum of each team total determines result</string>
-    <string name="all_players_required">All 4 player names are required</string>
+    <string name="rule_individual_desc">Each player\'s own total decides the result.</string>
+    <string name="rule_team_desc">The two team totals are combined and compared.</string>
+    <string name="cd_individual_rule">Individual scoring rule</string>
+    <string name="cd_team_rule">Team scoring rule</string>
+    <string name="cd_create_match">Create new match</string>
 
-    <!-- Scoreboard -->
+    <!-- ==================== Scoreboard ==================== -->
     <string name="scoreboard">Scoreboard</string>
     <string name="add_round">Add Round</string>
-    <string name="edit_round">Edit Round</string>
-    <string name="round_number">Round %d</string>
-    <string name="match_completed">Match Completed!</string>
-    <string name="winner">Winner: %s</string>
+    <string name="edit_round">Edit round</string>
+    <string name="back_to_matches">Back to Matches</string>
+    <string name="scoreboard_round_column">Rnd</string>
+    <string name="no_rounds_yet">No rounds yet</string>
+    <string name="no_rounds_yet_hint">Add the first round to start tracking scores.</string>
+    <string name="match_over_title">Match over</string>
+    <!-- Shown when the match ends; %s is one or more names. -->
+    <string name="match_over_loser">%s reached the target</string>
+    <string name="cd_player_column">Score column for %s</string>
 
-    <!-- Round Entry -->
-    <string name="hearts">+1 Heart</string>
-    <string name="queen_spades">+13 Bnt Baston</string>
-    <string name="ten_diamonds">+10 Denare</string>
-    <string name="round_total">Round Total: %d</string>
-    <string name="save_round">Save Round</string>
+    <!-- ==================== Round entry ==================== -->
     <string name="select_cards">Select Cards</string>
-    <string name="double_detected">DOUBLE! 37 Points</string>
-    <string name="total_hearts">Total Hearts: %d/13</string>
-
-    <!-- Card Table UI -->
-    <string name="round_status">Round Status</string>
-    <string name="hearts_remaining">Hearts: %d/13</string>
-    <string name="q_assigned">Q♠: %s</string>
-    <string name="ten_assigned">10♦: %s</string>
-    <string name="not_assigned">—</string>
-    <string name="double_active">DOUBLE ACTIVE</string>
-    <string name="double_subtitle">Other players set to 0</string>
-    <string name="hearts_card">Hearts</string>
-    <string name="hearts_value">+1</string>
-    <string name="q_spades_card">Q♠</string>
-    <string name="q_spades_value">+13</string>
-    <string name="ten_diamonds_card">10♦</string>
-    <string name="ten_diamonds_value">+10</string>
-    <string name="double_card">DOUBLE</string>
-    <string name="double_value">37</string>
-    <string name="select_player_first">Select a player first</string>
-    <string name="tap_to_remove">Tap to remove</string>
-    <string name="long_press_for_five">Long press +5 hearts</string>
-    <string name="round_valid">✓ VALID</string>
-    <string name="round_invalid">Total: %d/36 or 37</string>
+    <string name="save_round">Save Round</string>
     <string name="reset">Reset</string>
+    <string name="round_status">Round total</string>
+    <!-- "12 / 36" — the running total against the required round total. -->
+    <string name="round_total_format">%1$d / %2$d</string>
+    <string name="round_scoring_for">Scoring for</string>
+    <string name="round_checklist_title">To save this round</string>
+    <string name="check_hearts">Hearts %1$d / %2$d</string>
+    <string name="check_queen">Q♠ assigned</string>
+    <string name="check_ten">10♦ assigned</string>
+    <string name="check_queen_to">Q♠ · %s</string>
+    <string name="check_ten_to">10♦ · %s</string>
+    <string name="double_active">Double</string>
+    <string name="double_subtitle">One player takes everything — 37 points, everyone else scores zero.</string>
+    <string name="hearts_card">Hearts</string>
+    <string name="hearts_value">+1 each</string>
+    <string name="hearts_hint">Hold for +5</string>
+    <string name="q_spades_card">Queen</string>
+    <string name="q_spades_value">+13</string>
+    <string name="ten_diamonds_card">Ten</string>
+    <string name="ten_diamonds_value">+10</string>
+    <string name="double_card">Double</string>
+    <string name="double_value">37</string>
+    <string name="selected_actions">This round</string>
+    <string name="heart_count_format">×%d</string>
+    <string name="label_queen">Q</string>
+    <string name="label_ten">10</string>
+    <string name="cd_hearts">Hearts</string>
+    <string name="cd_queen_spades">Queen of spades</string>
+    <string name="cd_ten_diamonds">Ten of diamonds</string>
+    <!-- Removable chips. Each carries a suit icon, so the label supplies only
+         the player and the rank/count — never a repeated suit symbol. -->
+    <string name="chip_hearts">%1$s · ×%2$d</string>
+    <string name="chip_queen">%1$s · %2$s</string>
+    <string name="chip_ten">%1$s · %2$s</string>
+    <string name="cd_remove_action">Remove</string>
+    <string name="cd_select_player">Select %s</string>
 
-    <!-- Settings -->
-    <string name="settings_title">Settings</string>
-    <string name="contact_support">Contact Support</string>
-    <string name="rate_this_app">Rate this app</string>
-    <string name="placeholder">hasantahadroid@gmail.com</string>
-
-    <!-- End-game dialog -->
+    <!-- ==================== End-game dialog ==================== -->
     <string name="end_game_title">Game Over</string>
     <string name="end_game_loser_label">Loser</string>
+    <string name="end_game_capture_photo">Capture Loser Photo</string>
     <string name="end_game_show_round_scores">Show Round Scores</string>
     <string name="player_default">Player</string>
-    <string name="label_loser_names">\u274c LOSER: %s</string>
+    <string name="camera_permission_required">Camera permission is required to capture a photo</string>
 
-    <!-- Round Entry Format Strings -->
-    <string name="heart_count_format">×%d</string>
-    <string name="round_total_format">%d/36</string>
-    <string name="round_total_format_double">%d/37</string>
+    <!-- Light-hearted lines shown to whoever lost. Levantine Arabic on purpose:
+         it is the register the game is actually played in. -->
+    <string-array name="end_game_tease_lines">
+        <item>يا زلمة شو هاللعب؟ كنت معنا ولا ضدنا؟ 😂</item>
+        <item>واضح إنك راهنت على الحظ… والحظ خانك 😅</item>
+        <item>اللعبة كانت حلوة… بس نهايتك أحلى 😏</item>
+        <item>في شي غلط بالورق… أو فيك؟ 🤔</item>
+        <item>ولا يهمك… في ناس بتتعلّم من الخسارة 😄</item>
+        <item>حسّيتك عم تجرّب أشياء جديدة… كلها غلط 😂</item>
+        <item>خسارة محترمة… بس ضحك أكتر 🤣</item>
+        <item>إنت اليوم كنت عامل guest appearance بس 🎭</item>
+        <item>ما تزعل… في ناس أسوأ منك… قليل بس في 😆</item>
+        <item>الورق كان عم يحكي مع الكل… إلا معك 😜</item>
+        <item>واضح إنك جاي تتمرّن مش تربح 😏</item>
+        <item>حلوة الروح الرياضية… لأن اللعب مش ماشي 😄</item>
+        <item>في أمل بالجيم الجاي… يمكن 😂</item>
+        <item>خسرت بس بثقة عالية… منقدّرها 👏</item>
+        <item>حاولت… وهيدا أهم شي… تقريباً 😅</item>
+        <item>لو في جائزة لأسوأ حظ… ربحتها 🏆</item>
+        <item>اللعبة بسيطة… بس شكلك معقّدها 😂</item>
+        <item>كنت قريب تفهم اللعبة… قريب كتير 😜</item>
+        <item>في شي درامي صار… إسمه نتيجتك 😆</item>
+        <item>واضح إنك عم تلعب مود الصعوبة: مستحيل 😏</item>
+        <item>خسارة بتعلّم… بس إنت بدك كورس كامل 😂</item>
+        <item>عم نعطيك boost للجيم الجاي 😄</item>
+        <item>مش غلط… بس مش صح كمان 😅</item>
+        <item>النية كانت تربح… التنفيذ كان قصة تانية 😂</item>
+        <item>يمكن لو غيرنا الورق… أو اللاعب 😏</item>
+        <item>في تقدم… بس بالعكس 😆</item>
+        <item>لو الحظ مادة بالجامعة… رسبت فيها 😜</item>
+        <item>عم تلعب challenge مع حالك؟ 😂</item>
+        <item>خسارة اليوم… meme لبكرا 😄</item>
+        <item>ولا مرة شفت حدا يخسر بهالإبداع 🤣</item>
+    </string-array>
+
+    <!-- ==================== Settings ==================== -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_support">Support</string>
+    <string name="settings_section_about">About</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="contact_support_subtitle">Email us with app &amp; device details</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="rate_this_app_subtitle">Deal us a 5-star hand — or share it with friends</string>
+    <string name="app_version">Version</string>
+    <string name="app_version_format">%1$s (%2$d)</string>
+    <string name="support_email">hasantahadroid@gmail.com</string>
+    <string name="support_subject">Le5a Scorer — Support</string>
+    <string name="support_chooser_title">Contact support</string>
+    <string name="support_no_email_app">No email app found</string>
+    <string name="share_chooser_title">Deal us some love</string>
+    <string name="share_failed">Unable to open rating or sharing</string>
+    <string name="share_text">I’m keeping score with Le5a Scorer.\nFast rounds, clean scoreboard.\n\nDeal yourself a download:\n%s</string>
+
+    <!-- Support email body. Placeholders: app version, Android release, SDK,
+         manufacturer, model, locale. -->
+    <string name="support_email_body">Hi Support Team,\n\nPlease describe your issue below:\n--------------------------------\n\n\nDiagnostics (auto-filled):\n• App: Le5a Scorer %1$s\n• Android: %2$s (SDK %3$d)\n• Device: %4$s %5$s\n• Locale: %6$s</string>
+
+    <!-- ==================== Splash ==================== -->
+    <string name="version_format">v%s</string>
+
 </resources>

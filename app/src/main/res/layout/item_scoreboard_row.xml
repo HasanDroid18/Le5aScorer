@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  One round of the scoreboard, laid out as a printed score-pad line.
+
+  Column widths, gutters and padding must stay identical to the header block in
+  fragment_scoreboard.xml — both read the same dimen resources.
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card.Playing"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/card_ivory">
+    android:layout_marginHorizontal="@dimen/screen_margin"
+    android:layout_marginVertical="@dimen/space_xs"
+    app:cardElevation="@dimen/elev_raised">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
+        android:padding="@dimen/space_md">
 
-        <!-- Round Badge -->
         <TextView
             android:id="@+id/textRound"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_width="@dimen/scoreboard_round_col"
+            android:layout_height="@dimen/scoreboard_round_col"
             android:background="@drawable/bg_round_badge"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+            android:textColor="@color/ink"
             tools:text="1" />
 
-        <!-- Score Columns Container -->
         <LinearLayout
             android:id="@+id/layoutScoreColumns"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/scoreboard_gutter"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textPlayer1"
@@ -46,9 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/suit_black"
+                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                android:textColor="@color/ink"
                 tools:text="15" />
 
             <TextView
@@ -57,9 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/suit_black"
+                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                android:textColor="@color/ink"
                 tools:text="20" />
 
             <TextView
@@ -68,9 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/suit_black"
+                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                android:textColor="@color/ink"
                 tools:text="10" />
 
             <TextView
@@ -79,25 +77,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/suit_black"
+                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                android:textColor="@color/ink"
                 tools:text="18" />
 
         </LinearLayout>
 
-        <!-- Edit Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonEdit"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            style="@style/Widget.Le5a.Button.Icon"
+            android:layout_width="@dimen/scoreboard_action_col"
+            android:layout_height="@dimen/scoreboard_action_col"
+            android:layout_marginStart="@dimen/scoreboard_gutter"
             android:contentDescription="@string/edit_round"
             app:icon="@drawable/ic_edit"
-            app:iconSize="24dp"
-            app:iconTint="@color/felt_green_700" />
+            app:iconTint="@color/ink_muted"
+            app:rippleColor="@color/bone_shade" />
 
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
