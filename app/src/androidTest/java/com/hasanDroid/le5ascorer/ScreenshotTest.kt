@@ -47,9 +47,11 @@ class ScreenshotTest {
 
     @Test
     fun captureAllScreens() {
-        // Start from a known state so re-runs cannot double-seed.
-        context.deleteDatabase(DB_NAME)
-
+        // The CI emulator is created fresh for each run, so the database starts
+        // empty. Deliberately not calling deleteDatabase() here: the application
+        // has already started and VersionManager touches the database on a
+        // background coroutine, so pulling the file out from under it would be a
+        // race rather than a reset.
         val matchId = ScreenshotSeed.seed(context)
 
         launchApp()
@@ -85,7 +87,7 @@ class ScreenshotTest {
 
         // Scoreboard — the screen whose column alignment and tabular figures
         // this redesign specifically claims to have fixed.
-        click(By.text("Ahmad, Sara, Khaled, Fatima"))
+        click(By.textContains("Ahmad"))
         waitFor(id("recyclerView"))
         shot("06-scoreboard")
 
@@ -113,7 +115,7 @@ class ScreenshotTest {
 
         // End of match: banner, confetti and dialog.
         ScreenshotSeed.seedToGameOver(context, matchId)
-        click(By.text("Ahmad, Sara, Khaled, Fatima"))
+        click(By.textContains("Ahmad"))
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
         shot("10-end-game")
     }
@@ -158,7 +160,6 @@ class ScreenshotTest {
     }
 
     private companion object {
-        const val DB_NAME = "leekha_database"
         const val TIMEOUT = 10_000L
         const val LONG_TIMEOUT = 30_000L
         const val IDLE_MS = 3_000L
