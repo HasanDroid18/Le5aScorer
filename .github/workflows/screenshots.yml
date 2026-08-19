@@ -90,10 +90,24 @@ jobs:
             # Kept on one line: this action does not pass shell line-continuation
             # backslashes through, so a wrapped command reaches Gradle with the
             # continuation character itself parsed as a task name.
-            ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest --stacktrace
+            # No --stacktrace: it buries the actual test failure under ~200 lines
+            # of Gradle internals.
+            set +e
+            ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest
+            STATUS=$?
+            set -e
+            # Pull whatever was captured before any failure. A partial walk still
+            # shows the screens it reached, and how far it got is diagnostic.
             mkdir -p docs/screenshots
             adb pull /sdcard/Android/data/com.hasanDroid.le5ascorer/files/screenshots/. docs/screenshots/ || true
-            ls -la docs/screenshots/
+            ls -la docs/screenshots/ || true
+            if [ $STATUS -ne 0 ]; then
+              echo "===================== test results ====================="
+              find app/build/outputs/androidTest-results -name '*.xml' -exec cat {} + | head -120 || true
+              echo "===================== crash log ======================="
+              adb logcat -d -s AndroidRuntime:E TestRunner:I System.err:W | tail -80 || true
+            fi
+            exit $STATUS
 
       - name: Upload test reports on failure
         if: failure()
@@ -105,8 +119,11 @@ jobs:
             app/build/outputs/androidTest-results/
           if-no-files-found: ignore
 
+      # Runs even when the walk failed part way: partial screenshots are still
+      # the only way to see the redesign, and which screen it stopped at says
+      # a lot about why.
       - name: Commit screenshots
-        if: success()
+        if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
