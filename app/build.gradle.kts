@@ -58,6 +58,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Screenshot capture run (see .github/workflows/screenshots.yml). UiAutomator
+    // rather than Espresso: Espresso blocks on main-looper idle, and this app
+    // runs Lottie animations that would trip an idling-resource timeout.
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.uiautomator)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
