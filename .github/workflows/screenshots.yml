@@ -87,9 +87,10 @@ jobs:
             adb shell settings put global transition_animation_scale 0
             adb shell settings put global animator_duration_scale 0
             # Scoped to the screenshot class so nothing unrelated can red the job.
-            ./gradlew connectedDebugAndroidTest \
-              -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest \
-              --stacktrace
+            # Kept on one line: this action does not pass shell line-continuation
+            # backslashes through, so a wrapped command reaches Gradle with the
+            # continuation character itself parsed as a task name.
+            ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest --stacktrace
             mkdir -p docs/screenshots
             adb pull /sdcard/Android/data/com.hasanDroid.le5ascorer/files/screenshots/. docs/screenshots/ || true
             ls -la docs/screenshots/
