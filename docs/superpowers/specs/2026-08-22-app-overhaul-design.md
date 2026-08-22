@@ -294,15 +294,26 @@ cumulative-score cells, best/worst color-coded via
 `cardWinner` banner, and `buttonAddRound`/`buttonBackToHome`.
 
 **Design:**
-- **Leading-player column emphasis:** compute the current leader (lowest
-  cumulative score — recall higher score is worse, matching
-  `checkGameOver`'s "reaching target = loser" semantics) from the latest
-  `RoundScores` and highlight that player's entire column in the header
-  card and in every row (subtle background tint or accent border on that
-  column, not just per-row best/worst text color as today). This is a new
-  derived value computed once per `uiState` update, not per-row — expose
-  it from `ScoreboardViewModel` as e.g. `leadingPlayerIndex: Int?` in
+- **Leading-player column emphasis:** compute the current leader as
+  **highest cumulative score**, matching the existing "Leading" badge
+  already shown on the match-list card
+  (`LeekhaRepository.getMatchesByStatus`, comment: "HIGHEST score leads").
+  This is a deliberate, already-established app convention — "leading"
+  means most points accumulated so far, not closest to the losing
+  threshold — and the scoreboard redesign must use the same definition
+  rather than introduce a second, conflicting meaning of "leader."
+  Highlight that player's entire column in the header card and in every
+  row (subtle background tint or accent border on that column, not just
+  per-row best/worst text color as today). This is a new derived value
+  computed once per `uiState` update, not per-row — expose it from
+  `ScoreboardViewModel` as `leadingPlayerIndex: Int?` in
   `ScoreboardUiState`, and pass it into `ScoreboardAdapter.submitData`.
+  Note: `LeekhaRepository.getMatchesByStatus`'s legacy TEAM-leader branch
+  pairs players 0+1 vs 2+3, while `ScoreEngine.checkGameOver`'s TEAM
+  branch pairs 0+2 vs 1+3 — a pre-existing inconsistency in code that's
+  going legacy-only per section 1. Leave both as-is; don't "fix" one to
+  match the other, since that would silently change game-over/leader
+  behavior for old TEAM matches with no user-facing benefit.
 - **Per-player trend:** add a small sparkline (simple multi-line path,
   4 series) either as a header element above `cardPlayerNames` or a
   collapsible section — plots each player's cumulative score per round.
