@@ -110,7 +110,7 @@ class RoundEntryFragment : Fragment() {
 
     private fun setupSeats() {
         seats().forEachIndexed { index, seat ->
-            seat.cardSeat.setOnClickListener { onSeatTapped(index) }
+            seat.root.setOnClickListener { onSeatTapped(index) }
         }
     }
 
@@ -233,10 +233,10 @@ class RoundEntryFragment : Fragment() {
         allSeats.forEachIndexed { index, seat ->
             val player = state.playersData.getOrNull(index)
             if (player == null) {
-                seat.cardSeat.visibility = View.GONE
+                seat.root.visibility = View.GONE
                 return@forEachIndexed
             }
-            seat.cardSeat.visibility = View.VISIBLE
+            seat.root.visibility = View.VISIBLE
             bindSeat(seat, player, isSelected = index == selectedSeat)
         }
     }
@@ -254,7 +254,7 @@ class RoundEntryFragment : Fragment() {
         seat.iconQSpades.showIf(player.qSpadesCount > 0)
         seat.iconTenDiamonds.showIf(player.tenDiamondsCount > 0)
 
-        seat.cardSeat.contentDescription = if (armed != null) {
+        seat.root.contentDescription = if (armed != null) {
             getString(R.string.cd_deal_to, player.playerName)
         } else {
             getString(R.string.cd_select_player, player.playerName)
@@ -264,15 +264,15 @@ class RoundEntryFragment : Fragment() {
         // pixels, so raw literals rendered thinner on high-density screens.
         val res = resources
         if (isSelected) {
-            seat.cardSeat.setCardBackgroundColor(color(R.color.brass_400))
-            seat.cardSeat.strokeColor = color(R.color.brass_600)
-            seat.cardSeat.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_selected)
-            seat.cardSeat.cardElevation = res.getDimension(R.dimen.elev_float)
+            seat.root.setCardBackgroundColor(color(R.color.brass_400))
+            seat.root.strokeColor = color(R.color.brass_600)
+            seat.root.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_selected)
+            seat.root.cardElevation = res.getDimension(R.dimen.elev_float)
         } else {
-            seat.cardSeat.setCardBackgroundColor(color(R.color.felt_700))
-            seat.cardSeat.strokeColor = color(R.color.felt_outline)
-            seat.cardSeat.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_hairline)
-            seat.cardSeat.cardElevation = res.getDimension(R.dimen.elev_raised)
+            seat.root.setCardBackgroundColor(color(R.color.felt_700))
+            seat.root.strokeColor = color(R.color.felt_outline)
+            seat.root.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_hairline)
+            seat.root.cardElevation = res.getDimension(R.dimen.elev_raised)
         }
 
         // On brass the seat reads as a printed card, so the suits take their

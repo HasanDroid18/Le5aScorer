@@ -100,8 +100,8 @@ class ScreenshotTest {
         // following taps keep dealing hearts to the same player.
         click(id("cardHearts"))
         shot("08-round-entry-armed")
-        click(id("cardSeat"))
-        repeat(5) { click(id("cardSeat")) }
+        click(id("seat1"))
+        repeat(5) { click(id("seat1")) }
         click(id("cardQSpades"))
         device.waitForIdle(IDLE_MS)
         shot("09-round-entry-dealt")

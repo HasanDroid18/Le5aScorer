@@ -5,12 +5,16 @@
   Placed by the parent using ConstraintLayout circular positioning, so this
   layout only describes the seat itself and never its position. Selection state
   (brass fill, ink text, lift) is applied in RoundEntryFragment.
+
+  The root deliberately has no id: every use is via <include android:id=...>,
+  which overrides the included root's id, so a root id here would be dead and
+  ViewBinding's field for it would never resolve. Callers use `root`, which is
+  typed MaterialCardView.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardSeat"
     android:layout_width="@dimen/seat_width"
     android:layout_height="wrap_content"
     android:clickable="true"
