@@ -38,11 +38,7 @@ class ScoreboardViewModel @Inject constructor(
         viewModelScope.launch {
             getMatchDetailUseCase(matchId).collect { detail ->
                 val gameOver = detail?.let {
-                    scoreEngine.checkGameOver(
-                        it.scoreboard,
-                        it.match.terminalScore,
-                        it.match.scoreRule
-                    )
+                    scoreEngine.checkGameOver(it.scoreboard, it.match.terminalScore)
                 }
 
                 // Auto-complete match if game is over

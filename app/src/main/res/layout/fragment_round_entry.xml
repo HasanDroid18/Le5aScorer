@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Round entry.
+  Round entry, portrait.
 
-  Three questions have to be answerable at a glance: how far along is the round,
-  who am I scoring for, and what is still missing before I can save. The status
-  card answers the first and third (running total plus an explicit checklist),
-  and the "Scoring for" line above the play area answers the second.
+  The four players sit around a table rather than in a 2x2 grid of tiles. Seats
+  are positioned with ConstraintLayout circular positioning (layout_constraintCircle
+  + CircleAngle + CircleRadius) at 0/90/180/270 degrees around a centre anchor,
+  so the arrangement reads as a table and adapts by changing one radius dimen
+  instead of by rewriting constraints.
+
+  Dealing is order-free: tap a card then a seat, or a seat then a card. Whichever
+  comes first arms; the second completes. It stays pure tap, so there is no
+  drag-only affordance and nothing is unreachable with a screen reader.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,8 +43,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/space_xs"
                 android:text="@string/reset"
-                app:icon="@drawable/ic_undo"
-                app:iconSize="@dimen/icon_sm" />
+                app:icon="@drawable/ic_undo" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -64,418 +68,132 @@
             android:paddingHorizontal="@dimen/screen_margin"
             android:paddingTop="@dimen/space_md">
 
-            <!-- ==================== Status ==================== -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardStatus"
-                style="@style/Widget.Le5a.Card.Raised"
+            <include
+                android:id="@+id/roundStatus"
+                layout="@layout/view_round_status"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" />
 
+            <!-- ==================== The table ==================== -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tableArea"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/table_size"
+                android:layout_marginTop="@dimen/space_lg">
+
+                <View
+                    android:id="@+id/tableSurface"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/bg_table"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.72"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Anchor the seats orbit. Zero-sized and invisible; it exists
+                     only to give the circular constraints something to sit on. -->
+                <View
+                    android:id="@+id/tableCentre"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tableSurface"
+                    app:layout_constraintEnd_toEndOf="@id/tableSurface"
+                    app:layout_constraintStart_toStartOf="@id/tableSurface"
+                    app:layout_constraintTop_toTopOf="@id/tableSurface" />
+
+                <!-- What is armed and waiting to be dealt, or the prompt. -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/layoutArmed"
+                    android:layout_width="@dimen/table_centre"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
+                    app:layout_constraintBottom_toBottomOf="@id/tableSurface"
+                    app:layout_constraintEnd_toEndOf="@id/tableSurface"
+                    app:layout_constraintStart_toStartOf="@id/tableSurface"
+                    app:layout_constraintTop_toTopOf="@id/tableSurface">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/textArmedLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/round_armed"
+                        android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                        android:visibility="invisible"
+                        tools:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/imageArmed"
+                        android:layout_width="@dimen/icon_lg"
+                        android:layout_height="@dimen/icon_lg"
+                        android:layout_marginTop="@dimen/space_xs"
+                        android:contentDescription="@null"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/ic_suit_heart"
+                        app:tint="@color/brass_400"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textTapHint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textStatusTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/round_status"
-                                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
-
-                            <TextView
-                                android:id="@+id/textRoundTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_xs"
-                                android:textAppearance="@style/TextAppearance.Le5a.Score.Display"
-                                tools:text="24 / 36" />
-
-                        </LinearLayout>
-
-                        <com.google.android.material.progressindicator.CircularProgressIndicator
-                            android:id="@+id/progressRound"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:max="36"
-                            android:progress="0"
-                            app:indicatorSize="64dp" />
-
-                    </LinearLayout>
-
-                    <!-- Checklist: what still has to be true to save. -->
-                    <LinearLayout
-                        android:id="@+id/layoutNormalStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginVertical="@dimen/space_md"
-                            android:background="@color/felt_outline" />
-
-                        <TextView
-                            style="@style/Widget.Le5a.SectionHeader"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/round_checklist_title" />
-
-                        <include
-                            android:id="@+id/checkHearts"
-                            layout="@layout/view_check_row"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_sm" />
-
-                        <include
-                            android:id="@+id/checkQueen"
-                            layout="@layout/view_check_row"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                        <include
-                            android:id="@+id/checkTen"
-                            layout="@layout/view_check_row"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                    <!-- Double: one player takes everything, so the checklist
-                         does not apply. -->
-                    <LinearLayout
-                        android:id="@+id/layoutDoubleStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_md"
-                        android:background="@drawable/bg_pill_danger"
-                        android:orientation="vertical"
-                        android:padding="@dimen/space_md"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/double_active"
-                            android:textAppearance="@style/TextAppearance.Le5a.Overline"
-                            android:textColor="@color/danger" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_xs"
-                            android:text="@string/double_subtitle"
-                            android:textAppearance="@style/TextAppearance.Le5a.Body.Small" />
-
-                    </LinearLayout>
+                        android:gravity="center"
+                        android:text="@string/round_tap_hint"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                        android:textColor="@color/text_tertiary" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <!-- Seats, clockwise from the top. -->
+                <include
+                    android:id="@+id/seat1"
+                    layout="@layout/view_player_seat"
+                    android:layout_width="@dimen/seat_width"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintCircle="@id/tableCentre"
+                    app:layout_constraintCircleAngle="0"
+                    app:layout_constraintCircleRadius="@dimen/table_radius" />
 
-            <!-- ==================== Players ==================== -->
-            <TextView
-                android:id="@+id/textScoringForLabel"
-                style="@style/Widget.Le5a.SectionHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_xl"
-                android:text="@string/round_scoring_for" />
+                <include
+                    android:id="@+id/seat2"
+                    layout="@layout/view_player_seat"
+                    android:layout_width="@dimen/seat_width"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintCircle="@id/tableCentre"
+                    app:layout_constraintCircleAngle="90"
+                    app:layout_constraintCircleRadius="@dimen/table_radius" />
 
-            <TextView
-                android:id="@+id/textScoringFor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textAppearance="@style/TextAppearance.Le5a.Title"
-                android:textColor="@color/brass_300"
-                tools:text="Ahmad" />
+                <include
+                    android:id="@+id/seat3"
+                    layout="@layout/view_player_seat"
+                    android:layout_width="@dimen/seat_width"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintCircle="@id/tableCentre"
+                    app:layout_constraintCircleAngle="180"
+                    app:layout_constraintCircleRadius="@dimen/table_radius" />
 
-            <GridLayout
-                android:id="@+id/layoutPlayerRows"
+                <include
+                    android:id="@+id/seat4"
+                    layout="@layout/view_player_seat"
+                    android:layout_width="@dimen/seat_width"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintCircle="@id/tableCentre"
+                    app:layout_constraintCircleAngle="270"
+                    app:layout_constraintCircleRadius="@dimen/table_radius" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ==================== Card rail ==================== -->
+            <include
+                android:id="@+id/cardRail"
+                layout="@layout/view_card_rail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_md"
-                android:alignmentMode="alignMargins"
-                android:columnCount="2"
-                android:columnOrderPreserved="false"
-                android:rowCount="2"
-                android:useDefaultMargins="false">
+                android:layout_marginTop="@dimen/space_lg" />
 
-                <include
-                    android:id="@+id/rowPlayer1"
-                    layout="@layout/item_player_row"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="@dimen/space_xs"
-                    android:layout_row="0" />
-
-                <include
-                    android:id="@+id/rowPlayer2"
-                    layout="@layout/item_player_row"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="@dimen/space_xs"
-                    android:layout_row="0" />
-
-                <include
-                    android:id="@+id/rowPlayer3"
-                    layout="@layout/item_player_row"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="@dimen/space_xs"
-                    android:layout_row="1" />
-
-                <include
-                    android:id="@+id/rowPlayer4"
-                    layout="@layout/item_player_row"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="@dimen/space_xs"
-                    android:layout_row="1" />
-
-            </GridLayout>
-
-            <!-- ==================== Play area ====================
-                 A recess cut into the felt where the four cards lie. -->
-            <FrameLayout
-                android:id="@+id/containerPlayArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_lg"
-                android:background="@drawable/bg_well"
-                android:padding="@dimen/space_md">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardHearts"
-                        style="@style/Widget.Le5a.Card.Playing.Clickable"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/action_card_height"
-                        android:layout_marginEnd="@dimen/space_sm"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="@dimen/space_sm">
-
-                            <ImageView
-                                android:layout_width="@dimen/icon_lg"
-                                android:layout_height="@dimen/icon_lg"
-                                android:contentDescription="@null"
-                                app:srcCompat="@drawable/ic_suit_heart"
-                                app:tint="@color/ink_red" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_xs"
-                                android:text="@string/hearts_card"
-                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                                android:textColor="@color/ink" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/hearts_value"
-                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-                                android:textColor="@color/ink_muted" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardQSpades"
-                        style="@style/Widget.Le5a.Card.Playing.Clickable"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/action_card_height"
-                        android:layout_marginEnd="@dimen/space_sm"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="@dimen/space_sm">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/label_queen"
-                                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
-                                    android:textColor="@color/ink" />
-
-                                <ImageView
-                                    android:layout_width="@dimen/icon_sm"
-                                    android:layout_height="@dimen/icon_sm"
-                                    android:layout_marginStart="2dp"
-                                    android:contentDescription="@null"
-                                    app:srcCompat="@drawable/ic_suit_spade"
-                                    app:tint="@color/ink" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_xs"
-                                android:text="@string/q_spades_card"
-                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                                android:textColor="@color/ink" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/q_spades_value"
-                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-                                android:textColor="@color/ink_muted" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardTenDiamonds"
-                        style="@style/Widget.Le5a.Card.Playing.Clickable"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/action_card_height"
-                        android:layout_marginEnd="@dimen/space_sm"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="@dimen/space_sm">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/label_ten"
-                                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
-                                    android:textColor="@color/ink_red" />
-
-                                <ImageView
-                                    android:layout_width="@dimen/icon_sm"
-                                    android:layout_height="@dimen/icon_sm"
-                                    android:layout_marginStart="2dp"
-                                    android:contentDescription="@null"
-                                    app:srcCompat="@drawable/ic_suit_diamond"
-                                    app:tint="@color/ink_red" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_xs"
-                                android:text="@string/ten_diamonds_card"
-                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                                android:textColor="@color/ink" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/ten_diamonds_value"
-                                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-                                android:textColor="@color/ink_muted" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- The Double is not a card you take; it is a whole-round
-                         outcome, so it is styled as a face-down red back. -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardDouble"
-                        style="@style/Widget.Le5a.Card.Playing.Clickable"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/action_card_height"
-                        android:layout_weight="1"
-                        app:cardBackgroundColor="@color/danger_strong"
-                        app:strokeColor="@color/danger"
-                        app:strokeWidth="@dimen/stroke_hairline">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="@dimen/space_sm">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/double_value"
-                                android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_xs"
-                                android:text="@string/double_card"
-                                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                                android:textColor="@color/text_primary" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-            </FrameLayout>
-
-            <!-- Makes the +5 shortcut discoverable. The string for this gesture
-                 already existed but was never shown anywhere. -->
             <TextView
                 android:id="@+id/textHeartsHint"
                 android:layout_width="wrap_content"
@@ -520,7 +238,6 @@
         android:layout_marginBottom="@dimen/screen_margin"
         android:enabled="false"
         android:text="@string/save_round"
-        app:cornerRadius="@dimen/radius_pill"
         app:icon="@drawable/ic_check"
         app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="parent"

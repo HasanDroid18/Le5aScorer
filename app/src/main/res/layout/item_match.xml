@@ -2,11 +2,12 @@
 <!--
   A match card.
 
-  Reading order: who is playing -> what the rules are -> who is ahead ->
-  when and what state. The leader block sits in its own row rather than
-  floating over the metadata (the previous 80dp avatar was constrained only to
-  the players line and could overlap the date on narrow screens), and a barrier
-  guarantees the footer clears whichever of the two is taller.
+  It shows the whole table rather than one leader: four standings rows, each
+  with a bar showing how close that player is to the target. Since reaching the
+  target is how you *lose*, the longest bar is the player in most trouble — the
+  card reads as a race nobody wants to win.
+
+  The leading player's photo, when one was taken, sits on the right.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,24 +21,29 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/card_padding"
-        android:paddingTop="@dimen/space_md"
-        android:paddingEnd="@dimen/space_xs"
-        android:paddingBottom="@dimen/card_padding">
+        android:layout_height="wrap_content">
+
+        <!-- Status-keyed edge: brass while in progress, green once complete. -->
+        <View
+            android:id="@+id/accentEdge"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_status_accent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textPlayers"
+            android:id="@+id/textRuleSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.Le5a.Title"
-            app:layout_constraintEnd_toStartOf="@id/buttonMenu"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_md"
+            android:textAppearance="@style/TextAppearance.Le5a.Overline"
+            app:layout_constraintEnd_toStartOf="@id/cardLeadingPlayer"
+            app:layout_constraintStart_toEndOf="@id/accentEdge"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Ahmad, Sara, Khaled, Fatima" />
+            tools:text="Target 101" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonMenu"
@@ -49,32 +55,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textRuleSummary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:layout_marginEnd="@dimen/space_md"
-            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textPlayers"
-            tools:text="Target 101 · Individual" />
-
-        <!-- ===================== Leader block =====================
-             Every view here belongs to groupLeader, so the adapter shows or
-             hides the label, name and score together with the photo. -->
+        <!-- Photo of whoever is closest to losing. -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLeadingPlayer"
             android:layout_width="@dimen/match_avatar"
             android:layout_height="@dimen/match_avatar"
-            android:layout_marginTop="@dimen/space_lg"
+            android:layout_marginTop="@dimen/space_sm"
+            android:layout_marginEnd="@dimen/space_md"
             app:cardBackgroundColor="@color/felt_700"
             app:cardCornerRadius="@dimen/radius_md"
             app:cardElevation="@dimen/elev_flat"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textRuleSummary"
-            app:strokeColor="@color/felt_outline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonMenu"
+            app:strokeColor="@color/brass_600"
             app:strokeWidth="@dimen/stroke_hairline">
 
             <ImageView
@@ -90,73 +83,86 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/textLeadingLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_md"
-            android:text="@string/match_leading_label"
-            android:textAppearance="@style/TextAppearance.Le5a.Overline"
-            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
-            app:layout_constraintTop_toTopOf="@id/cardLeadingPlayer" />
-
-        <TextView
-            android:id="@+id/textLeaderName"
+        <!-- ==================== Standings ==================== -->
+        <LinearLayout
+            android:id="@+id/layoutStandings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_md"
-            android:layout_marginTop="@dimen/space_xs"
+            android:layout_marginTop="@dimen/space_sm"
             android:layout_marginEnd="@dimen/space_md"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.Le5a.Title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
-            app:layout_constraintTop_toBottomOf="@id/textLeadingLabel"
-            tools:text="Ahmad" />
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@id/cardLeadingPlayer"
+            app:layout_constraintStart_toEndOf="@id/accentEdge"
+            app:layout_constraintTop_toBottomOf="@id/textRuleSummary">
 
+            <include
+                android:id="@+id/standing1"
+                layout="@layout/view_standing_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/standing2"
+                layout="@layout/view_standing_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/standing3"
+                layout="@layout/view_standing_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/standing4"
+                layout="@layout/view_standing_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!-- Shown instead of the standings before the first round is entered. -->
         <TextView
-            android:id="@+id/textLeaderScore"
-            android:layout_width="wrap_content"
+            android:id="@+id/textPlayers"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_md"
-            android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
-            android:textColor="@color/brass_300"
-            app:layout_constraintStart_toEndOf="@id/cardLeadingPlayer"
-            app:layout_constraintTop_toBottomOf="@id/textLeaderName"
-            tools:text="45" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupLeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:layout_marginEnd="@dimen/space_md"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
             android:visibility="gone"
-            app:constraint_referenced_ids="cardLeadingPlayer,textLeadingLabel,textLeaderName,textLeaderScore"
+            app:layout_constraintEnd_toStartOf="@id/cardLeadingPlayer"
+            app:layout_constraintStart_toEndOf="@id/accentEdge"
+            app:layout_constraintTop_toBottomOf="@id/textRuleSummary"
+            tools:text="Ahmad, Sara, Khaled, Fatima"
             tools:visibility="visible" />
 
-        <!-- The footer sits below whichever is taller: the leader block or the
-             rule summary when there is no leader yet. -->
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrierLeader"
+            android:id="@+id/barrierBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:barrierAllowsGoneWidgets="false"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="cardLeadingPlayer,textLeaderScore,textRuleSummary" />
+            app:constraint_referenced_ids="layoutStandings,textPlayers,cardLeadingPlayer" />
 
-        <!-- ======================= Footer ======================= -->
+        <!-- ==================== Footer ==================== -->
         <TextView
             android:id="@+id/textRounds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_lg"
+            android:layout_marginStart="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginBottom="@dimen/space_md"
             android:drawablePadding="@dimen/space_xs"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
             app:drawableStartCompat="@drawable/ic_card_stack"
             app:drawableTint="@color/text_tertiary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrierLeader"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/accentEdge"
+            app:layout_constraintTop_toBottomOf="@id/barrierBody"
             tools:text="5 rounds" />
 
         <TextView

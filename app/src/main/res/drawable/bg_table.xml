@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The playing surface the seats sit around: a lit oval of felt. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="60%"
+        android:centerX="0.5"
+        android:centerY="0.42"
+        android:startColor="@color/felt_700"
+        android:endColor="@color/felt_900" />
+    <stroke android:width="1dp" android:color="@color/felt_outline" />
+</shape>

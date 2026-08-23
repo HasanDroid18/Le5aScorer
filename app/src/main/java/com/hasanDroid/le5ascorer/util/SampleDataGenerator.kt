@@ -1,7 +1,6 @@
 package com.hasanDroid.le5ascorer.util
 
 import com.hasanDroid.le5ascorer.data.local.entity.ActionType
-import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.data.repository.LeekhaRepository
 import com.hasanDroid.le5ascorer.domain.model.ScoreAction
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +31,6 @@ class SampleDataGenerator @Inject constructor(
 
             // Random configuration
             val terminalScore = listOf(51, 101, 151).random()
-            val scoreRule = if (Random.nextBoolean()) ScoreRule.INDIVIDUAL else ScoreRule.TEAM
 
             // Create match
             val matchId = repository.createMatch(
@@ -40,8 +38,7 @@ class SampleDataGenerator @Inject constructor(
                 player2Name = players[1],
                 player3Name = players[2],
                 player4Name = players[3],
-                terminalScore = terminalScore,
-                scoreRule = scoreRule
+                terminalScore = terminalScore
             )
 
             // Add random rounds (3-8 rounds per match)

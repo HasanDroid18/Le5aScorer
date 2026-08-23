@@ -2,7 +2,6 @@ package com.hasanDroid.le5ascorer
 
 import android.content.Context
 import com.hasanDroid.le5ascorer.data.local.entity.ActionType
-import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.data.repository.LeekhaRepository
 import com.hasanDroid.le5ascorer.domain.model.ScoreAction
 import dagger.hilt.EntryPoint
@@ -70,8 +69,7 @@ object ScreenshotSeed {
             player2Name = "Sara",
             player3Name = "Khaled",
             player4Name = "Fatima",
-            terminalScore = TERMINAL,
-            scoreRule = ScoreRule.INDIVIDUAL
+            terminalScore = TERMINAL
         )
         repository.addRound(inProgress, round(hearts = listOf(5, 3, 4, 1), queenTo = 0, tenTo = 2))
         repository.addRound(inProgress, round(hearts = listOf(2, 6, 1, 4), queenTo = 1, tenTo = 3))
@@ -83,8 +81,7 @@ object ScreenshotSeed {
             player2Name = "Layla",
             player3Name = "Omar",
             player4Name = "Zahra",
-            terminalScore = 51,
-            scoreRule = ScoreRule.TEAM
+            terminalScore = 51
         )
 
         inProgress

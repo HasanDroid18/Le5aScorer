@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Round total, plus the checklist of what still has to be true before the round
+  can be saved. Shared by the portrait and landscape round-entry layouts.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardStatus"
+    style="@style/Widget.Le5a.Card.Raised"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/card_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textStatusTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/round_status"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <TextView
+                    android:id="@+id/textRoundTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Display"
+                    tools:text="24 / 36" />
+
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressRound"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:max="36"
+                android:progress="0"
+                app:indicatorSize="56dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutNormalStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="@dimen/space_md"
+                android:background="@color/felt_outline" />
+
+            <include
+                android:id="@+id/checkHearts"
+                layout="@layout/view_check_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/checkQueen"
+                layout="@layout/view_check_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/checkTen"
+                layout="@layout/view_check_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!-- Double: one player takes everything, so the checklist cannot apply. -->
+        <LinearLayout
+            android:id="@+id/layoutDoubleStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:background="@drawable/bg_pill_danger"
+            android:orientation="vertical"
+            android:padding="@dimen/space_md"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/double_active"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                android:textColor="@color/danger" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/double_subtitle"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

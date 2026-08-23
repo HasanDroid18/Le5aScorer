@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Unchecked segments used felt_outline, only 1.87:1 against the card, so the
+     segmented control read as floating text. control_outline is 3.62:1. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true" android:color="@color/brass_400" />
-    <item android:color="@color/felt_outline" />
+    <item android:color="@color/control_outline" />
 </selector>

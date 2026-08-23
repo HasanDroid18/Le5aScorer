@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,12 +16,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.Chip
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.hasanDroid.le5ascorer.R
-import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.databinding.FragmentNewMatchBinding
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+private const val ENTRANCE_RISE = 56f
+private const val MAX_RECENT_CHIPS = 8
 
 @AndroidEntryPoint
 class NewMatchFragment : Fragment() {
@@ -48,9 +53,9 @@ class NewMatchFragment : Fragment() {
         setupToolbar()
         setupInputs()
         setupTerminalScoreSelector()
-        setupScoreRuleSelector()
         setupCreateButton()
         observeUiState()
+        observeKnownPlayers()
         playEntranceAnimation()
     }
 
@@ -66,62 +71,92 @@ class NewMatchFragment : Fragment() {
         }
     }
 
+    private fun nameFields(): List<MaterialAutoCompleteTextView> = listOf(
+        binding.editPlayer1, binding.editPlayer2, binding.editPlayer3, binding.editPlayer4
+    )
+
     private fun setupInputs() {
-        binding.editPlayer1.addTextChangedListener {
-            viewModel.updatePlayer1Name(it.toString())
+        val updaters = listOf(
+            viewModel::updatePlayer1Name,
+            viewModel::updatePlayer2Name,
+            viewModel::updatePlayer3Name,
+            viewModel::updatePlayer4Name
+        )
+        nameFields().forEachIndexed { seat, field ->
+            field.addTextChangedListener { updaters[seat](it.toString()) }
+            // Refresh the offered names on focus: which ones are still free
+            // depends on what the other three seats currently hold.
+            field.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) refreshSuggestions(seat)
+            }
         }
-        binding.editPlayer2.addTextChangedListener {
-            viewModel.updatePlayer2Name(it.toString())
+    }
+
+    private fun refreshSuggestions(seat: Int) {
+        val field = nameFields()[seat]
+        val suggestions = viewModel.suggestionsFor(seat)
+        field.setAdapter(
+            ArrayAdapter(requireContext(), R.layout.item_suggestion, suggestions)
+        )
+    }
+
+    private fun observeKnownPlayers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.knownPlayers.collect { names ->
+                    bindRecentChips(names)
+                    nameFields().indices.forEach { refreshSuggestions(it) }
+                }
+            }
         }
-        binding.editPlayer3.addTextChangedListener {
-            viewModel.updatePlayer3Name(it.toString())
+    }
+
+    /** One-tap fill for the common case: the same group playing again. */
+    private fun bindRecentChips(names: List<String>) {
+        binding.layoutRecentPlayers.visibility =
+            if (names.isEmpty()) View.GONE else View.VISIBLE
+        binding.chipGroupRecent.removeAllViews()
+
+        names.take(MAX_RECENT_CHIPS).forEach { name ->
+            val chip = Chip(requireContext()).apply {
+                setChipDrawable(
+                    com.google.android.material.chip.ChipDrawable.createFromAttributes(
+                        requireContext(), null, 0, R.style.Widget_Le5a_Chip_Action
+                    )
+                )
+                text = name
+                setChipIconResource(R.drawable.ic_person)
+                isChipIconVisible = true
+                setOnClickListener { fillNextEmptySeat(name) }
+            }
+            binding.chipGroupRecent.addView(chip)
         }
-        binding.editPlayer4.addTextChangedListener {
-            viewModel.updatePlayer4Name(it.toString())
-        }
+    }
+
+    private fun fillNextEmptySeat(name: String) {
+        // Already seated somewhere: tapping again would duplicate the player.
+        if (viewModel.uiState.value.names.any { it.trim().equals(name, ignoreCase = true) }) return
+        val seat = viewModel.firstEmptySeat() ?: return
+        nameFields()[seat].setText(name)
     }
 
     private fun setupTerminalScoreSelector() {
         binding.toggleTerminalScore.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
-                val score = when (checkedId) {
-                    R.id.button51 -> 51
-                    R.id.button101 -> 101
-                    R.id.button151 -> 151
-                    else -> 101
-                }
-                viewModel.updateTerminalScore(score)
+                viewModel.updateTerminalScore(
+                    when (checkedId) {
+                        R.id.button51 -> 51
+                        R.id.button151 -> 151
+                        else -> 101
+                    }
+                )
             }
         }
         binding.toggleTerminalScore.check(R.id.button101)
     }
 
-    private fun setupScoreRuleSelector() {
-        binding.toggleScoreRule.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                val rule = when (checkedId) {
-                    R.id.buttonIndividual -> ScoreRule.INDIVIDUAL
-                    R.id.buttonTeam -> ScoreRule.TEAM
-                    else -> ScoreRule.INDIVIDUAL
-                }
-                viewModel.updateScoreRule(rule)
-                updateRuleDescription(rule)
-            }
-        }
-        binding.toggleScoreRule.check(R.id.buttonIndividual)
-    }
-
-    private fun updateRuleDescription(rule: ScoreRule) {
-        binding.textRuleDescription.text = when (rule) {
-            ScoreRule.INDIVIDUAL -> getString(R.string.rule_individual_desc)
-            ScoreRule.TEAM -> getString(R.string.rule_team_desc)
-        }
-    }
-
     private fun setupCreateButton() {
-        binding.buttonCreate.setOnClickListener {
-            viewModel.createMatch()
-        }
+        binding.buttonCreate.setOnClickListener { viewModel.createMatch() }
     }
 
     private fun observeUiState() {
@@ -131,16 +166,21 @@ class NewMatchFragment : Fragment() {
                     val isEnabled = state.isValid && !state.isCreating
                     binding.buttonCreate.isEnabled = isEnabled
 
-                    // Pulse animation when button first becomes enabled
-                    if (isEnabled && !wasButtonEnabled) {
-                        animateButtonEnabled()
-                    }
+                    // Say *why* the button is off when the reason is a clash
+                    // rather than a blank — a blank field is self-evident.
+                    val filled = state.names.map { it.trim() }.filter { it.isNotEmpty() }
+                    val hasDuplicate = filled.map { it.lowercase() }.toSet().size != filled.size
+                    binding.textNameError.visibility =
+                        if (hasDuplicate) View.VISIBLE else View.GONE
+
+                    if (isEnabled && !wasButtonEnabled) animateButtonEnabled()
                     wasButtonEnabled = isEnabled
 
                     if (state.createdMatchId != null) {
-                        val action = NewMatchFragmentDirections
-                            .actionNewMatchFragmentToScoreboardFragment(state.createdMatchId)
-                        findNavController().navigate(action)
+                        findNavController().navigate(
+                            NewMatchFragmentDirections
+                                .actionNewMatchFragmentToScoreboardFragment(state.createdMatchId)
+                        )
                         viewModel.resetCreatedMatchId()
                     }
                 }
@@ -151,12 +191,11 @@ class NewMatchFragment : Fragment() {
     /**
      * Cards rise in sequence, then the primary action. Views are referenced by
      * id rather than by child index — the previous version walked
-     * `getChildAt(1).getChildAt(0)` and would have animated the wrong views (or
-     * crashed) the moment the layout's child order changed.
+     * `getChildAt(1).getChildAt(0)` and would have animated the wrong views the
+     * moment the layout's child order changed.
      */
     private fun playEntranceAnimation() {
-        val staggered = listOf(binding.cardPlayers, binding.cardRules)
-        staggered.forEachIndexed { index, child ->
+        listOf(binding.cardPlayers, binding.cardRules).forEachIndexed { index, child ->
             child.alpha = 0f
             child.translationY = ENTRANCE_RISE
             child.animate()
@@ -194,9 +233,4 @@ class NewMatchFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    private companion object {
-        const val ENTRANCE_RISE = 56f
-    }
 }
-

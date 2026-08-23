@@ -20,6 +20,8 @@ data class Match(
     val roundCount: Int = 0,
     val leadingPlayerName: String? = null,
     val leadingScore: Int? = null,
+    /** Cumulative total per player, in seat order. Empty until a round exists. */
+    val playerScores: List<Int> = emptyList(),
     val loserImagePath: String? = null
 )
 

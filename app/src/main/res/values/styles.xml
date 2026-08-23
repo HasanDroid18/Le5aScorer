@@ -70,22 +70,42 @@
 
     <!-- ===================================================================
          Buttons
+
+         Two rules, stated here rather than left to call sites:
+
+         1. Vertical insets are zeroed. Material's default 6dp top/bottom inset
+            meant a button with minHeight 56dp only drew ~44dp of pill, and a
+            segment pinned to a 48dp height drew 36dp — which is what made the
+            buttons look squashed and inconsistent from screen to screen.
+         2. Shape is by role. Primary and Secondary are pills; Outlined,
+            toggle segments and icon buttons are radius_md. Call sites must not
+            override either, so the system stays legible.
+
+         Height is a minHeight, never a fixed layout_height, so a button grows
+         with large font settings instead of clipping its own label.
          =================================================================== -->
-    <style name="Widget.Le5a.Button.Primary" parent="Widget.Material3.Button">
-        <item name="android:minHeight">@dimen/button_height</item>
+    <style name="Widget.Le5a.Button" parent="Widget.Material3.Button">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
         <item name="android:textAppearance">@style/TextAppearance.Le5a.Label</item>
+        <item name="iconSize">@dimen/icon_md</item>
+        <item name="iconPadding">@dimen/space_sm</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.Le5a.Button.Primary">
+        <item name="android:minHeight">@dimen/button_height</item>
         <item name="android:textColor">@color/btn_primary_text</item>
         <item name="backgroundTint">@color/btn_primary_bg</item>
         <item name="iconTint">@color/btn_primary_text</item>
-        <item name="iconSize">@dimen/icon_md</item>
-        <item name="iconPadding">@dimen/space_sm</item>
-        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="cornerRadius">@dimen/radius_pill</item>
         <item name="elevation">@dimen/elev_raised</item>
-        <item name="android:stateListAnimator">@null</item>
     </style>
 
     <!-- Quiet action on felt: tonal fill, no accent. -->
     <style name="Widget.Le5a.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
         <item name="android:minHeight">@dimen/button_height</item>
         <item name="android:textAppearance">@style/TextAppearance.Le5a.Label</item>
         <item name="android:textColor">@color/btn_secondary_text</item>
@@ -93,34 +113,47 @@
         <item name="iconTint">@color/btn_secondary_text</item>
         <item name="iconSize">@dimen/icon_md</item>
         <item name="iconPadding">@dimen/space_sm</item>
-        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="cornerRadius">@dimen/radius_pill</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
 
+    <!-- Segments of a MaterialButtonToggleGroup. No cornerRadius here: the group
+         shapes the outer corners of the run, and a per-child radius fights it. -->
     <style name="Widget.Le5a.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
+        <item name="android:minHeight">@dimen/touch_min</item>
         <item name="android:textAppearance">@style/TextAppearance.Le5a.Label</item>
         <item name="android:textColor">@color/toggle_text</item>
         <item name="strokeColor">@color/toggle_stroke</item>
+        <item name="strokeWidth">@dimen/stroke_hairline</item>
         <item name="backgroundTint">@color/toggle_bg</item>
         <item name="iconTint">@color/toggle_text</item>
-        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="iconSize">@dimen/icon_sm</item>
+        <item name="iconPadding">@dimen/space_xs</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
     <style name="Widget.Le5a.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
+        <item name="android:minHeight">@dimen/touch_min</item>
         <item name="android:textAppearance">@style/TextAppearance.Le5a.Label</item>
         <item name="android:textColor">@color/brass_300</item>
         <item name="iconTint">@color/brass_300</item>
+        <item name="iconSize">@dimen/icon_sm</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
         <item name="rippleColor">@color/overlay_ripple_brass</item>
     </style>
 
-    <!-- Layout params are deliberately not set in the button/row styles: they
-         are supplied at each usage site so inflation never depends on style
-         resolution for layout_width/layout_height. -->
     <style name="Widget.Le5a.Button.Icon" parent="Widget.Material3.Button.IconButton">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
         <item name="android:minWidth">@dimen/touch_min</item>
         <item name="android:minHeight">@dimen/touch_min</item>
         <item name="iconSize">@dimen/icon_md</item>
         <item name="iconTint">@color/text_secondary</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
         <item name="rippleColor">@color/overlay_ripple_light</item>
     </style>
 

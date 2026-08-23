@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One row of the name-suggestion dropdown. Supplied explicitly so the popup
+  inherits the app's felt surface rather than the platform's light default.
+-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textSuggestion"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/touch_min"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/space_lg"
+    android:textAppearance="@style/TextAppearance.Le5a.Body"
+    android:textColor="@color/text_primary" />

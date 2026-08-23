@@ -251,7 +251,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_round"
-            app:cornerRadius="@dimen/radius_pill"
             app:icon="@drawable/ic_add"
             app:iconGravity="textStart" />
 
@@ -262,7 +261,6 @@
             android:layout_height="wrap_content"
             android:text="@string/back_to_matches"
             android:visibility="gone"
-            app:cornerRadius="@dimen/radius_pill"
             app:icon="@drawable/ic_arrow_back"
             app:iconGravity="textStart" />
 

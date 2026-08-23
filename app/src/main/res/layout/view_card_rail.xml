@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The four things you can deal: hearts, the queen, the ten, and a Double.
+
+  Shared between the portrait and landscape round-entry layouts, which differ
+  only in where this rail sits and whether it runs as a row or a column. The
+  orientation is set by the including layout.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHearts"
+        style="@style/Widget.Le5a.Card.Playing.Clickable"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/action_card_height"
+        android:layout_marginEnd="@dimen/space_sm"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/space_sm">
+
+            <ImageView
+                android:layout_width="@dimen/icon_lg"
+                android:layout_height="@dimen/icon_lg"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_suit_heart"
+                app:tint="@color/ink_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/hearts_card"
+                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                android:textColor="@color/ink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hearts_value"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/ink_muted" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardQSpades"
+        style="@style/Widget.Le5a.Card.Playing.Clickable"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/action_card_height"
+        android:layout_marginEnd="@dimen/space_sm"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/space_sm">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_queen"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                    android:textColor="@color/ink" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:layout_marginStart="2dp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_suit_spade"
+                    app:tint="@color/ink" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/q_spades_value"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/ink_muted" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTenDiamonds"
+        style="@style/Widget.Le5a.Card.Playing.Clickable"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/action_card_height"
+        android:layout_marginEnd="@dimen/space_sm"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/space_sm">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_ten"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                    android:textColor="@color/ink_red" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:layout_marginStart="2dp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_suit_diamond"
+                    app:tint="@color/ink_red" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/ten_diamonds_value"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/ink_muted" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Not a card you take but a whole-round outcome, so it is styled as a
+         face-down red back rather than a bone card face. -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardDouble"
+        style="@style/Widget.Le5a.Card.Playing.Clickable"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/action_card_height"
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/danger_strong"
+        app:strokeColor="@color/danger"
+        app:strokeWidth="@dimen/stroke_hairline">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/space_sm">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/double_value"
+                android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/double_card"
+                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                android:textColor="@color/text_primary" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

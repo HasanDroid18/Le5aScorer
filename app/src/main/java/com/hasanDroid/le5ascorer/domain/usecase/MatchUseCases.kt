@@ -29,7 +29,7 @@ class CreateMatchUseCase @Inject constructor(
         player3Name: String,
         player4Name: String,
         terminalScore: Int,
-        scoreRule: ScoreRule
+        scoreRule: ScoreRule = ScoreRule.INDIVIDUAL
     ): Long {
         return repository.createMatch(
             player1Name, player2Name, player3Name, player4Name,
@@ -90,7 +90,7 @@ class MatchUseCases @Inject constructor(
         player3Name: String,
         player4Name: String,
         terminalScore: Int,
-        scoreRule: ScoreRule
+        scoreRule: ScoreRule = ScoreRule.INDIVIDUAL
     ): Long = createMatchUseCase(player1Name, player2Name, player3Name, player4Name, terminalScore, scoreRule)
 
     suspend fun deleteMatch(matchId: Long) = deleteMatchUseCase(matchId)

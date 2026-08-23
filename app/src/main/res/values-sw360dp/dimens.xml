@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Anything at least 360dp wide — most phones. The base values in values/ are
+  sized for narrower screens, where a wider table clips the side seats.
+-->
+<resources>
+    <dimen name="table_radius">116dp</dimen>
+    <dimen name="table_size">300dp</dimen>
+    <dimen name="seat_width">92dp</dimen>
+    <dimen name="table_centre">96dp</dimen>
+    <dimen name="action_card_height">112dp</dimen>
+</resources>

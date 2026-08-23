@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape is short, so the table and the cards give up height. -->
+<resources>
+    <dimen name="table_radius">92dp</dimen>
+    <dimen name="table_size">236dp</dimen>
+    <dimen name="seat_width">84dp</dimen>
+    <dimen name="table_centre">76dp</dimen>
+    <dimen name="action_card_height">88dp</dimen>
+    <dimen name="icon_empty_state">56dp</dimen>
+</resources>

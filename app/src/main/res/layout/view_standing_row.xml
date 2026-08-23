@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One player's line in the match-card standings: rank pip, name, total.
+  The pip is tinted by position — trailing (fewest points) is the good end in
+  this game, since reaching the target is how you lose.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="3dp">
+
+    <View
+        android:id="@+id/pipStanding"
+        android:layout_width="4dp"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_standing_pip" />
+
+    <TextView
+        android:id="@+id/textStandingName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+        android:textColor="@color/text_primary"
+        tools:text="Ahmad" />
+
+    <!-- Progress toward the target, so the card shows how close the match is. -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressStanding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_sm"
+        android:layout_weight="1.2"
+        app:trackColor="@color/felt_900"
+        app:trackCornerRadius="2dp"
+        app:trackThickness="4dp"
+        tools:progress="45" />
+
+    <TextView
+        android:id="@+id/textStandingScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="28dp"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+        android:textColor="@color/text_primary"
+        tools:text="45" />
+
+</LinearLayout>
