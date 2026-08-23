@@ -78,7 +78,7 @@ class ScreenshotTest {
         click(By.text("Cancel"))
         waitFor(id("recyclerViewInProgress"))
 
-        // New match.
+        // New match: recent-player chips plus the four name fields.
         click(id("fab"))
         waitFor(id("editPlayer1"))
         shot("05-new-match")
@@ -91,16 +91,29 @@ class ScreenshotTest {
         waitFor(id("recyclerView"))
         shot("06-scoreboard")
 
-        // Round entry, nothing entered: checklist all unmet, Save disabled.
+        // Round entry, nothing dealt: the table, the prompt, checklist unmet.
         click(id("buttonAddRound"))
-        waitFor(id("cardStatus"))
+        waitFor(id("tableArea"))
         shot("07-round-entry-empty")
 
-        // Partially filled: a selected player tile and the checklist ticking over.
-        repeat(6) { click(id("cardHearts")) }
+        // Arm a card, then deal to a seat. Both stay set afterwards, so the
+        // following taps keep dealing hearts to the same player.
+        click(id("cardHearts"))
+        shot("08-round-entry-armed")
+        click(id("seat1"))
+        repeat(5) { click(id("seat1")) }
         click(id("cardQSpades"))
         device.waitForIdle(IDLE_MS)
-        shot("08-round-entry-partial")
+        shot("09-round-entry-dealt")
+
+        // Landscape: the table and the rail sit side by side.
+        device.setOrientationLeft()
+        device.waitForIdle(IDLE_MS)
+        waitFor(id("tableArea"))
+        shot("10-round-entry-landscape")
+        device.setOrientationNatural()
+        device.waitForIdle(IDLE_MS)
+
         device.pressBack()
         waitFor(id("recyclerView"))
         device.pressBack()
@@ -109,7 +122,7 @@ class ScreenshotTest {
         // Settings — the share icon here used to be invisible.
         click(By.desc("Settings"))
         waitFor(id("layoutContactSupport"))
-        shot("09-settings")
+        shot("11-settings")
         device.pressBack()
         waitFor(id("recyclerViewInProgress"))
 
@@ -117,7 +130,7 @@ class ScreenshotTest {
         ScreenshotSeed.seedToGameOver(context, matchId)
         click(By.textContains("Ahmad"))
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
-        shot("10-end-game")
+        shot("12-end-game")
     }
 
     // ================================================================

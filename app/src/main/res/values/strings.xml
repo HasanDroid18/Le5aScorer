@@ -17,10 +17,7 @@
     <string name="new_match">New Match</string>
 
     <!-- ==================== Match card ==================== -->
-    <string name="rule_individual">Individual</string>
-    <string name="rule_team">Team</string>
-    <!-- e.g. "Target 101 · Individual" -->
-    <string name="match_rule_summary">Target %1$d · %2$s</string>
+    <string name="match_rule_summary">Target %d</string>
     <plurals name="match_round_count">
         <item quantity="one">%d round</item>
         <item quantity="other">%d rounds</item>
@@ -36,9 +33,9 @@
     <string name="cd_leading_player_photo">Leading player photo</string>
 
     <!-- ==================== New match ==================== -->
-    <string name="first_team">First Team</string>
-    <string name="second_team">Second Team</string>
-    <string name="vs_label">VS</string>
+    <string name="players_section">Players</string>
+    <string name="recent_players">Recent players</string>
+    <string name="duplicate_player_names">Each player needs a different name</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="player_3">Player 3</string>
@@ -54,12 +51,7 @@
     <string name="cd_terminal_51">Target score 51</string>
     <string name="cd_terminal_101">Target score 101</string>
     <string name="cd_terminal_151">Target score 151</string>
-    <string name="score_rule">Scoring</string>
     <string name="create_match">Create Match</string>
-    <string name="rule_individual_desc">Each player\'s own total decides the result.</string>
-    <string name="rule_team_desc">The two team totals are combined and compared.</string>
-    <string name="cd_individual_rule">Individual scoring rule</string>
-    <string name="cd_team_rule">Team scoring rule</string>
     <string name="cd_create_match">Create new match</string>
 
     <!-- ==================== Scoreboard ==================== -->
@@ -83,6 +75,9 @@
     <!-- "12 / 36" — the running total against the required round total. -->
     <string name="round_total_format">%1$d / %2$d</string>
     <string name="round_scoring_for">Scoring for</string>
+    <string name="round_tap_hint">Tap a card, then a player — or a player, then a card</string>
+    <string name="round_armed">Dealing</string>
+    <string name="cd_deal_to">Deal to %s</string>
     <string name="round_checklist_title">To save this round</string>
     <string name="check_hearts">Hearts %1$d / %2$d</string>
     <string name="check_queen">Q♠ assigned</string>

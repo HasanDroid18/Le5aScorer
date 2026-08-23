@@ -1,7 +1,6 @@
 package com.hasanDroid.le5ascorer.domain
 
 import com.hasanDroid.le5ascorer.data.local.entity.ActionType
-import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.domain.model.*
 
 /**
@@ -173,58 +172,21 @@ class ScoreEngine {
     /**
      * Check if game is over (someone reached terminal score = they are LOSER)
      * Important: Reaching target score means you LOST, not won!
+     *
+     * Several players can cross on the same round, so every one of them is
+     * reported rather than just the first found.
      */
-    fun checkGameOver(scoreboard: List<RoundScores>, terminalScore: Int, scoreRule: ScoreRule): GameOverResult? {
+    fun checkGameOver(scoreboard: List<RoundScores>, terminalScore: Int): GameOverResult? {
         if (scoreboard.isEmpty()) return null
 
-        val lastRound = scoreboard.last()
+        val reached = scoreboard.last().playerScores.filter { it.cumulativeScore >= terminalScore }
+        if (reached.isEmpty()) return null
 
-        return when (scoreRule) {
-            ScoreRule.INDIVIDUAL -> {
-                // Check if any player reached terminal score
-                val playerReachedTarget = lastRound.playerScores.find { it.cumulativeScore >= terminalScore }
-                playerReachedTarget?.let {
-                    // This player is the LOSER (reached target first)
-                    GameOverResult(
-                        loserIndices = listOf(it.playerIndex),
-                        loserNames = listOf(it.playerName),
-                        finalScores = lastRound.playerScores.map { p -> p.cumulativeScore }
-                    )
-                }
-            }
-            ScoreRule.TEAM -> {
-                // Team 1: players 0 and 2, Team 2: players 1 and 3
-                val team1Score = lastRound.playerScores[0].cumulativeScore +
-                                lastRound.playerScores[2].cumulativeScore
-                val team2Score = lastRound.playerScores[1].cumulativeScore +
-                                lastRound.playerScores[3].cumulativeScore
-
-                // Check if any team reached terminal score
-                if (team1Score >= terminalScore) {
-                    // Team 1 is LOSER (reached target first)
-                    GameOverResult(
-                        loserIndices = listOf(0, 2),
-                        loserNames = listOf(
-                            lastRound.playerScores[0].playerName,
-                            lastRound.playerScores[2].playerName
-                        ),
-                        finalScores = listOf(team1Score, team2Score)
-                    )
-                } else if (team2Score >= terminalScore) {
-                    // Team 2 is LOSER (reached target first)
-                    GameOverResult(
-                        loserIndices = listOf(1, 3),
-                        loserNames = listOf(
-                            lastRound.playerScores[1].playerName,
-                            lastRound.playerScores[3].playerName
-                        ),
-                        finalScores = listOf(team1Score, team2Score)
-                    )
-                } else {
-                    null
-                }
-            }
-        }
+        return GameOverResult(
+            loserIndices = reached.map { it.playerIndex },
+            loserNames = reached.map { it.playerName },
+            finalScores = scoreboard.last().playerScores.map { it.cumulativeScore }
+        )
     }
 
     /**

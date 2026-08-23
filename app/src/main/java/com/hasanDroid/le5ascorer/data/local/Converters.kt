@@ -12,10 +12,15 @@ class Converters {
         return value.name
     }
 
+    /**
+     * Tolerates values no longer in the enum. Matches created before team
+     * scoring was removed still hold "TEAM" in this column, and a bare
+     * valueOf() would throw IllegalArgumentException and take down the match
+     * list for anyone who ever created one.
+     */
     @TypeConverter
-    fun toScoreRule(value: String): ScoreRule {
-        return ScoreRule.valueOf(value)
-    }
+    fun toScoreRule(value: String): ScoreRule =
+        runCatching { ScoreRule.valueOf(value) }.getOrDefault(ScoreRule.INDIVIDUAL)
 
     @TypeConverter
     fun fromMatchStatus(value: MatchStatus): String {

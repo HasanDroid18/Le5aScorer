@@ -47,7 +47,7 @@ class LeekhaRepository @Inject constructor(
         player3Name: String,
         player4Name: String,
         terminalScore: Int,
-        scoreRule: ScoreRule
+        scoreRule: ScoreRule = ScoreRule.INDIVIDUAL
     ): Long {
         val player1Id = getOrCreatePlayer(player1Name)
         val player2Id = getOrCreatePlayer(player2Name)
@@ -135,6 +135,9 @@ class LeekhaRepository @Inject constructor(
                 // Calculate leading player/score if there are rounds
                 var leadingPlayerName: String? = null
                 var leadingScore: Int? = null
+                // Already computed below for the leader; kept so the match card
+                // can show all four standings without a second pass.
+                var playerScores: List<Int> = emptyList()
 
                 if (roundCount > 0) {
                     val rounds = roundDao.getRoundsByMatchIdSync(matchEntity.id).map { roundEntity ->
@@ -154,32 +157,12 @@ class LeekhaRepository @Inject constructor(
                         }
                     }
 
-                    // Find leader based on score rule - HIGHEST score leads
-                    val maxScore: Int
-                    val leadingIndex: Int
-
-                    when (matchEntity.scoreRule) {
-                        ScoreRule.INDIVIDUAL -> {
-                            // Highest individual score is leading
-                            leadingIndex = cumulativeScores.indices.maxByOrNull { cumulativeScores[it] } ?: 0
-                            maxScore = cumulativeScores[leadingIndex]
-                        }
-                        ScoreRule.TEAM -> {
-                            // Highest team score is leading (player 0+1 vs 2+3)
-                            val team1Score = cumulativeScores[0] + cumulativeScores[1]
-                            val team2Score = cumulativeScores[2] + cumulativeScores[3]
-
-                            if (team1Score >= team2Score) {
-                                // Team 1 has higher score - show player with higher score in team
-                                leadingIndex = if (cumulativeScores[0] >= cumulativeScores[1]) 0 else 1
-                                maxScore = team1Score
-                            } else {
-                                // Team 2 has higher score
-                                leadingIndex = if (cumulativeScores[2] >= cumulativeScores[3]) 2 else 3
-                                maxScore = team2Score
-                            }
-                        }
-                    }
+                    // Highest cumulative score leads. (Reaching the target is
+                    // how you lose, so "leading" here means most points.)
+                    val leadingIndex = cumulativeScores.indices
+                        .maxByOrNull { cumulativeScores[it] } ?: 0
+                    val maxScore = cumulativeScores[leadingIndex]
+                    playerScores = cumulativeScores.toList()
 
                     leadingPlayerName = players.getOrNull(leadingIndex)?.name
                     leadingScore = maxScore
@@ -196,6 +179,7 @@ class LeekhaRepository @Inject constructor(
                     roundCount = roundCount,
                     leadingPlayerName = leadingPlayerName,
                     leadingScore = leadingScore,
+                    playerScores = playerScores,
                     loserImagePath = matchEntity.loserImagePath
                 )
             }

@@ -1,6 +1,5 @@
 package com.hasanDroid.le5ascorer.domain
 
-import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.domain.model.PlayerScore
 import com.hasanDroid.le5ascorer.domain.model.RoundScores
 import org.junit.Assert.assertEquals
@@ -26,7 +25,7 @@ class ScoreEngineGameOverTest {
             )
         )
 
-        val result = engine.checkGameOver(scoreboard, terminalScore = 101, scoreRule = ScoreRule.INDIVIDUAL)
+        val result = engine.checkGameOver(scoreboard, terminalScore = 101)
         assertNull(result)
     }
 
@@ -44,7 +43,7 @@ class ScoreEngineGameOverTest {
             )
         )
 
-        val result = engine.checkGameOver(scoreboard, terminalScore = 101, scoreRule = ScoreRule.INDIVIDUAL)
+        val result = engine.checkGameOver(scoreboard, terminalScore = 101)
         assertNotNull(result)
         assertEquals(listOf(1), result!!.loserIndices)
         assertEquals(listOf("B"), result.loserNames)
@@ -65,32 +64,30 @@ class ScoreEngineGameOverTest {
             )
         )
 
-        val result = engine.checkGameOver(scoreboard, terminalScore = 101, scoreRule = ScoreRule.INDIVIDUAL)
+        val result = engine.checkGameOver(scoreboard, terminalScore = 101)
         assertNotNull(result)
         assertEquals(listOf(0), result!!.loserIndices)
         assertEquals(listOf("A"), result.loserNames)
     }
 
     @Test
-    fun `team - game over when team reaches 101 or more (loser)`() {
-        // Team 1: players 0 + 2
-        // Team 2: players 1 + 3
+    fun `reports every player who reached the target on the same round`() {
         val scoreboard = listOf(
             RoundScores(
                 roundIndex = 3,
                 playerScores = listOf(
-                    PlayerScore(0, "A", 0, 60),
+                    PlayerScore(0, "A", 0, 105),
                     PlayerScore(1, "B", 0, 40),
-                    PlayerScore(2, "C", 0, 41), // team1 = 101
-                    PlayerScore(3, "D", 0, 10)  // team2 = 50
+                    PlayerScore(2, "C", 0, 101),
+                    PlayerScore(3, "D", 0, 10)
                 )
             )
         )
 
-        val result = engine.checkGameOver(scoreboard, terminalScore = 101, scoreRule = ScoreRule.TEAM)
+        val result = engine.checkGameOver(scoreboard, terminalScore = 101)
         assertNotNull(result)
         assertEquals(listOf(0, 2), result!!.loserIndices)
         assertEquals(listOf("A", "C"), result.loserNames)
-        assertEquals(listOf(101, 50), result.finalScores)
+        assertEquals(listOf(105, 40, 101, 10), result.finalScores)
     }
 }

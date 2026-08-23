@@ -10,7 +10,7 @@ data class MatchEntity(
     val createdAt: Long = System.currentTimeMillis(),
     val completedAt: Long? = null,
     val terminalScore: Int, // 51, 101, or 151
-    val scoreRule: ScoreRule, // INDIVIDUAL or TEAM
+    val scoreRule: ScoreRule,
     val player1Id: Long,
     val player2Id: Long,
     val player3Id: Long,

@@ -53,8 +53,15 @@
     <dimen name="scoreboard_action_col">48dp</dimen>
     <dimen name="scoreboard_gutter">12dp</dimen>
 
-    <!-- Round entry. -->
-    <dimen name="action_card_height">112dp</dimen>
+    <!-- Round entry. The table is laid out with ConstraintLayout circular
+         positioning: seats sit at table_radius from the centre. These are the
+         small-phone-safe sizes; values-sw360dp opts larger screens up and
+         values-land trades height back on short windows. -->
+    <dimen name="action_card_height">96dp</dimen>
+    <dimen name="table_radius">96dp</dimen>
+    <dimen name="table_size">252dp</dimen>
+    <dimen name="seat_width">80dp</dimen>
+    <dimen name="table_centre">84dp</dimen>
     <dimen name="match_avatar">72dp</dimen>
 
     <!-- Clearance so scrolling content is not hidden behind the FAB or a

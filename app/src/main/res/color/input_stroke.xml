@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Same reasoning as toggle_stroke: an unfocused text field box has to be
+     visible as a control boundary, not just a hint of one. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true" android:color="@color/brass_400" />
     <item android:state_hovered="true" android:color="@color/brass_600" />
-    <item android:color="@color/felt_outline" />
+    <item android:color="@color/control_outline" />
 </selector>

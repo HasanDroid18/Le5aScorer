@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,8 +19,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentRoundEntryBinding
-import com.hasanDroid.le5ascorer.databinding.ItemPlayerRowBinding
 import com.hasanDroid.le5ascorer.databinding.ViewCheckRowBinding
+import com.hasanDroid.le5ascorer.databinding.ViewPlayerSeatBinding
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,6 +31,18 @@ private const val REQUIRED_TOTAL = 36
 private const val DOUBLE_TOTAL = 37
 private const val HEARTS_LONG_PRESS_STEP = 5
 
+/**
+ * Round entry, played on a table.
+ *
+ * Four seats sit around a felt table (positioned by the layout, using
+ * ConstraintLayout circular positioning). Dealing is order-free: arm a card then
+ * pick a seat, or pick a seat then arm a card — whichever you touch first is
+ * remembered and the second completes the deal. Both stay set afterwards, so
+ * dealing five hearts to one player is five taps rather than ten.
+ *
+ * The portrait and landscape layouts share every id and all three sub-layouts,
+ * so nothing here branches on orientation.
+ */
 @AndroidEntryPoint
 class RoundEntryFragment : Fragment() {
 
@@ -39,7 +52,16 @@ class RoundEntryFragment : Fragment() {
     private val viewModel: RoundEntryViewModel by viewModels()
     private val args: RoundEntryFragmentArgs by navArgs()
 
-    private var selectedPlayerIndex: Int = 0
+    /** Which card is waiting to be dealt, if any. */
+    private enum class Card(@DrawableRes val icon: Int) {
+        HEARTS(R.drawable.ic_suit_heart),
+        QUEEN(R.drawable.ic_suit_spade),
+        TEN(R.drawable.ic_suit_diamond),
+        DOUBLE(R.drawable.ic_card_stack)
+    }
+
+    private var armed: Card? = null
+    private var selectedSeat: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,15 +75,16 @@ class RoundEntryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val playerNames = args.playerNames.toList()
-        val roundId = if (args.roundId == NO_ROUND) null else args.roundId
-
-        viewModel.initialize(args.matchId, playerNames, roundId)
+        viewModel.initialize(
+            args.matchId,
+            args.playerNames.toList(),
+            if (args.roundId == NO_ROUND) null else args.roundId
+        )
 
         applyInsets()
         setupToolbar()
-        setupPlayerRows()
-        setupCardActions()
+        setupSeats()
+        setupCardRail()
         observeUiState()
     }
 
@@ -75,34 +98,66 @@ class RoundEntryFragment : Fragment() {
         binding.toolbar.title = getString(
             if (args.roundId == NO_ROUND) R.string.select_cards else R.string.edit_round
         )
-        binding.buttonReset.setOnClickListener { viewModel.reset() }
+        binding.buttonReset.setOnClickListener {
+            armed = null
+            selectedSeat = null
+            viewModel.reset()
+        }
     }
 
-    private fun setupPlayerRows() {
-        playerRowBindings().forEachIndexed { index, rowBinding ->
-            rowBinding.cardPlayerRow.setOnClickListener {
-                selectedPlayerIndex = index
-                render(viewModel.uiState.value)
+    private fun seats(): List<ViewPlayerSeatBinding> =
+        listOf(binding.seat1, binding.seat2, binding.seat3, binding.seat4)
+
+    private fun setupSeats() {
+        seats().forEachIndexed { index, seat ->
+            seat.root.setOnClickListener { onSeatTapped(index) }
+        }
+    }
+
+    private fun setupCardRail() {
+        with(binding.cardRail) {
+            cardHearts.setOnClickListener { onCardTapped(Card.HEARTS) }
+            cardHearts.setOnLongClickListener {
+                // +5 without five taps. Needs a seat, so arm one first if the
+                // player has only picked the card so far.
+                val seat = selectedSeat
+                if (seat == null) {
+                    onCardTapped(Card.HEARTS)
+                } else {
+                    repeat(HEARTS_LONG_PRESS_STEP) { viewModel.incrementHeart(seat) }
+                }
+                true
             }
+            cardQSpades.setOnClickListener { onCardTapped(Card.QUEEN) }
+            cardTenDiamonds.setOnClickListener { onCardTapped(Card.TEN) }
+            cardDouble.setOnClickListener { onCardTapped(Card.DOUBLE) }
         }
+        binding.buttonSave.setOnClickListener { viewModel.saveRound() }
     }
 
-    private fun playerRowBindings(): List<ItemPlayerRowBinding> = listOf(
-        binding.rowPlayer1, binding.rowPlayer2, binding.rowPlayer3, binding.rowPlayer4
-    )
+    // ================================================================
+    // Dealing
+    // ================================================================
 
-    private fun setupCardActions() {
-        binding.cardHearts.setOnClickListener { viewModel.incrementHeart(selectedPlayerIndex) }
-        binding.cardHearts.setOnLongClickListener {
-            repeat(HEARTS_LONG_PRESS_STEP) { viewModel.incrementHeart(selectedPlayerIndex) }
-            true
+    private fun onSeatTapped(seat: Int) {
+        selectedSeat = seat
+        armed?.let { deal(it, seat) }
+        render(viewModel.uiState.value)
+    }
+
+    private fun onCardTapped(card: Card) {
+        armed = card
+        selectedSeat?.let { deal(card, it) }
+        render(viewModel.uiState.value)
+    }
+
+    private fun deal(card: Card, seat: Int) {
+        when (card) {
+            Card.HEARTS -> viewModel.incrementHeart(seat)
+            Card.QUEEN -> viewModel.toggleQSpades(seat)
+            Card.TEN -> viewModel.toggleTenDiamonds(seat)
+            Card.DOUBLE -> viewModel.setDouble(seat)
         }
-        binding.cardQSpades.setOnClickListener { viewModel.toggleQSpades(selectedPlayerIndex) }
-        binding.cardTenDiamonds.setOnClickListener {
-            viewModel.toggleTenDiamonds(selectedPlayerIndex)
-        }
-        binding.cardDouble.setOnClickListener { viewModel.setDouble(selectedPlayerIndex) }
-        binding.buttonSave.setOnClickListener { viewModel.saveRound() }
     }
 
     private fun observeUiState() {
@@ -118,9 +173,10 @@ class RoundEntryFragment : Fragment() {
 
     private fun render(state: RoundEntryUiState) {
         val validity = Validity.of(state)
-        updatePlayerRows(state)
-        updateScoringFor(state)
-        updateStatusCard(state, validity)
+        updateSeats(state)
+        updateTableCentre()
+        updateCardRail()
+        updateStatus(state, validity)
         updateActionChips(state)
         binding.buttonSave.isEnabled = !state.isSaving && validity.isValid
     }
@@ -130,9 +186,9 @@ class RoundEntryFragment : Fragment() {
     // ================================================================
 
     /**
-     * The round's completeness, derived once per render. The same four
-     * conditions previously got recomputed independently in the status card and
-     * in the save-button handler, which is how they drifted apart.
+     * The round's completeness, derived once per render. The same conditions
+     * previously got recomputed independently in the status card and in the
+     * save-button handler, which is how they drifted apart.
      */
     private data class Validity(
         val totalHearts: Int,
@@ -172,111 +228,146 @@ class RoundEntryFragment : Fragment() {
     // Rendering
     // ================================================================
 
-    private fun updateScoringFor(state: RoundEntryUiState) {
-        binding.textScoringFor.text = state.playersData
-            .getOrNull(selectedPlayerIndex)
-            ?.playerName
-            ?: getString(R.string.player_default)
-    }
-
-    private fun updatePlayerRows(state: RoundEntryUiState) {
-        val rows = playerRowBindings()
-        state.playersData.forEachIndexed { index, player ->
-            rows.getOrNull(index)?.let {
-                updatePlayerRow(it, player, isSelected = index == selectedPlayerIndex)
+    private fun updateSeats(state: RoundEntryUiState) {
+        val allSeats = seats()
+        allSeats.forEachIndexed { index, seat ->
+            val player = state.playersData.getOrNull(index)
+            if (player == null) {
+                seat.root.visibility = View.GONE
+                return@forEachIndexed
             }
+            seat.root.visibility = View.VISIBLE
+            bindSeat(seat, player, isSelected = index == selectedSeat)
         }
     }
 
-    private fun updatePlayerRow(
-        row: ItemPlayerRowBinding,
+    private fun bindSeat(
+        seat: ViewPlayerSeatBinding,
         player: PlayerRoundData,
         isSelected: Boolean
     ) {
-        row.textPlayerName.text = player.playerName
-        row.textPlayerScore.text = player.total.toString()
+        seat.textSeatName.text = player.playerName
+        seat.textSeatScore.text = player.total.toString()
 
-        row.layoutHearts.showIf(player.heartCount > 0)
-        row.textHeartCount.text = getString(R.string.heart_count_format, player.heartCount)
-        row.layoutQSpades.showIf(player.qSpadesCount > 0)
-        row.layoutTenDiamonds.showIf(player.tenDiamondsCount > 0)
+        seat.layoutHearts.showIf(player.heartCount > 0)
+        seat.textHeartCount.text = getString(R.string.heart_count_format, player.heartCount)
+        seat.iconQSpades.showIf(player.qSpadesCount > 0)
+        seat.iconTenDiamonds.showIf(player.tenDiamondsCount > 0)
 
-        row.cardPlayerRow.contentDescription =
-            getString(R.string.cd_select_player, player.playerName)
-
-        // Selection flips the whole tile from felt to brass. Stroke and
-        // elevation come from dimen resources because MaterialCardView takes
-        // pixels, not dp — the previous literals (6, 12f) rendered thinner on
-        // high-density screens and thicker on low.
-        val res = resources
-        if (isSelected) {
-            row.cardPlayerRow.setCardBackgroundColor(color(R.color.brass_400))
-            row.cardPlayerRow.strokeColor = color(R.color.brass_600)
-            row.cardPlayerRow.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_selected)
-            row.cardPlayerRow.cardElevation = res.getDimension(R.dimen.elev_float)
+        seat.root.contentDescription = if (armed != null) {
+            getString(R.string.cd_deal_to, player.playerName)
         } else {
-            row.cardPlayerRow.setCardBackgroundColor(color(R.color.felt_700))
-            row.cardPlayerRow.strokeColor = color(R.color.felt_outline)
-            row.cardPlayerRow.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_hairline)
-            row.cardPlayerRow.cardElevation = res.getDimension(R.dimen.elev_raised)
+            getString(R.string.cd_select_player, player.playerName)
         }
 
-        // On brass the tile reads as a printed card, so the suits take their
-        // printed colours. On felt, printed red would fall below a usable
-        // contrast ratio, so the indicators go monochrome — the suit shapes
-        // still carry the meaning.
-        val onTile = if (isSelected) R.color.felt_950 else R.color.text_primary
+        // Stroke and elevation come from dimen resources: MaterialCardView takes
+        // pixels, so raw literals rendered thinner on high-density screens.
+        val res = resources
+        if (isSelected) {
+            seat.root.setCardBackgroundColor(color(R.color.brass_400))
+            seat.root.strokeColor = color(R.color.brass_600)
+            seat.root.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_selected)
+            seat.root.cardElevation = res.getDimension(R.dimen.elev_float)
+        } else {
+            seat.root.setCardBackgroundColor(color(R.color.felt_700))
+            seat.root.strokeColor = color(R.color.felt_outline)
+            seat.root.strokeWidth = res.getDimensionPixelSize(R.dimen.stroke_hairline)
+            seat.root.cardElevation = res.getDimension(R.dimen.elev_raised)
+        }
+
+        // On brass the seat reads as a printed card, so the suits take their
+        // printed colours. On felt, printed red falls below usable contrast, so
+        // the indicators go monochrome — the suit shapes still carry meaning.
+        val onSeat = if (isSelected) R.color.felt_950 else R.color.text_primary
         val suitRed = if (isSelected) R.color.ink_red else R.color.text_secondary
         val suitBlack = if (isSelected) R.color.ink else R.color.text_secondary
 
-        row.textPlayerName.setTextColor(color(onTile))
-        row.textPlayerScore.setTextColor(color(onTile))
-        row.iconHearts.tint(suitRed)
-        row.textHeartCount.setTextColor(color(suitRed))
-        row.textQSpadesLabel.setTextColor(color(suitBlack))
-        row.iconQSpades.tint(suitBlack)
-        row.textTenLabel.setTextColor(color(suitRed))
-        row.iconTenDiamonds.tint(suitRed)
+        seat.textSeatName.setTextColor(color(onSeat))
+        seat.textSeatScore.setTextColor(color(onSeat))
+        seat.iconHearts.tint(suitRed)
+        seat.textHeartCount.setTextColor(color(suitRed))
+        seat.iconQSpades.tint(suitBlack)
+        seat.iconTenDiamonds.tint(suitRed)
     }
 
-    private fun updateStatusCard(state: RoundEntryUiState, validity: Validity) {
-        binding.textRoundTotal.text =
-            getString(R.string.round_total_format, validity.totalRound, validity.target)
-        binding.progressRound.max = validity.target
-        binding.progressRound.progress = validity.totalRound
+    /** The middle of the table shows what is about to be dealt. */
+    private fun updateTableCentre() {
+        val card = armed
+        binding.textArmedLabel.visibility = if (card == null) View.INVISIBLE else View.VISIBLE
+        binding.imageArmed.visibility = if (card == null) View.INVISIBLE else View.VISIBLE
+        binding.textTapHint.showIf(card == null && selectedSeat == null)
+        card?.let { binding.imageArmed.setImageResource(it.icon) }
+    }
 
-        binding.layoutDoubleStatus.showIf(validity.isDouble)
-        binding.layoutNormalStatus.showIf(!validity.isDouble)
-
-        val accent = when {
-            validity.isDouble -> R.color.danger
-            validity.isValid -> R.color.success
-            else -> R.color.brass_400
+    /** The armed card lifts out of the rail. */
+    private fun updateCardRail() {
+        val cards = with(binding.cardRail) {
+            mapOf(
+                Card.HEARTS to cardHearts,
+                Card.QUEEN to cardQSpades,
+                Card.TEN to cardTenDiamonds,
+                Card.DOUBLE to cardDouble
+            )
         }
-        binding.progressRound.setIndicatorColor(color(accent))
-        binding.textRoundTotal.setTextColor(color(accent))
+        val res = resources
+        cards.forEach { (card, view) ->
+            val isArmed = card == armed
+            view.cardElevation =
+                res.getDimension(if (isArmed) R.dimen.elev_dialog else R.dimen.elev_float)
+            view.strokeWidth =
+                res.getDimensionPixelSize(if (isArmed) R.dimen.stroke_selected else R.dimen.stroke_none)
+            view.strokeColor = color(R.color.brass_400)
+            view.translationY =
+                if (isArmed) -res.getDimension(R.dimen.space_sm) else 0f
+        }
+        // The Double keeps its own red edge when it is not the armed card.
+        if (armed != Card.DOUBLE) {
+            binding.cardRail.cardDouble.strokeWidth =
+                res.getDimensionPixelSize(R.dimen.stroke_hairline)
+            binding.cardRail.cardDouble.strokeColor = color(R.color.danger)
+        }
+    }
 
-        if (validity.isDouble) return
+    private fun updateStatus(state: RoundEntryUiState, validity: Validity) {
+        with(binding.roundStatus) {
+            textRoundTotal.text =
+                getString(R.string.round_total_format, validity.totalRound, validity.target)
+            progressRound.max = validity.target
+            progressRound.progress = validity.totalRound
 
-        bindCheck(
-            binding.checkHearts,
-            met = validity.heartsComplete,
-            label = getString(R.string.check_hearts, validity.totalHearts, REQUIRED_HEARTS)
-        )
-        bindCheck(
-            binding.checkQueen,
-            met = validity.hasQueen,
-            label = ownerLabel(
-                state, validity.qOwnerIndex, R.string.check_queen_to, R.string.check_queen
+            layoutDoubleStatus.showIf(validity.isDouble)
+            layoutNormalStatus.showIf(!validity.isDouble)
+
+            val accent = when {
+                validity.isDouble -> R.color.danger
+                validity.isValid -> R.color.success
+                else -> R.color.brass_400
+            }
+            progressRound.setIndicatorColor(color(accent))
+            textRoundTotal.setTextColor(color(accent))
+
+            if (validity.isDouble) return
+
+            bindCheck(
+                checkHearts,
+                met = validity.heartsComplete,
+                label = getString(R.string.check_hearts, validity.totalHearts, REQUIRED_HEARTS)
             )
-        )
-        bindCheck(
-            binding.checkTen,
-            met = validity.hasTen,
-            label = ownerLabel(
-                state, validity.tenOwnerIndex, R.string.check_ten_to, R.string.check_ten
+            bindCheck(
+                checkQueen,
+                met = validity.hasQueen,
+                label = ownerLabel(
+                    state, validity.qOwnerIndex, R.string.check_queen_to, R.string.check_queen
+                )
             )
-        )
+            bindCheck(
+                checkTen,
+                met = validity.hasTen,
+                label = ownerLabel(
+                    state, validity.tenOwnerIndex, R.string.check_ten_to, R.string.check_ten
+                )
+            )
+        }
     }
 
     private fun ownerLabel(
@@ -324,7 +415,7 @@ class RoundEntryFragment : Fragment() {
         }
     }
 
-    private fun addActionChip(label: String, iconRes: Int, onRemove: () -> Unit) {
+    private fun addActionChip(label: String, @DrawableRes iconRes: Int, onRemove: () -> Unit) {
         val chip = Chip(requireContext()).apply {
             setChipDrawable(
                 com.google.android.material.chip.ChipDrawable.createFromAttributes(

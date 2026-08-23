@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One seat at the table.
+
+  Placed by the parent using ConstraintLayout circular positioning, so this
+  layout only describes the seat itself and never its position. Selection state
+  (brass fill, ink text, lift) is applied in RoundEntryFragment.
+
+  The root deliberately has no id: every use is via <include android:id=...>,
+  which overrides the included root's id, so a root id here would be dead and
+  ViewBinding's field for it would never resolve. Callers use `root`, which is
+  typed MaterialCardView.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/seat_width"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/felt_700"
+    app:cardCornerRadius="@dimen/radius_md"
+    app:cardElevation="@dimen/elev_raised"
+    app:rippleColor="@color/overlay_ripple_brass"
+    app:strokeColor="@color/felt_outline"
+    app:strokeWidth="@dimen/stroke_hairline">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/space_sm">
+
+        <TextView
+            android:id="@+id/textSeatName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+            android:textColor="@color/text_primary"
+            tools:text="Ahmad" />
+
+        <TextView
+            android:id="@+id/textSeatScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+            android:textColor="@color/text_primary"
+            tools:text="13" />
+
+        <!-- What this seat has taken so far this round. -->
+        <LinearLayout
+            android:id="@+id/layoutSeatIcons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layoutHearts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/iconHearts"
+                    android:layout_width="11dp"
+                    android:layout_height="11dp"
+                    android:contentDescription="@string/cd_hearts"
+                    app:srcCompat="@drawable/ic_suit_heart"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/textHeartCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+                    android:textColor="@color/text_secondary"
+                    tools:text="×5" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iconQSpades"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:contentDescription="@string/cd_queen_spades"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_suit_spade"
+                app:tint="@color/text_secondary"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iconTenDiamonds"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:contentDescription="@string/cd_ten_diamonds"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_suit_diamond"
+                app:tint="@color/text_secondary"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

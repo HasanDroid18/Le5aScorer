@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  New match setup.
+  New match, landscape.
 
-  A flat four-player line-up. This screen used to be framed as "First Team / VS /
-  Second Team", which was team-scoring vocabulary; with team scoring removed the
-  seats are just seats.
-
-  Each field is a MaterialAutoCompleteTextView backed by previously used players,
-  and the chip rail above offers recent names for one-tap filling.
+  Identical ids to the portrait layout so NewMatchFragment binds the same way.
+  The four name fields run in two columns because a landscape phone cannot show
+  four stacked fields plus the target selector without scrolling past both.
 -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,9 +45,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/screen_margin"
-            android:paddingTop="@dimen/space_lg">
+            android:paddingTop="@dimen/space_md">
 
-            <!-- ==================== Players ==================== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPlayers"
                 style="@style/Widget.Le5a.Card"
@@ -85,8 +81,6 @@
 
                     </LinearLayout>
 
-                    <!-- Recent players. Hidden until somebody has played before,
-                         so a first run does not show an empty rail. -->
                     <LinearLayout
                         android:id="@+id/layoutRecentPlayers"
                         android:layout_width="match_parent"
@@ -98,7 +92,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_md"
+                            android:layout_marginTop="@dimen/space_sm"
                             android:text="@string/recent_players"
                             android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
                             android:textColor="@color/text_tertiary" />
@@ -121,97 +115,121 @@
 
                     </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Le5a.TextInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_lg"
-                        android:hint="@string/player_1"
-                        app:endIconMode="clear_text"
-                        app:placeholderText="@string/player_hint_1"
-                        app:startIconDrawable="@drawable/ic_person">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/editPlayer1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:completionThreshold="1"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName|textCapWords"
-                            android:maxLines="1"
-                            android:popupBackground="@drawable/bg_popup_menu"
-                            tools:text="Ahmad" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Le5a.TextInput"
+                    <!-- Two columns: seats 1 and 3 on the left, 2 and 4 right. -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_md"
-                        android:hint="@string/player_2"
-                        app:endIconMode="clear_text"
-                        app:placeholderText="@string/player_hint_2"
-                        app:startIconDrawable="@drawable/ic_person">
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/editPlayer2"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_sm"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Le5a.TextInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:completionThreshold="1"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName|textCapWords"
-                            android:maxLines="1"
-                            android:popupBackground="@drawable/bg_popup_menu"
-                            tools:text="Sara" />
+                                                        android:hint="@string/player_1"
+                            app:endIconMode="clear_text"
+                            app:placeholderText="@string/player_hint_1"
+                            app:startIconDrawable="@drawable/ic_person">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/editPlayer1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName|textCapWords"
+                                android:maxLines="1"
+                                android:popupBackground="@drawable/bg_popup_menu"
+                                tools:text="Ahmad" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Le5a.TextInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_md"
-                        android:hint="@string/player_3"
-                        app:endIconMode="clear_text"
-                        app:placeholderText="@string/player_hint_3"
-                        app:startIconDrawable="@drawable/ic_person">
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/editPlayer3"
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Le5a.TextInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:completionThreshold="1"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName|textCapWords"
-                            android:maxLines="1"
-                            android:popupBackground="@drawable/bg_popup_menu"
-                            tools:text="Khaled" />
+                            android:layout_marginTop="@dimen/space_md"
+                            android:hint="@string/player_3"
+                            app:endIconMode="clear_text"
+                            app:placeholderText="@string/player_hint_3"
+                            app:startIconDrawable="@drawable/ic_person">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/editPlayer3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName|textCapWords"
+                                android:maxLines="1"
+                                android:popupBackground="@drawable/bg_popup_menu"
+                                tools:text="Khaled" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Le5a.TextInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_md"
-                        android:hint="@string/player_4"
-                        app:endIconMode="clear_text"
-                        app:placeholderText="@string/player_hint_4"
-                        app:startIconDrawable="@drawable/ic_person">
+                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/editPlayer4"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_sm"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Le5a.TextInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:completionThreshold="1"
-                            android:imeOptions="actionDone"
-                            android:inputType="textPersonName|textCapWords"
-                            android:maxLines="1"
-                            android:popupBackground="@drawable/bg_popup_menu"
-                            tools:text="Fatima" />
+                                                        android:hint="@string/player_2"
+                            app:endIconMode="clear_text"
+                            app:placeholderText="@string/player_hint_2"
+                            app:startIconDrawable="@drawable/ic_person">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/editPlayer2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName|textCapWords"
+                                android:maxLines="1"
+                                android:popupBackground="@drawable/bg_popup_menu"
+                                tools:text="Sara" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Le5a.TextInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_md"
+                            android:hint="@string/player_4"
+                            app:endIconMode="clear_text"
+                            app:placeholderText="@string/player_hint_4"
+                            app:startIconDrawable="@drawable/ic_person">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/editPlayer4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:imeOptions="actionDone"
+                                android:inputType="textPersonName|textCapWords"
+                                android:maxLines="1"
+                                android:popupBackground="@drawable/bg_popup_menu"
+                                tools:text="Fatima" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/textNameError"
@@ -228,47 +246,40 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ==================== Target ==================== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardRules"
                 style="@style/Widget.Le5a.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_lg">
+                android:layout_marginTop="@dimen/space_md">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:padding="@dimen/card_padding">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@null"
+                        app:srcCompat="@drawable/ic_target"
+                        app:tint="@color/text_tertiary" />
+
+                    <TextView
+                        style="@style/Widget.Le5a.SectionHeader"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/icon_sm"
-                            android:layout_height="@dimen/icon_sm"
-                            android:contentDescription="@null"
-                            app:srcCompat="@drawable/ic_target"
-                            app:tint="@color/text_tertiary" />
-
-                        <TextView
-                            style="@style/Widget.Le5a.SectionHeader"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_sm"
-                            android:text="@string/terminal_score_label" />
-
-                    </LinearLayout>
+                        android:layout_marginStart="@dimen/space_sm"
+                        android:layout_marginEnd="@dimen/space_lg"
+                        android:text="@string/terminal_score_label" />
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggleTerminalScore"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_md"
+                        android:layout_weight="1"
                         app:checkedButton="@id/button101"
                         app:selectionRequired="true"
                         app:singleSelection="true">
@@ -310,7 +321,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Fade so content dissolves under the sticky button instead of being cut. -->
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/sticky_button_clearance"
@@ -325,7 +335,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginHorizontal="@dimen/screen_margin"
-        android:layout_marginBottom="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/space_md"
         android:contentDescription="@string/cd_create_match"
         android:enabled="false"
         android:text="@string/create_match"

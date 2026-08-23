@@ -23,6 +23,11 @@
     <color name="felt_700">#FF143B29</color>  <!-- raised surface -->
     <color name="felt_600">#FF1B4A34</color>  <!-- pressed / highest surface -->
     <color name="felt_outline">#FF2A5B44</color>
+    <!-- Boundary of an interactive control (outlined buttons, toggle segments,
+         text field boxes). felt_outline is only 1.87:1 on felt_800 — fine for a
+         decorative card edge, but it made the segmented control read as floating
+         text rather than a control. 3.62:1 clears the 3:1 bar for UI components. -->
+    <color name="control_outline">#FF4E8A6C</color>
     <color name="felt_outline_soft">#FF1E4732</color>
 
     <!-- ===================================================================
@@ -51,7 +56,10 @@
     <color name="text_primary">#FFF5F1E8</color>
     <color name="text_secondary">#FFB9C7BE</color>
     <color name="text_tertiary">#FF8A9C90</color>
-    <color name="text_disabled">#FF5F6F65</color>
+    <!-- Disabled text was #5F6F65, which is only 2.34:1 on felt_700 — a disabled
+         Create Match button was effectively unreadable, and that button starts
+         disabled. Disabled state is signalled by the flat fill instead. -->
+    <color name="text_disabled">#FF8A9C90</color>
 
     <!-- ===================================================================
          Semantic. Muted enough to live on felt without competing with brass.
