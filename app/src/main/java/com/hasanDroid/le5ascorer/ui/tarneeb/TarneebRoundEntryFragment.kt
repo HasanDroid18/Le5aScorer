@@ -42,6 +42,8 @@ class TarneebRoundEntryFragment : Fragment() {
     private val viewModel: TarneebRoundEntryViewModel by viewModels()
     private val args: TarneebRoundEntryFragmentArgs by navArgs()
 
+    private var navigatedAway = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,6 +78,12 @@ class TarneebRoundEntryFragment : Fragment() {
 
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        // Nothing else on this screen distinguished editing an existing round
+        // from adding a new one, which matters because Reset blanks whichever
+        // you are on. Leekha's round entry already titles itself this way.
+        binding.toolbar.setTitle(
+            if (args.roundId == NO_ROUND) R.string.tarneeb_round_title else R.string.edit_round
+        )
         binding.buttonReset.setOnClickListener { viewModel.reset() }
     }
 
@@ -107,8 +115,20 @@ class TarneebRoundEntryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    if (state.saved) {
+                        // One-shot. `saved` is never cleared, and render() can
+                        // provoke a further emission of its own (checking the
+                        // bidder toggle calls back into the ViewModel), so a
+                        // second navigateUp would pop the scoreboard too and
+                        // strand the user on the match list. Returning here also
+                        // keeps render() off a binding that is about to go away.
+                        if (!navigatedAway) {
+                            navigatedAway = true
+                            findNavController().navigateUp()
+                        }
+                        return@collect
+                    }
                     render(state)
-                    if (state.saved) findNavController().navigateUp()
                 }
             }
         }
@@ -134,14 +154,16 @@ class TarneebRoundEntryFragment : Fragment() {
             // The traditional name: bid 1 is seven tricks, bid 7 is all thirteen.
             getString(R.string.tarneeb_bid_lamas, state.bid - TarneebScoreEngine.MIN_BID + 1)
         }
-        binding.buttonBidDown.isEnabled = state.bid > TarneebScoreEngine.MIN_BID
-        binding.buttonBidUp.isEnabled = state.bid < TarneebScoreEngine.TRICKS_PER_ROUND
+        binding.buttonBidDown.isEnabled =
+            !state.isLoading && state.bid > TarneebScoreEngine.MIN_BID
+        binding.buttonBidUp.isEnabled =
+            !state.isLoading && state.bid < TarneebScoreEngine.TRICKS_PER_ROUND
 
         renderRows(state)
         renderRemaining(state)
         renderPreview(state)
 
-        binding.buttonSave.isEnabled = state.isComplete && !state.isSaving
+        binding.buttonSave.isEnabled = state.isComplete && !state.isSaving && !state.isLoading
     }
 
     private fun renderRows(state: TarneebRoundUiState) {
@@ -156,8 +178,9 @@ class TarneebRoundEntryFragment : Fragment() {
                 row.textTeamBid.text = getString(R.string.tarneeb_bidder_marker, state.bid)
             }
 
-            row.buttonTricksDown.isEnabled = state.tricks.getOrElse(team) { 0 } > 0
-            row.buttonTricksUp.isEnabled = state.remaining > 0
+            row.buttonTricksDown.isEnabled =
+                !state.isLoading && state.tricks.getOrElse(team) { 0 } > 0
+            row.buttonTricksUp.isEnabled = !state.isLoading && viewModel.canAddTrick(team)
             row.buttonTricksDown.contentDescription =
                 getString(R.string.cd_tarneeb_tricks_down, name)
             row.buttonTricksUp.contentDescription =

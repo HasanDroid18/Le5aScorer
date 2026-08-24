@@ -225,7 +225,6 @@
     <string name="cd_tarneeb_tricks_up">One more trick for %s</string>
     <string name="tarneeb_row_bid_made">Bid %d · made</string>
     <string name="tarneeb_row_bid_failed">Bid %d · failed</string>
-    <string name="tarneeb_row_tricks">%d tricks</string>
     <string name="cd_tarneeb_cell">%1$s: %2$d tricks, %3$d points, %4$d total</string>
     <string name="cd_tarneeb_standing">%1$s: %2$d of %3$d</string>
 

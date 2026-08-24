@@ -20,6 +20,7 @@ import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.databinding.FragmentTarneebScoreboardBinding
 import com.hasanDroid.le5ascorer.databinding.ViewStandingColumnBinding
 import com.hasanDroid.le5ascorer.domain.TarneebGameResult
+import com.hasanDroid.le5ascorer.domain.TarneebScoreEngine
 import com.hasanDroid.le5ascorer.ui.common.EndGameDialogFragment
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
@@ -110,7 +111,9 @@ class TarneebScoreboardFragment : Fragment() {
 
     private fun openRoundEntry(roundId: Long) {
         val names = viewModel.uiState.value.teamNames
-        if (names.isEmpty()) return
+        // Both teams, not just one: a one-element list would open the entry
+        // screen with a blank second team and no way to assign it tricks.
+        if (names.size < TarneebScoreEngine.TEAMS) return
         findNavController().navigate(
             TarneebScoreboardFragmentDirections
                 .actionTarneebScoreboardFragmentToTarneebRoundEntryFragment(

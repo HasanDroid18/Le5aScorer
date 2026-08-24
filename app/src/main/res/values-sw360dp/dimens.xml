@@ -15,4 +15,9 @@
     <dimen name="heart_pip_overlap">-6dp</dimen>
     <dimen name="assign_card_width">60dp</dimen>
     <dimen name="assign_card_height">82dp</dimen>
+
+    <!-- Room for a full-size round badge once the screen is not 320dp wide. -->
+    <dimen name="tarneeb_round_col">44dp</dimen>
+    <dimen name="tarneeb_score_col_min">48dp</dimen>
+
 </resources>

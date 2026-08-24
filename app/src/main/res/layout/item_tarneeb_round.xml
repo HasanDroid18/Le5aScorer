@@ -27,8 +27,8 @@
 
         <TextView
             android:id="@+id/textRound"
-            android:layout_width="@dimen/scoreboard_round_col"
-            android:layout_height="@dimen/scoreboard_round_col"
+            android:layout_width="@dimen/tarneeb_round_col"
+            android:layout_height="@dimen/tarneeb_round_col"
             android:background="@drawable/bg_round_badge"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
@@ -39,8 +39,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/scoreboard_gutter"
-            android:layout_weight="1"
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1.3"
             android:orientation="vertical">
 
             <TextView
@@ -64,25 +64,30 @@
 
         </LinearLayout>
 
+        <!-- Weighted, not fixed. These were 60dp each, which together with the
+             badge and the edit button left 20dp for the team name on a 320dp
+             screen. An <include> overriding any layout param must declare width
+             and height too, or inflation throws. -->
         <include
             android:id="@+id/cellTeamA"
             layout="@layout/view_tarneeb_score_cell"
-            android:layout_width="@dimen/tarneeb_score_col"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <include
             android:id="@+id/cellTeamB"
             layout="@layout/view_tarneeb_score_cell"
-            android:layout_width="@dimen/tarneeb_score_col"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_sm" />
+            android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonEdit"
             style="@style/Widget.Le5a.Button.Icon"
             android:layout_width="@dimen/scoreboard_action_col"
             android:layout_height="@dimen/scoreboard_action_col"
-            android:layout_marginStart="@dimen/scoreboard_gutter"
+            android:layout_marginStart="@dimen/space_sm"
             android:contentDescription="@string/edit_round"
             app:icon="@drawable/ic_edit"
             app:iconTint="@color/ink_muted"
