@@ -55,17 +55,12 @@ class ScreenshotTest {
         val matchId = ScreenshotSeed.seed(context)
 
         launchApp()
-        // Anchor on the tab container, never on recyclerViewInProgress: the
-        // fragment sets the list to GONE while it is empty, so waiting on the
-        // list means waiting on data as well as on the screen — and a GONE view
-        // is absent from the hierarchy, so the failure reads as "screen never
-        // appeared" when the screen was there all along.
         waitForList()
         shot("01-match-list")
 
         // Completed tab: empty state.
         click(By.text("Completed"))
-        waitFor(id("layoutCompleted"))
+        waitFor(By.textContains("No completed games"))
         shot("02-empty-state")
         click(By.text("In Progress"))
         waitForList()
@@ -93,13 +88,13 @@ class ScreenshotTest {
         // Scoreboard — the screen whose column alignment and tabular figures
         // this redesign specifically claims to have fixed.
         click(By.textContains("Ahmad"))
-        waitFor(id("cardPlayerNames"))
+        waitFor(By.text("Scoreboard"))
         shot("06-scoreboard")
 
         // Round entry, nothing dealt: the heart pool full, both honour cards
         // unclaimed, Save disabled.
         click(id("buttonAddRound"))
-        waitFor(id("layoutHeartPool"))
+        waitFor(id("buttonSave"))
         shot("07-round-entry-empty")
 
         // Every player row carries the same four button ids, so findObject
@@ -118,19 +113,19 @@ class ScreenshotTest {
         // layout scrolled. This shot is what proves that claim.
         device.setOrientationLeft()
         device.waitForIdle(IDLE_MS)
-        waitFor(id("layoutHeartPool"))
+        waitFor(id("buttonSave"))
         shot("10-round-entry-landscape")
         device.setOrientationNatural()
         device.waitForIdle(IDLE_MS)
 
         device.pressBack()
-        waitFor(id("cardPlayerNames"))
+        waitFor(By.text("Scoreboard"))
         device.pressBack()
         waitForList()
 
         // Settings — the share icon here used to be invisible.
         click(By.desc("Settings"))
-        waitFor(id("layoutContactSupport"))
+        waitFor(By.textContains("Contact Support"))
         shot("11-settings")
         device.pressBack()
         waitForList()
@@ -144,7 +139,7 @@ class ScreenshotTest {
         // dialog also arrive live, through the Flow, which is what they do in
         // real use.
         click(By.textContains("Ahmad"))
-        waitFor(id("cardPlayerNames"))
+        waitFor(By.text("Scoreboard"))
         ScreenshotSeed.seedToGameOver(context, matchId)
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
         shot("12-end-game")
@@ -159,9 +154,16 @@ class ScreenshotTest {
             .getLaunchIntentForPackage(pkg)
             ?.apply { addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK) }
         context.startActivity(intent)
-        device.wait(Until.hasObject(By.pkg(pkg).depth(0)), LONG_TIMEOUT)
-        // The splash runs a Lottie animation before handing off to MainActivity.
-        device.wait(Until.hasObject(id("toolbar")), LONG_TIMEOUT)
+        // Assert rather than fire-and-forget. These two waits used to discard
+        // their result, so when the app failed to come up the walk carried on
+        // and blamed whichever selector it checked next — which cost a run to
+        // work out.
+        waitFor(By.pkg(pkg).depth(0), timeout = LONG_TIMEOUT)
+        // Wait on the tab label, not on the app name: the splash shows the app
+        // name too, so that selector matches while the Lottie is still running
+        // and hands back a screen that is about to be replaced. Only the match
+        // list has tabs.
+        waitFor(By.text("In Progress"), timeout = LONG_TIMEOUT)
     }
 
     private fun id(name: String): BySelector = By.res(pkg, name)
@@ -170,16 +172,22 @@ class ScreenshotTest {
      * Waits for the In Progress tab, then for the seeded card actually to be on
      * it.
      *
-     * Two waits rather than one because they fail for different reasons and the
-     * distinction is the whole diagnosis: layoutInProgress is the container and
-     * is present whatever the data does, so a miss there means the screen never
-     * arrived. The card text only appears once the seeded matches have reached
-     * the UI, so a miss there means seeding did not land — which is worth a
+     * Every anchor in this walk is a button, a text label or a list — never a
+     * layout container. UiAutomator reads the *accessibility* tree, not the view
+     * tree, and a bare wrapper ViewGroup with no text, no content description
+     * and no click listener is pruned from it: By.res would never match
+     * layoutInProgress however long it waited. Containers looked like the stable
+     * choice precisely because they are always inflated, which is the trap.
+     *
+     * Two waits rather than one because they fail for different reasons. The tab
+     * label is part of the screen's chrome, so a miss there means the screen
+     * never arrived. The card text only appears once the seeded matches have
+     * reached the UI, so a miss there means seeding did not land — worth a
      * longer timeout, since it waits on a Room write propagating through a Flow
      * rather than on a layout pass.
      */
     private fun waitForList() {
-        waitFor(id("layoutInProgress"))
+        waitFor(By.text("In Progress"))
         waitFor(By.textContains("Ahmad"), timeout = LONG_TIMEOUT)
     }
 

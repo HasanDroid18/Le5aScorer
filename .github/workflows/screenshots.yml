@@ -126,10 +126,15 @@ jobs:
             # continuation character itself parsed as a task name.
             # No --stacktrace: it buries the actual test failure under ~200 lines
             # of Gradle internals.
-            set +e
-            ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest
-            STATUS=$?
-            set -e
+            # Capture the status with "|| STATUS=$?" rather than "set +e" plus
+            # "$?". The action runs this script under sh -e, and the set +e was
+            # not surviving, so a failing gradlew aborted the script on the spot
+            # — the pull and the diagnostics below never ran, which is why a
+            # failing run reported "No screenshots were captured" with no
+            # explanation. A command on the left of || is exempt from -e by
+            # POSIX, so this holds regardless of what the harness sets.
+            STATUS=0
+            ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.hasanDroid.le5ascorer.ScreenshotTest || STATUS=$?
             # Pull whatever was captured before any failure. A partial walk still
             # shows the screens it reached, and how far it got is diagnostic.
             mkdir -p docs/screenshots
