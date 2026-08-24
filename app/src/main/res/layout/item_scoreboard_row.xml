@@ -41,45 +41,36 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textPlayer1"
+            <!-- Each include must restate layout_width/height/weight: an <include>
+                 that overrides any layout param has to declare width and height
+                 too, or inflation throws. -->
+            <include
+                android:id="@+id/cell1"
+                layout="@layout/view_score_cell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
-                android:textColor="@color/ink"
-                tools:text="15" />
+                android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/textPlayer2"
+            <include
+                android:id="@+id/cell2"
+                layout="@layout/view_score_cell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
-                android:textColor="@color/ink"
-                tools:text="20" />
+                android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/textPlayer3"
+            <include
+                android:id="@+id/cell3"
+                layout="@layout/view_score_cell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
-                android:textColor="@color/ink"
-                tools:text="10" />
+                android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/textPlayer4"
+            <include
+                android:id="@+id/cell4"
+                layout="@layout/view_score_cell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
-                android:textColor="@color/ink"
-                tools:text="18" />
+                android:layout_weight="1" />
 
         </LinearLayout>
 

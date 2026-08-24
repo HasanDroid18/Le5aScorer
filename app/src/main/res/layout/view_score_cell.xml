@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One player's box on one scoreboard row.
+
+  The big figure is what that round actually cost them; the small figure under
+  it is their running total afterwards. Previously only the running total was
+  shown, so a row told you where everyone stood but never what happened in it.
+
+  No id on the root: this is included four times per row, and <include> replaces
+  an included root's own id with the include's, which would leave it unreachable
+  from ViewBinding.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textCellRound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+        android:textColor="@color/ink"
+        tools:text="+13" />
+
+    <TextView
+        android:id="@+id/textCellTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+        android:textColor="@color/ink_muted"
+        tools:text="24" />
+
+</LinearLayout>

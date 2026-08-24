@@ -92,7 +92,12 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ==================== Column header ==================== -->
+    <!-- ==================== Standings header ====================
+         Was a bare strip of four names. It now carries the live standings —
+         each player's running total and how far it has travelled toward the
+         target — so the answer to "who's losing" is on screen without reading
+         down to the last row. The columns keep the row layout's exact
+         proportions, so they still line up with the per-round cells beneath. -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardPlayerNames"
         style="@style/Widget.Le5a.Card"
@@ -108,80 +113,110 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="@dimen/space_md">
 
-            <TextView
-                android:layout_width="@dimen/scoreboard_round_col"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/scoreboard_round_column"
-                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
-
             <LinearLayout
-                android:id="@+id/layoutPlayerNamesHeader"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/scoreboard_gutter"
-                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textHeaderPlayer1"
-                    android:layout_width="0dp"
+                    android:id="@+id/textTargetLabel"
+                    android:layout_width="@dimen/scoreboard_round_col"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
                     android:gravity="center"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                    android:textColor="@color/text_primary"
-                    tools:text="Ahmad" />
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                    tools:text="/101" />
 
-                <TextView
-                    android:id="@+id/textHeaderPlayer2"
+                <LinearLayout
+                    android:id="@+id/layoutPlayerNamesHeader"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/scoreboard_gutter"
                     android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                    android:textColor="@color/text_primary"
-                    tools:text="Sara" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textHeaderPlayer3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                    android:textColor="@color/text_primary"
-                    tools:text="Khaled" />
+                    <!-- An <include> that overrides any layout param must declare
+                         width and height too, or inflation throws. -->
+                    <include
+                        android:id="@+id/column1"
+                        layout="@layout/view_standing_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/textHeaderPlayer4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
-                    android:textColor="@color/text_primary"
-                    tools:text="Fatima" />
+                    <include
+                        android:id="@+id/column2"
+                        layout="@layout/view_standing_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/column3"
+                        layout="@layout/view_standing_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/column4"
+                        layout="@layout/view_standing_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <!-- Mirrors the edit button's column on each row. -->
+                <View
+                    android:layout_width="@dimen/scoreboard_action_col"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/scoreboard_gutter" />
 
             </LinearLayout>
 
-            <!-- Mirrors the edit button's column on each row. -->
             <View
-                android:layout_width="@dimen/scoreboard_action_col"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="@dimen/scoreboard_gutter" />
+                android:layout_marginTop="@dimen/space_md"
+                android:background="@color/felt_outline" />
+
+            <!-- Legend for the rows below, which now carry two figures per
+                 player rather than one. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/scoreboard_round_col"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/scoreboard_round_column"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/scoreboard_gutter"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/scoreboard_cell_legend"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <View
+                    android:layout_width="@dimen/scoreboard_action_col"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/scoreboard_gutter" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

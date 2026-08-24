@@ -92,19 +92,20 @@
 
     </FrameLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <!-- A standard 56dp circular FAB. The extended version was too large for
+         this screen and crowded the last card in the list; 56dp plus the two
+         16dp margins is exactly the fab_scroll_clearance the lists pad by. -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/screen_margin"
         android:contentDescription="@string/new_match"
-        android:text="@string/new_match"
-        android:textAppearance="@style/TextAppearance.Le5a.Label"
         app:backgroundTint="@color/brass_400"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/felt_950"
         app:elevation="@dimen/elev_float"
-        android:textColor="@color/felt_950" />
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/felt_950" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

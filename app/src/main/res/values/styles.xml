@@ -146,6 +146,28 @@
         <item name="rippleColor">@color/overlay_ripple_brass</item>
     </style>
 
+    <!-- The per-player buttons on round entry: outlined by default, filled with
+         brass once that card is assigned to that player (applied in code). -->
+    <style name="Widget.Le5a.Button.Score" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">@dimen/stroke_none</item>
+        <item name="android:insetBottom">@dimen/stroke_none</item>
+        <item name="android:minHeight">@dimen/touch_min</item>
+        <item name="android:minWidth">@dimen/stroke_none</item>
+        <item name="android:paddingStart">@dimen/space_xs</item>
+        <item name="android:paddingEnd">@dimen/space_xs</item>
+        <item name="android:textAppearance">@style/TextAppearance.Le5a.Score.Medium</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="strokeColor">@color/control_outline</item>
+        <item name="strokeWidth">@dimen/stroke_hairline</item>
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="iconSize">@dimen/icon_sm</item>
+        <item name="iconPadding">@dimen/space_xs</item>
+        <item name="iconGravity">textStart</item>
+        <item name="rippleColor">@color/overlay_ripple_brass</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
     <style name="Widget.Le5a.Button.Icon" parent="Widget.Material3.Button.IconButton">
         <item name="android:insetTop">@dimen/stroke_none</item>
         <item name="android:insetBottom">@dimen/stroke_none</item>

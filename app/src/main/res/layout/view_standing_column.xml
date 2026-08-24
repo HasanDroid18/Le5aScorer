@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One player's column in the scoreboard header: name, running total, and how far
+  that total has travelled toward the target.
+
+  Reaching the target is how you *lose*, so a full bar is bad news — the bar is
+  tinted by standing rather than by fill, and the lowest total is the good end.
+
+  No id on the root: included four times, and <include> replaces an included
+  root's own id with the include's.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="2dp">
+
+    <TextView
+        android:id="@+id/textColumnName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+        android:textColor="@color/text_primary"
+        tools:text="Ahmad" />
+
+    <TextView
+        android:id="@+id/textColumnTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Standing"
+        tools:text="45" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressColumn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        app:trackColor="@color/felt_900"
+        app:trackCornerRadius="2dp"
+        app:trackThickness="3dp"
+        tools:progress="45" />
+
+</LinearLayout>

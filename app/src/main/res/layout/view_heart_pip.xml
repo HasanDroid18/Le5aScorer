@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One heart in the fanned pool at the top of round entry. Thirteen of these are
+  added by RoundEntryFragment and overlapped by a negative margin to fan them.
+  A heart dims once it has been dealt, so the pool visibly empties and "how many
+  hearts are left" is readable without a counter.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/heart_pip_width"
+    android:layout_height="@dimen/heart_pip_height"
+    app:cardBackgroundColor="@color/bone"
+    app:cardCornerRadius="@dimen/radius_sm"
+    app:cardElevation="@dimen/elev_raised"
+    app:strokeColor="@color/bone_shade"
+    app:strokeWidth="@dimen/stroke_hairline">
+
+    <ImageView
+        android:id="@+id/iconPip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:padding="@dimen/space_xs"
+        app:srcCompat="@drawable/ic_suit_heart"
+        app:tint="@color/ink_red" />
+
+</com.google.android.material.card.MaterialCardView>

@@ -71,6 +71,12 @@
     <color name="danger">#FFC4453C</color>
     <color name="danger_strong">#FF9E3229</color>
     <color name="danger_container">#FF3A1512</color>
+    <!-- danger as *text on felt* — it is only 3.13:1 on felt_850, which passes
+         for large type and nothing else. This lifts it to 4.73:1, so the
+         scoreboard's trailing total is legible at any size. danger itself stays
+         put: it is the fill and stroke colour of the loss banner, where it sits
+         on danger_container instead. -->
+    <color name="danger_bright">#FFE06B60</color>
 
     <!-- ===================================================================
          Fixed neutrals and translucent overlays. The overlays are named by

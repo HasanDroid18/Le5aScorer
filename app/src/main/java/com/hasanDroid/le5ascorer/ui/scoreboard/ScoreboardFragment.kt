@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentScoreboardBinding
+import com.hasanDroid.le5ascorer.domain.model.MatchDetail
 import com.hasanDroid.le5ascorer.ui.common.EndGameDialogFragment
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
@@ -129,15 +131,7 @@ class ScoreboardFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     state.matchDetail?.let { detail ->
-                        // Set player names in header
-                        val playerNames = detail.match.players.map { it.name }
-                        val headers = listOf(
-                            binding.textHeaderPlayer1, binding.textHeaderPlayer2,
-                            binding.textHeaderPlayer3, binding.textHeaderPlayer4
-                        )
-                        headers.forEachIndexed { index, view ->
-                            view.text = playerNames.getOrNull(index).orEmpty()
-                        }
+                        bindStandings(detail)
 
                         adapter.submitData(detail.scoreboard, detail.rounds)
 
@@ -191,6 +185,55 @@ class ScoreboardFragment : Fragment() {
                     binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                 }
             }
+        }
+    }
+
+    /**
+     * The header's live standings: each player's running total and how far it
+     * has travelled toward the target. Reaching the target is how you lose, so
+     * the *lowest* total is the good end — the leader is green and the trailing
+     * player red, matching the match card in the list.
+     *
+     * When everyone is level there is no best or worst, so nothing is coloured.
+     */
+    private fun bindStandings(detail: MatchDetail) {
+        val names = detail.match.players.map { it.name }
+        val lastRound = detail.scoreboard.lastOrNull()?.playerScores
+        val columns = listOf(
+            binding.column1, binding.column2, binding.column3, binding.column4
+        )
+        // Guard the divisor: a match can only be created with a positive target,
+        // but the progress indicator would throw on a max of zero.
+        val target = detail.match.terminalScore.coerceAtLeast(1)
+        val totals = columns.indices.map { lastRound?.getOrNull(it)?.cumulativeScore ?: 0 }
+        val max = totals.max()
+        val min = totals.min()
+
+        binding.textTargetLabel.text =
+            getString(R.string.scoreboard_target_format, detail.match.terminalScore)
+
+        columns.forEachIndexed { index, column ->
+            val name = names.getOrNull(index).orEmpty()
+            val total = totals[index]
+            val colorRes = when {
+                max == min -> R.color.text_primary
+                total == max -> R.color.danger_bright
+                total == min -> R.color.success
+                else -> R.color.text_primary
+            }
+            val color = ContextCompat.getColor(requireContext(), colorRes)
+
+            column.textColumnName.text = name
+            column.textColumnTotal.text = total.toString()
+            column.textColumnTotal.setTextColor(color)
+            column.progressColumn.setIndicatorColor(color)
+            column.progressColumn.max = target
+            column.progressColumn.progress = total.coerceIn(0, target)
+
+            // One description for the whole column, so a screen reader reads
+            // "Ahmad: 45 of 101" instead of the name, the number and the bar.
+            column.root.contentDescription =
+                getString(R.string.cd_standing, name, total, detail.match.terminalScore)
         }
     }
 

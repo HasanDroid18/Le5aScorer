@@ -91,25 +91,29 @@ class ScreenshotTest {
         waitFor(id("recyclerView"))
         shot("06-scoreboard")
 
-        // Round entry, nothing dealt: the table, the prompt, checklist unmet.
+        // Round entry, nothing dealt: the heart pool full, both honour cards
+        // unclaimed, Save disabled.
         click(id("buttonAddRound"))
-        waitFor(id("tableArea"))
+        waitFor(id("layoutHeartPool"))
         shot("07-round-entry-empty")
 
-        // Arm a card, then deal to a seat. Both stay set afterwards, so the
-        // following taps keep dealing hearts to the same player.
-        click(id("cardHearts"))
-        shot("08-round-entry-armed")
-        click(id("seat1"))
-        repeat(5) { click(id("seat1")) }
-        click(id("cardQSpades"))
+        // Every player row carries the same four button ids, so findObject
+        // returns the first row's — which is what we want: this deals to
+        // player 1 and leaves the other three rows untouched for contrast.
+        repeat(6) { click(id("buttonRowHearts")) }
+        shot("08-round-entry-hearts")
+
+        click(id("buttonRowQueen"))
+        click(id("buttonRowTen"))
         device.waitForIdle(IDLE_MS)
         shot("09-round-entry-dealt")
 
-        // Landscape: the table and the rail sit side by side.
+        // Landscape. There is no layout-land for this screen any more — the
+        // rebuilt design is a single scrolling column, so landscape is the same
+        // layout scrolled. This shot is what proves that claim.
         device.setOrientationLeft()
         device.waitForIdle(IDLE_MS)
-        waitFor(id("tableArea"))
+        waitFor(id("layoutHeartPool"))
         shot("10-round-entry-landscape")
         device.setOrientationNatural()
         device.waitForIdle(IDLE_MS)

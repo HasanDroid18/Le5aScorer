@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Landscape is short, so the table and the cards give up height. -->
+<!--
+  Landscape on a narrow screen. Landscape is short, so anything sized for
+  vertical room gives some back.
+
+  Careful with the bucket names here: smallest-width outranks orientation, so a
+  value set in values-sw360dp beats the same value set in values-land on every
+  phone at least 360dp wide — which is all of them. Any dimen that this file and
+  values-sw360dp both want to change therefore also needs an entry in
+  values-sw360dp-land, or the landscape version silently never applies.
+  icon_empty_state is only overridden here, so it needs no counterpart.
+-->
 <resources>
-    <dimen name="table_radius">92dp</dimen>
-    <dimen name="table_size">236dp</dimen>
-    <dimen name="seat_width">84dp</dimen>
-    <dimen name="table_centre">76dp</dimen>
-    <dimen name="action_card_height">88dp</dimen>
     <dimen name="icon_empty_state">56dp</dimen>
+    <dimen name="heart_pip_height">32dp</dimen>
+    <dimen name="assign_card_height">64dp</dimen>
 </resources>
