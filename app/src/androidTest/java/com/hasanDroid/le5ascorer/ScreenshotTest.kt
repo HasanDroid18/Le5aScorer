@@ -192,22 +192,46 @@ class ScreenshotTest {
     }
 
     /**
-     * Waits for a selector, and on failure writes the window hierarchy next to
-     * the screenshots before throwing.
+     * Waits for a selector; on a miss, throws with what was actually on screen.
      *
-     * Without the dump, a miss says only which id was not found — and a view
-     * that is merely GONE is indistinguishable from one that was never
-     * inflated, since neither appears in the hierarchy. The dump makes the
-     * difference readable from CI instead of guessable.
+     * The diagnosis goes in the exception message rather than into a file
+     * because Gradle prints the message inline in the CI log, whereas anything
+     * written to the device has to survive an adb pull and then be found in
+     * ~1400 lines of log. Several runs were spent inferring from "id not found"
+     * alone what this prints outright: the foreground package (so "the app
+     * never came up" is distinct from "the app is up but the selector is
+     * wrong"), and the ids and text that were present instead.
+     *
+     * The hierarchy dump stays as well — it is the full picture when the
+     * summary is not enough.
      */
     private fun waitFor(selector: BySelector, timeout: Long = TIMEOUT) {
-        val found = device.wait(Until.hasObject(selector), timeout)
-        if (!found) {
-            runCatching {
-                device.dumpWindowHierarchy(File(outputDir, "hierarchy-on-failure.xml"))
-            }
-            error("timed out waiting for $selector")
+        if (device.wait(Until.hasObject(selector), timeout)) return
+
+        runCatching {
+            device.dumpWindowHierarchy(File(outputDir, "hierarchy-on-failure.xml"))
         }
+        // Photograph whatever is there. A failing walk still pulls its images,
+        // so this is both a diagnostic and — when the app is up and only the
+        // selector is wrong — an actual look at the screen.
+        runCatching { shot("99-failure") }
+        val foreground = runCatching { device.currentPackageName }.getOrNull()
+        val onScreen = runCatching {
+            device.findObjects(By.pkg(pkg))
+                .asSequence()
+                .mapNotNull { node ->
+                    node.resourceName?.substringAfterLast('/')
+                        ?: node.text?.takeIf { it.isNotBlank() }
+                }
+                .distinct()
+                .take(40)
+                .toList()
+        }.getOrElse { listOf("<hierarchy unavailable: $it>") }
+
+        error(
+            "timed out waiting for $selector after ${timeout}ms; " +
+                "foreground=$foreground; onScreen=$onScreen"
+        )
     }
 
     private fun click(selector: BySelector) {
