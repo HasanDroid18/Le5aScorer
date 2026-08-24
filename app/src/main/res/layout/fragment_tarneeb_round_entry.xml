@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tarneeb round entry.
+
+  Three questions in the order they are answered at the table: who won the bid,
+  what they bid, and how the thirteen tricks actually fell. The preview at the
+  bottom shows what the round will award before it is saved, so a mis-entry is
+  caught here rather than discovered three rounds later on the scoreboard.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_felt_table">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_close"
+            app:title="@string/tarneeb_round_title">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonReset"
+                style="@style/Widget.Le5a.Button.Icon"
+                android:layout_width="@dimen/touch_min"
+                android:layout_height="@dimen/touch_min"
+                android:layout_gravity="end"
+                android:contentDescription="@string/reset"
+                app:icon="@drawable/ic_undo"
+                app:iconTint="@color/text_secondary" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/sticky_button_clearance"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingTop="@dimen/space_lg">
+
+            <!-- ============ Who bid ============ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarneeb_bidder_section"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleBidder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                app:checkedButton="@id/buttonBidderA"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/buttonBidderA"
+                    style="@style/Widget.Le5a.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Us" />
+
+                <Button
+                    android:id="@+id/buttonBidderB"
+                    style="@style/Widget.Le5a.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Them" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- ============ The bid ============ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:text="@string/tarneeb_bid_section"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Le5a.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/card_padding">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonBidDown"
+                        style="@style/Widget.Le5a.Button.Icon"
+                        android:layout_width="@dimen/touch_min"
+                        android:layout_height="@dimen/touch_min"
+                        android:contentDescription="@string/cd_tarneeb_bid_down"
+                        app:icon="@drawable/ic_minus"
+                        app:iconTint="@color/text_primary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textBid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                            tools:text="9" />
+
+                        <TextView
+                            android:id="@+id/textBidCaption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Lamas 3" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonBidUp"
+                        style="@style/Widget.Le5a.Button.Icon"
+                        android:layout_width="@dimen/touch_min"
+                        android:layout_height="@dimen/touch_min"
+                        android:contentDescription="@string/cd_tarneeb_bid_up"
+                        app:icon="@drawable/ic_add"
+                        app:iconTint="@color/text_primary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ============ Tricks ============ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tarneeb_tricks_section"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <TextView
+                    android:id="@+id/textTricksRemaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                    tools:text="4 left to assign" />
+
+            </LinearLayout>
+
+            <!-- An <include> overriding any layout param must declare width and
+                 height too, or inflation throws. -->
+            <include
+                android:id="@+id/rowTeamA"
+                layout="@layout/view_tarneeb_team_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md" />
+
+            <include
+                android:id="@+id/rowTeamB"
+                layout="@layout/view_tarneeb_team_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm" />
+
+            <!-- ============ What it pays ============ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPreview"
+                style="@style/Widget.Le5a.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                app:cardBackgroundColor="@color/felt_850">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:id="@+id/textPreviewVerdict"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.Le5a.Label"
+                        tools:text="Bid made" />
+
+                    <TextView
+                        android:id="@+id/textPreviewA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="@dimen/tarneeb_stepper_value"
+                        android:gravity="end"
+                        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                        tools:text="+9" />
+
+                    <TextView
+                        android:id="@+id/textPreviewB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_md"
+                        android:minWidth="@dimen/tarneeb_stepper_value"
+                        android:gravity="end"
+                        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                        tools:text="0" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sticky_button_clearance"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_fade"
+        android:translationZ="@dimen/elev_raised" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSave"
+        style="@style/Widget.Le5a.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/screen_margin"
+        android:enabled="false"
+        android:text="@string/tarneeb_save_round"
+        app:elevation="@dimen/elev_float"
+        app:icon="@drawable/ic_check"
+        app:iconGravity="textStart" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

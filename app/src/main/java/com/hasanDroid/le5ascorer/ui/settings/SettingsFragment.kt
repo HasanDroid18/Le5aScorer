@@ -41,6 +41,11 @@ class SettingsFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.layoutContactSupport.setOnClickListener { openEmailSupport() }
         binding.layoutRateApp.setOnClickListener { showRateOrShareChooser() }
+        binding.layoutRules.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToRulesFragment()
+            )
+        }
 
         showVersion()
     }

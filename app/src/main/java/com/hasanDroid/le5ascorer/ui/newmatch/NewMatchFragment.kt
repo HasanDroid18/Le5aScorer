@@ -21,6 +21,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.FragmentNewMatchBinding
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarMargins
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -62,7 +63,7 @@ class NewMatchFragment : Fragment() {
     private fun applyInsets() {
         binding.appBarLayout.applySystemBarInsets(top = true)
         binding.scrollView.applySystemBarInsets(bottom = true)
-        binding.buttonCreate.applySystemBarInsets(bottom = true, sides = false)
+        binding.buttonCreate.applySystemBarMargins(bottom = true, sides = false)
     }
 
     private fun setupToolbar() {

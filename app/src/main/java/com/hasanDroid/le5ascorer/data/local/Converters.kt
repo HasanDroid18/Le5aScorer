@@ -37,9 +37,15 @@ class Converters {
         return value.name
     }
 
+    /**
+     * Lenient for the same reason toScoreRule is: a bare valueOf() throws on any
+     * value the current build does not know, and this converter runs while
+     * loading the match list, so one unrecognised row would take the whole
+     * screen down rather than degrade. HEART is the safe default — it is worth
+     * one point, so a stray row skews a score rather than crashing the app.
+     */
     @TypeConverter
-    fun toActionType(value: String): ActionType {
-        return ActionType.valueOf(value)
-    }
+    fun toActionType(value: String): ActionType =
+        runCatching { ActionType.valueOf(value) }.getOrDefault(ActionType.HEART)
 }
 

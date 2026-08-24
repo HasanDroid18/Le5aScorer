@@ -15,7 +15,12 @@ data class Match(
     val completedAt: Long?,
     val terminalScore: Int,
     val scoreRule: ScoreRule,
-    val players: List<Player>, // Always 4 players
+    /**
+     * Four players for Leekha, two teams for Tarneeb. A Tarneeb match stores its
+     * teams in the first two of the four player columns and leaves the rest at
+     * 0, which no row ever uses, so this list simply comes back shorter.
+     */
+    val players: List<Player>,
     val status: MatchStatus,
     val roundCount: Int = 0,
     val leadingPlayerName: String? = null,

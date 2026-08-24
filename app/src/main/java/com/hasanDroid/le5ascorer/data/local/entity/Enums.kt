@@ -1,20 +1,27 @@
 package com.hasanDroid.le5ascorer.data.local.entity
 
 /**
- * How a match is scored.
+ * Which game a match belongs to, and therefore how it is scored.
  *
- * Team scoring was removed: the two implementations of it disagreed about who
- * was on whose team (the engine paired players 0+2 against 1+3, the repository
- * paired 0+1 against 2+3), so it never behaved consistently.
+ * This started life as Leekha's individual-vs-team switch. Team scoring was
+ * removed because the two implementations of it disagreed about who was on
+ * whose team (the engine paired players 0+2 against 1+3, the repository paired
+ * 0+1 against 2+3), but the enum and its column were deliberately kept: the
+ * database is built with fallbackToDestructiveMigration(), so dropping the
+ * column would have deleted every stored match.
  *
- * The enum and its database column are deliberately kept rather than dropped.
- * The database is built with fallbackToDestructiveMigration(), so any schema
- * change would delete every stored match; keeping the column means no schema
- * change and no data loss. Rows that still hold "TEAM" are mapped to
- * INDIVIDUAL by Converters.
+ * That leftover column is now the game-mode discriminator. TARNEEB is a new
+ * value on the same TEXT column, so adding a second game needs no schema
+ * change at all. INDIVIDUAL keeps its exact spelling so existing rows still
+ * load as Leekha, and Converters maps anything unrecognised — including rows
+ * that still say "TEAM" — to INDIVIDUAL rather than throwing.
  */
 enum class ScoreRule {
-    INDIVIDUAL
+    /** Leekha: four players scored individually. */
+    INDIVIDUAL,
+
+    /** Tarneeb: two partnerships, bid-and-trick scoring. */
+    TARNEEB
 }
 
 enum class MatchStatus {

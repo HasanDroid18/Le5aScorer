@@ -4,22 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.hasanDroid.le5ascorer.R
+import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.databinding.FragmentMatchListBinding
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarMargins
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * The match list for one game.
+ *
+ * Serves both Leekha and Tarneeb. The two lists differ only in which matches
+ * they show, what the toolbar says, and where the add button goes, so they share
+ * a screen rather than a copy of one — the gameMode argument decides.
+ */
 @AndroidEntryPoint
 class MatchListFragment : Fragment() {
 
@@ -27,6 +36,18 @@ class MatchListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MatchListViewModel by viewModels()
+    private val args: MatchListFragmentArgs by navArgs()
+
+    /**
+     * Unknown values fall back to Leekha rather than crashing, matching how
+     * Converters treats the same column.
+     */
+    private val gameMode: ScoreRule by lazy {
+        runCatching { ScoreRule.valueOf(args.gameMode) }.getOrDefault(ScoreRule.INDIVIDUAL)
+    }
+
+    private val isTarneeb get() = gameMode == ScoreRule.TARNEEB
+
     private lateinit var inProgressAdapter: MatchAdapter
     private lateinit var completedAdapter: MatchAdapter
 
@@ -42,13 +63,14 @@ class MatchListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.start(gameMode)
+
         applyInsets()
         setupToolbar()
         setupTabs()
         setupEmptyStates()
         setupRecyclerViews()
         setupFab()
-        setupBackPressHandler()
         observeUiState()
     }
 
@@ -57,17 +79,15 @@ class MatchListFragment : Fragment() {
         binding.appBarLayout.applySystemBarInsets(top = true)
         binding.recyclerViewInProgress.applySystemBarInsets(bottom = true)
         binding.recyclerViewCompleted.applySystemBarInsets(bottom = true)
-        binding.fab.applySystemBarInsets(bottom = true, sides = false)
-    }
-
-    private fun setupBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            // Home screen: back exits the app.
-            requireActivity().finish()
-        }
+        binding.fab.applySystemBarMargins(bottom = true, sides = false)
     }
 
     private fun setupToolbar() {
+        binding.toolbar.setTitle(if (isTarneeb) R.string.game_tarneeb else R.string.game_leekha)
+        // This screen used to be the start destination and had nowhere to go
+        // back to. It sits behind the game picker now, so it needs the arrow.
+        binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_settings -> {
@@ -128,9 +148,14 @@ class MatchListFragment : Fragment() {
 
     private fun buildAdapter() = MatchAdapter(
         onMatchClick = { match ->
-            findNavController().navigate(
-                MatchListFragmentDirections.actionMatchListFragmentToScoreboardFragment(match.id)
-            )
+            val directions = if (isTarneeb) {
+                MatchListFragmentDirections
+                    .actionMatchListFragmentToTarneebScoreboardFragment(match.id)
+            } else {
+                MatchListFragmentDirections
+                    .actionMatchListFragmentToScoreboardFragment(match.id)
+            }
+            findNavController().navigate(directions)
         },
         onDuplicateClick = { match -> viewModel.duplicateMatch(match.id) },
         onDeleteClick = { match -> showDeleteConfirmation(match.id) }
@@ -138,7 +163,13 @@ class MatchListFragment : Fragment() {
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_matchListFragment_to_newMatchFragment)
+            findNavController().navigate(
+                if (isTarneeb) {
+                    R.id.action_matchListFragment_to_newTarneebMatchFragment
+                } else {
+                    R.id.action_matchListFragment_to_newMatchFragment
+                }
+            )
         }
     }
 

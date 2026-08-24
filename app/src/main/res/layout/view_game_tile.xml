@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One game on the home grid: icon, name, and a line saying what it is.
+
+  No id on the root — this is included four times, and <include> replaces an
+  included root's own id with the include's, which would leave it unreachable
+  from ViewBinding.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card.Clickable"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/game_tile_height"
+    app:cardBackgroundColor="@color/felt_800">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/space_md">
+
+        <ImageView
+            android:id="@+id/iconGame"
+            android:layout_width="@dimen/game_tile_icon"
+            android:layout_height="@dimen/game_tile_icon"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_suit_heart"
+            app:tint="@color/brass_400"
+            tools:ignore="ImageContrastCheck" />
+
+        <TextView
+            android:id="@+id/textGameName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Title"
+            tools:text="Leekha" />
+
+        <TextView
+            android:id="@+id/textGameSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+            android:textColor="@color/text_secondary"
+            tools:text="4 players · avoid the points" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

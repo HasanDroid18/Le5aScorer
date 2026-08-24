@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One team's line in Tarneeb round entry: name, a bid marker when this team is
+  the bidder, and a stepper for the tricks it took.
+
+  No id on the root — included twice, and <include> replaces an included root's
+  own id with the include's.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/card_padding">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textTeamName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.Le5a.Title"
+                tools:text="Us" />
+
+            <TextView
+                android:id="@+id/textTeamBid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                android:textColor="@color/brass_400"
+                android:visibility="gone"
+                tools:text="Bid 9"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonTricksDown"
+            style="@style/Widget.Le5a.Button.Icon"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            app:icon="@drawable/ic_minus"
+            app:iconTint="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/textTricks"
+            android:layout_width="@dimen/tarneeb_stepper_value"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Standing"
+            tools:text="7" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonTricksUp"
+            style="@style/Widget.Le5a.Button.Icon"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/text_primary" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

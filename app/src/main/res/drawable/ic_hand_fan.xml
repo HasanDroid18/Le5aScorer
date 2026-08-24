@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Three cards fanned as they sit in a hand. Marks the "Hand" game. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M10.6,3.1 L6.9,4.5a2,2 0,0 0,-1.2 2.6l3.6,9.6 2,-0.7L7.6,6.2l3.7,-1.4z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M13.9,2.8a2,2 0,0 0,-2.2 1.1L10.9,5.7l2,0.4 0.5,-1.2 3.8,1.1 -2.6,9.9 2,0.5 2.7,-10.3a2,2 0,0 0,-1.4 -2.4l-4,-0.9z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4.4,9.4A2,2 0,0 0,3.1 11.9l2.4,7.7a2,2 0,0 0,2.5 1.3l5.6,-1.7a2,2 0,0 0,1.3 -2.5l-2.4,-7.7a2,2 0,0 0,-2.5 -1.3l-5.6,1.7zM10.1,9.6l2.4,7.7 -5.6,1.7 -2.4,-7.7 5.6,-1.7z" />
+</vector>

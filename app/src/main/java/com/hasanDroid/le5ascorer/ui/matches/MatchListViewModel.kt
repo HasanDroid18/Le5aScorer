@@ -2,6 +2,7 @@ package com.hasanDroid.le5ascorer.ui.matches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.domain.model.Match
 import com.hasanDroid.le5ascorer.domain.usecase.MatchUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,15 +26,26 @@ class MatchListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MatchListUiState())
     val uiState: StateFlow<MatchListUiState> = _uiState
 
-    init {
+    /**
+     * Which game's matches this list shows. Set once by the fragment from its
+     * navigation argument, before collection starts — the same list screen
+     * serves Leekha and Tarneeb, and they must never show each other's matches.
+     */
+    private var scoreRule: ScoreRule = ScoreRule.INDIVIDUAL
+    private var started = false
+
+    fun start(scoreRule: ScoreRule) {
+        if (started) return
+        started = true
+        this.scoreRule = scoreRule
         loadMatches()
     }
 
     private fun loadMatches() {
         viewModelScope.launch {
             combine(
-                matchUseCases.getInProgressMatches(),
-                matchUseCases.getCompletedMatches()
+                matchUseCases.getInProgressMatches(scoreRule),
+                matchUseCases.getCompletedMatches(scoreRule)
             ) { inProgress, completed ->
                 MatchListUiState(
                     inProgressMatches = inProgress,

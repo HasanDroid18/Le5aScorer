@@ -137,6 +137,51 @@
             </LinearLayout>
 
             <!-- ==================== About ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutRules"
+                style="@style/Widget.Le5a.Row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_info"
+                    app:tint="@color/brass_400" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_md"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rules_title"
+                        android:textAppearance="@style/TextAppearance.Le5a.Title.Small" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rules_settings_subtitle"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_md"
+                    android:layout_height="@dimen/icon_md"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
+
+            </LinearLayout>
+
             <TextView
                 style="@style/Widget.Le5a.SectionHeader"
                 android:layout_width="wrap_content"

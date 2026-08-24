@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The game picker. Four tiles in a 2x2 grid, built from two horizontal rows
+  rather than a GridLayout so each tile can carry layout_weight and stay equal
+  on any width.
+
+  The grid sits in a NestedScrollView so that a short screen, a large font
+  setting or landscape scrolls rather than clipping the bottom row.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_felt_table">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat"
+        app:liftOnScroll="false">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/menu_match_list"
+            app:title="@string/home_title" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/space_lg"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_margin">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_lg"
+                android:text="@string/home_subtitle"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- An <include> overriding any layout param must declare width
+                     and height too, or inflation throws. -->
+                <include
+                    android:id="@+id/tileLeekha"
+                    layout="@layout/view_game_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/game_tile_height"
+                    android:layout_marginEnd="@dimen/space_sm"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/tileTarneeb"
+                    layout="@layout/view_game_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/game_tile_height"
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/tile400"
+                    layout="@layout/view_game_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/game_tile_height"
+                    android:layout_marginEnd="@dimen/space_sm"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/tileHand"
+                    layout="@layout/view_game_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/game_tile_height"
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -80,6 +80,35 @@ object ScreenshotSeed {
     }
 
     /**
+     * A Tarneeb match with a few rounds, so the second game's screens have
+     * something to show without the walk having to type team names in.
+     *
+     * The rounds are chosen to exercise the scoring rather than just fill the
+     * list: one bid made, one bid failed (which pays the defenders), and one
+     * sweep worth the 16-point bonus.
+     */
+    fun seedTarneeb(context: Context) = runBlocking {
+        val repository = EntryPointAccessors
+            .fromApplication(context.applicationContext, ScreenshotSeedEntryPoint::class.java)
+            .repository()
+
+        val matchId = repository.createTarneebMatch(
+            teamAName = "Us",
+            teamBName = "Them",
+            terminalScore = 41
+        )
+
+        // Bid 7, took 9 — made, scores 9.
+        repository.addTarneebRound(matchId, bidderTeam = 0, bid = 7, tricks = listOf(9, 4))
+        // Bid 9, took 6 — failed, so -9 and the defenders bank their 7.
+        repository.addTarneebRound(matchId, bidderTeam = 1, bid = 9, tricks = listOf(7, 6))
+        // Bid 8, took all 13 — the sweep bonus, 16 rather than 13.
+        repository.addTarneebRound(matchId, bidderTeam = 0, bid = 8, tricks = listOf(13, 0))
+
+        matchId
+    }
+
+    /**
      * Pushes an existing match past its terminal score so the end-game banner,
      * confetti and dialog can be captured.
      */
