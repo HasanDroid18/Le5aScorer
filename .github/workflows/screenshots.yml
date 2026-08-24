@@ -141,6 +141,17 @@ jobs:
             adb pull /sdcard/Android/data/com.hasanDroid.le5ascorer/files/screenshots/. docs/screenshots/ || true
             ls -la docs/screenshots/ || true
             if [ $STATUS -ne 0 ]; then
+              # Write the failure into docs/screenshots/ so the commit step
+              # below carries it back to the branch. The workflow log can only
+              # be read from its tail, and the interesting lines sit ~100 lines
+              # from the end under a wall of Gradle output — several rounds went
+              # into fishing them out. A file on the branch is one git fetch.
+              {
+                echo "run:    ${{ github.run_number }} (${{ github.sha }})"
+                echo "status: $STATUS"
+                echo
+                grep -h -A4 -E '(FAILED|failure message=)' app/build/outputs/androidTest-results/*/*.xml 2>/dev/null | head -40
+              } > docs/screenshots/LAST_FAILURE.txt || true
               echo "===================== test results ====================="
               find app/build/outputs/androidTest-results -name '*.xml' -exec cat {} + | head -120 || true
               # The walk dumps the window hierarchy whenever a selector misses.
