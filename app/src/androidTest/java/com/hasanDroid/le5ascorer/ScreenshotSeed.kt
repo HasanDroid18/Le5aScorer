@@ -2,12 +2,8 @@ package com.hasanDroid.le5ascorer
 
 import android.content.Context
 import com.hasanDroid.le5ascorer.data.local.entity.ActionType
-import com.hasanDroid.le5ascorer.data.repository.LeekhaRepository
 import com.hasanDroid.le5ascorer.domain.model.ScoreAction
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -15,18 +11,14 @@ import kotlinx.coroutines.runBlocking
  *
  * Instrumentation runs against the real @HiltAndroidApp application, so the
  * production repository can be pulled straight out of the singleton graph — no
- * HiltTestApplication and no dependency swapping required.
+ * HiltTestApplication and no dependency swapping required. The entry point that
+ * opens that graph is declared in the debug source set rather than here; see
+ * ScreenshotSeedEntryPoint for why it cannot live in androidTest.
  *
  * SampleDataGenerator already exists but shuffles names and randomises scores,
  * which would make every screenshot differ from the last. These fixtures are
  * fixed so runs are comparable.
  */
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface ScreenshotSeedEntryPoint {
-    fun repository(): LeekhaRepository
-}
-
 object ScreenshotSeed {
 
     private const val TERMINAL = 101

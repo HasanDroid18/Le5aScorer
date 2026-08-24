@@ -105,6 +105,16 @@
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
+    <!-- The scoreboard header's four running totals. Sized to sit between
+         Large and Medium: three digits at 22sp fit the narrowest of the four
+         columns on a 320dp-wide phone, which 28sp does not. -->
+    <style name="TextAppearance.Le5a.Score.Standing">
+        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
     <style name="TextAppearance.Le5a.Score.Medium">
         <item name="android:textSize">18sp</item>
     </style>

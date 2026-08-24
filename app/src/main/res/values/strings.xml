@@ -60,12 +60,21 @@
     <string name="edit_round">Edit round</string>
     <string name="back_to_matches">Back to Matches</string>
     <string name="scoreboard_round_column">Rnd</string>
+    <string name="scoreboard_cell_legend">Round points · running total</string>
+    <!-- Sits over the round column in the header: the score everyone is racing
+         away from. -->
+    <string name="scoreboard_target_format">/%d</string>
+    <!-- A round in which a player took nothing. Rendered instead of "0" so the
+         eye lands on the players who actually took cards. -->
+    <string name="scoreboard_no_points">—</string>
+    <string name="scoreboard_round_points_format">+%d</string>
+    <string name="cd_score_cell">%1$s: %2$d this round, %3$d total</string>
+    <string name="cd_standing">%1$s: %2$d of %3$d</string>
     <string name="no_rounds_yet">No rounds yet</string>
     <string name="no_rounds_yet_hint">Add the first round to start tracking scores.</string>
     <string name="match_over_title">Match over</string>
     <!-- Shown when the match ends; %s is one or more names. -->
     <string name="match_over_loser">%s reached the target</string>
-    <string name="cd_player_column">Score column for %s</string>
 
     <!-- ==================== Round entry ==================== -->
     <string name="select_cards">Select Cards</string>
@@ -74,21 +83,13 @@
     <string name="round_status">Round total</string>
     <!-- "12 / 36" — the running total against the required round total. -->
     <string name="round_total_format">%1$d / %2$d</string>
-    <string name="round_scoring_for">Scoring for</string>
-    <string name="round_tap_hint">Tap a card, then a player — or a player, then a card</string>
-    <string name="round_armed">Dealing</string>
-    <string name="cd_deal_to">Deal to %s</string>
-    <string name="round_checklist_title">To save this round</string>
     <string name="check_hearts">Hearts %1$d / %2$d</string>
-    <string name="check_queen">Q♠ assigned</string>
-    <string name="check_ten">10♦ assigned</string>
-    <string name="check_queen_to">Q♠ · %s</string>
-    <string name="check_ten_to">10♦ · %s</string>
+    <string name="unassigned">—</string>
     <string name="double_active">Double</string>
     <string name="double_subtitle">One player takes everything — 37 points, everyone else scores zero.</string>
     <string name="hearts_card">Hearts</string>
     <string name="hearts_value">+1 each</string>
-    <string name="hearts_hint">Hold for +5</string>
+    <string name="hearts_hint">Hold ♥ for +5 · tap again to add</string>
     <string name="q_spades_card">Queen</string>
     <string name="q_spades_value">+13</string>
     <string name="ten_diamonds_card">Ten</string>
@@ -102,6 +103,10 @@
     <string name="cd_hearts">Hearts</string>
     <string name="cd_queen_spades">Queen of spades</string>
     <string name="cd_ten_diamonds">Ten of diamonds</string>
+    <string name="cd_hearts_for">Hearts for %s</string>
+    <string name="cd_queen_for">Queen of spades for %s</string>
+    <string name="cd_ten_for">Ten of diamonds for %s</string>
+    <string name="cd_double_for">Double for %s</string>
     <!-- Removable chips. Each carries a suit icon, so the label supplies only
          the player and the rank/count — never a repeated suit symbol. -->
     <string name="chip_hearts">%1$s · ×%2$d</string>

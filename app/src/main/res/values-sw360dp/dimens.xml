@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Anything at least 360dp wide — most phones. The base values in values/ are
-  sized for narrower screens, where a wider table clips the side seats.
+  sized for the narrowest screens we support (320dp), where thirteen hearts plus
+  their overlap would otherwise need to scroll sideways to be seen at all.
+
+  Note the direction: smallest-width qualifiers match every screen *at least*
+  that wide, so the base bucket has to hold the small-screen values and this one
+  opts the roomier screens up. The reverse — a values-sw320dp holding small
+  values — would match every modern phone and quietly override the base.
 -->
 <resources>
-    <dimen name="table_radius">116dp</dimen>
-    <dimen name="table_size">300dp</dimen>
-    <dimen name="seat_width">92dp</dimen>
-    <dimen name="table_centre">96dp</dimen>
-    <dimen name="action_card_height">112dp</dimen>
+    <dimen name="heart_pip_width">28dp</dimen>
+    <dimen name="heart_pip_height">40dp</dimen>
+    <dimen name="heart_pip_overlap">-6dp</dimen>
+    <dimen name="assign_card_width">60dp</dimen>
+    <dimen name="assign_card_height">82dp</dimen>
 </resources>

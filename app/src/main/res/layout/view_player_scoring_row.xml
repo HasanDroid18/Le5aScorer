@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One player's scoring row: their name and running total, then the four things
+  they can be given — hearts (with a count), Q♠, 10♦ and the Double.
+
+  Each button toggles or increments for this player directly, so there is no
+  "select a player first" step: what you tap is what happens.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_md">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textRowName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Le5a.Title"
+            tools:text="Ahmad" />
+
+        <TextView
+            android:id="@+id/textRowTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+            android:textColor="@color/brass_300"
+            tools:text="18" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <!-- Hearts: increments, so it carries a live count rather than a state. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRowHearts"
+            style="@style/Widget.Le5a.Button.Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:layout_weight="1.1"
+            app:icon="@drawable/ic_suit_heart"
+            app:iconTint="@color/ink_red"
+            tools:text="0" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRowQueen"
+            style="@style/Widget.Le5a.Button.Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_xs"
+            android:layout_weight="1"
+            android:text="@string/label_queen"
+            app:icon="@drawable/ic_suit_spade"
+            app:iconTint="@color/ink" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRowTen"
+            style="@style/Widget.Le5a.Button.Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_xs"
+            android:layout_weight="1"
+            android:text="@string/label_ten"
+            app:icon="@drawable/ic_suit_diamond"
+            app:iconTint="@color/ink_red" />
+
+        <!-- The Double: this player takes the whole round, everyone else zero. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRowDouble"
+            style="@style/Widget.Le5a.Button.Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_xs"
+            android:layout_weight="0.9"
+            android:text="@string/double_value" />
+
+    </LinearLayout>
+
+</LinearLayout>

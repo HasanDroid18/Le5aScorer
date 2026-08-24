@@ -2,13 +2,14 @@ package com.hasanDroid.le5ascorer.ui.scoreboard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hasanDroid.le5ascorer.R
 import com.hasanDroid.le5ascorer.databinding.ItemScoreboardRowBinding
+import com.hasanDroid.le5ascorer.databinding.ViewScoreCellBinding
+import com.hasanDroid.le5ascorer.domain.model.PlayerScore
 import com.hasanDroid.le5ascorer.domain.model.Round
 import com.hasanDroid.le5ascorer.domain.model.RoundScores
 
@@ -49,19 +50,10 @@ class ScoreboardAdapter(
             binding.textRound.text = (roundScores.roundIndex + 1).toString()
 
             val scores = roundScores.playerScores
-            val cells = listOf(
-                binding.textPlayer1, binding.textPlayer2,
-                binding.textPlayer3, binding.textPlayer4
-            )
-            val values = cells.indices.map { scores.getOrNull(it)?.cumulativeScore ?: 0 }
+            val cells = listOf(binding.cell1, binding.cell2, binding.cell3, binding.cell4)
 
-            val max = values.max()
-            val min = values.min()
             cells.forEachIndexed { index, cell ->
-                cell.text = values[index].toString()
-                cell.contentDescription = scores.getOrNull(index)
-                    ?.let { cell.context.getString(R.string.cd_player_column, it.playerName) }
-                highlight(cell, values[index], max, min)
+                bindCell(cell, scores.getOrNull(index))
             }
 
             val roundEntity = roundEntities.find { it.roundIndex == roundScores.roundIndex }
@@ -71,18 +63,37 @@ class ScoreboardAdapter(
         }
 
         /**
-         * Highlights the current best and worst totals. When every player is
-         * level there is no best or worst, so nothing is highlighted — the
-         * previous version tested `max` first and painted all four red.
+         * A cell shows what the round cost this player, with their running total
+         * underneath. Rows used to carry the running total alone, which told you
+         * where everyone stood but never what actually happened in the round.
+         *
+         * A player who took nothing gets an em dash rather than "0": in a hand
+         * where one person eats thirteen hearts, three zeroes competing for
+         * attention is noise.
          */
-        private fun highlight(view: TextView, score: Int, max: Int, min: Int) {
-            val colorRes = when {
-                max == min -> R.color.ink
-                score == max -> R.color.ink_red
-                score == min -> R.color.success
-                else -> R.color.ink
+        private fun bindCell(cell: ViewScoreCellBinding, score: PlayerScore?) {
+            val context = cell.root.context
+            val roundScore = score?.roundScore ?: 0
+            val total = score?.cumulativeScore ?: 0
+
+            cell.textCellRound.text = if (roundScore == 0) {
+                context.getString(R.string.scoreboard_no_points)
+            } else {
+                context.getString(R.string.scoreboard_round_points_format, roundScore)
             }
-            view.setTextColor(ContextCompat.getColor(view.context, colorRes))
+            cell.textCellRound.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    if (roundScore == 0) R.color.ink_muted else R.color.ink_red
+                )
+            )
+            cell.textCellTotal.text = total.toString()
+
+            // One description for the pair: two separate ones would make a
+            // screen reader read every column twice.
+            cell.root.contentDescription = score?.let {
+                context.getString(R.string.cd_score_cell, it.playerName, roundScore, total)
+            }
         }
     }
 

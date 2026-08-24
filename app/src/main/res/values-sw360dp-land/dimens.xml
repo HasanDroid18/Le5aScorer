@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Landscape on a normal phone: the roomier widths from values-sw360dp with the
+  shorter heights from values-land.
+
+  This bucket has to exist because resource buckets do not merge — the single
+  best-matching bucket supplies each value, and smallest-width outranks
+  orientation. Without it, a phone in landscape would take values-sw360dp whole
+  and keep the tall portrait heights.
+-->
+<resources>
+    <dimen name="heart_pip_width">28dp</dimen>
+    <dimen name="heart_pip_height">32dp</dimen>
+    <dimen name="heart_pip_overlap">-6dp</dimen>
+    <dimen name="assign_card_width">60dp</dimen>
+    <dimen name="assign_card_height">64dp</dimen>
+    <dimen name="icon_empty_state">56dp</dimen>
+</resources>

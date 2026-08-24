@@ -55,15 +55,15 @@ class ScreenshotTest {
         val matchId = ScreenshotSeed.seed(context)
 
         launchApp()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
         shot("01-match-list")
 
         // Completed tab: empty state.
         click(By.text("Completed"))
-        waitFor(id("layoutCompleted"))
+        waitFor(By.textContains("No completed games"))
         shot("02-empty-state")
         click(By.text("In Progress"))
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // The overflow menu and the delete dialog both rendered as white boxes
         // before the theme was reparented to Material3 Dark, so they are the two
@@ -76,59 +76,71 @@ class ScreenshotTest {
         waitFor(By.textContains("permanently removed"))
         shot("04-delete-dialog")
         click(By.text("Cancel"))
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // New match: recent-player chips plus the four name fields.
         click(id("fab"))
         waitFor(id("editPlayer1"))
         shot("05-new-match")
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // Scoreboard — the screen whose column alignment and tabular figures
         // this redesign specifically claims to have fixed.
         click(By.textContains("Ahmad"))
-        waitFor(id("recyclerView"))
+        waitFor(By.text("Scoreboard"))
         shot("06-scoreboard")
 
-        // Round entry, nothing dealt: the table, the prompt, checklist unmet.
+        // Round entry, nothing dealt: the heart pool full, both honour cards
+        // unclaimed, Save disabled.
         click(id("buttonAddRound"))
-        waitFor(id("tableArea"))
+        waitFor(id("buttonSave"))
         shot("07-round-entry-empty")
 
-        // Arm a card, then deal to a seat. Both stay set afterwards, so the
-        // following taps keep dealing hearts to the same player.
-        click(id("cardHearts"))
-        shot("08-round-entry-armed")
-        click(id("seat1"))
-        repeat(5) { click(id("seat1")) }
-        click(id("cardQSpades"))
+        // Every player row carries the same four button ids, so findObject
+        // returns the first row's — which is what we want: this deals to
+        // player 1 and leaves the other three rows untouched for contrast.
+        repeat(6) { click(id("buttonRowHearts")) }
+        shot("08-round-entry-hearts")
+
+        click(id("buttonRowQueen"))
+        click(id("buttonRowTen"))
         device.waitForIdle(IDLE_MS)
         shot("09-round-entry-dealt")
 
-        // Landscape: the table and the rail sit side by side.
+        // Landscape. There is no layout-land for this screen any more — the
+        // rebuilt design is a single scrolling column, so landscape is the same
+        // layout scrolled. This shot is what proves that claim.
         device.setOrientationLeft()
         device.waitForIdle(IDLE_MS)
-        waitFor(id("tableArea"))
+        waitFor(id("buttonSave"))
         shot("10-round-entry-landscape")
         device.setOrientationNatural()
         device.waitForIdle(IDLE_MS)
 
         device.pressBack()
-        waitFor(id("recyclerView"))
+        waitFor(By.text("Scoreboard"))
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // Settings — the share icon here used to be invisible.
         click(By.desc("Settings"))
-        waitFor(id("layoutContactSupport"))
+        waitFor(By.textContains("Contact Support"))
         shot("11-settings")
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // End of match: banner, confetti and dialog.
-        ScreenshotSeed.seedToGameOver(context, matchId)
+        //
+        // Open the scoreboard first and push the match over the line while it is
+        // on screen. Seeding first would finish the match before we navigate,
+        // and a finished match leaves the In Progress tab — so the click that
+        // opens it would be looking on the wrong tab. This way the banner and
+        // dialog also arrive live, through the Flow, which is what they do in
+        // real use.
         click(By.textContains("Ahmad"))
+        waitFor(By.text("Scoreboard"))
+        ScreenshotSeed.seedToGameOver(context, matchId)
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
         shot("12-end-game")
     }
@@ -142,16 +154,84 @@ class ScreenshotTest {
             .getLaunchIntentForPackage(pkg)
             ?.apply { addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK) }
         context.startActivity(intent)
-        device.wait(Until.hasObject(By.pkg(pkg).depth(0)), LONG_TIMEOUT)
-        // The splash runs a Lottie animation before handing off to MainActivity.
-        device.wait(Until.hasObject(id("toolbar")), LONG_TIMEOUT)
+        // Assert rather than fire-and-forget. These two waits used to discard
+        // their result, so when the app failed to come up the walk carried on
+        // and blamed whichever selector it checked next — which cost a run to
+        // work out.
+        waitFor(By.pkg(pkg).depth(0), timeout = LONG_TIMEOUT)
+        // Wait on the tab label, not on the app name: the splash shows the app
+        // name too, so that selector matches while the Lottie is still running
+        // and hands back a screen that is about to be replaced. Only the match
+        // list has tabs.
+        waitFor(By.text("In Progress"), timeout = LONG_TIMEOUT)
     }
 
     private fun id(name: String): BySelector = By.res(pkg, name)
 
+    /**
+     * Waits for the In Progress tab, then for the seeded card actually to be on
+     * it.
+     *
+     * Every anchor in this walk is a button, a text label or a list — never a
+     * layout container. UiAutomator reads the *accessibility* tree, not the view
+     * tree, and a bare wrapper ViewGroup with no text, no content description
+     * and no click listener is pruned from it: By.res would never match
+     * layoutInProgress however long it waited. Containers looked like the stable
+     * choice precisely because they are always inflated, which is the trap.
+     *
+     * Two waits rather than one because they fail for different reasons. The tab
+     * label is part of the screen's chrome, so a miss there means the screen
+     * never arrived. The card text only appears once the seeded matches have
+     * reached the UI, so a miss there means seeding did not land — worth a
+     * longer timeout, since it waits on a Room write propagating through a Flow
+     * rather than on a layout pass.
+     */
+    private fun waitForList() {
+        waitFor(By.text("In Progress"))
+        waitFor(By.textContains("Ahmad"), timeout = LONG_TIMEOUT)
+    }
+
+    /**
+     * Waits for a selector; on a miss, throws with what was actually on screen.
+     *
+     * The diagnosis goes in the exception message rather than into a file
+     * because Gradle prints the message inline in the CI log, whereas anything
+     * written to the device has to survive an adb pull and then be found in
+     * ~1400 lines of log. Several runs were spent inferring from "id not found"
+     * alone what this prints outright: the foreground package (so "the app
+     * never came up" is distinct from "the app is up but the selector is
+     * wrong"), and the ids and text that were present instead.
+     *
+     * The hierarchy dump stays as well — it is the full picture when the
+     * summary is not enough.
+     */
     private fun waitFor(selector: BySelector, timeout: Long = TIMEOUT) {
-        val found = device.wait(Until.hasObject(selector), timeout)
-        check(found) { "timed out waiting for $selector" }
+        if (device.wait(Until.hasObject(selector), timeout)) return
+
+        runCatching {
+            device.dumpWindowHierarchy(File(outputDir, "hierarchy-on-failure.xml"))
+        }
+        // Photograph whatever is there. A failing walk still pulls its images,
+        // so this is both a diagnostic and — when the app is up and only the
+        // selector is wrong — an actual look at the screen.
+        runCatching { shot("99-failure") }
+        val foreground = runCatching { device.currentPackageName }.getOrNull()
+        val onScreen = runCatching {
+            device.findObjects(By.pkg(pkg))
+                .asSequence()
+                .mapNotNull { node ->
+                    node.resourceName?.substringAfterLast('/')
+                        ?: node.text?.takeIf { it.isNotBlank() }
+                }
+                .distinct()
+                .take(40)
+                .toList()
+        }.getOrElse { listOf("<hierarchy unavailable: $it>") }
+
+        error(
+            "timed out waiting for $selector after ${timeout}ms; " +
+                "foreground=$foreground; onScreen=$onScreen"
+        )
     }
 
     private fun click(selector: BySelector) {

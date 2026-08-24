@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Round entry, portrait.
+  Round entry.
 
-  The four players sit around a table rather than in a 2x2 grid of tiles. Seats
-  are positioned with ConstraintLayout circular positioning (layout_constraintCircle
-  + CircleAngle + CircleRadius) at 0/90/180/270 degrees around a centre anchor,
-  so the arrangement reads as a table and adapts by changing one radius dimen
-  instead of by rewriting constraints.
+  Structure follows the reference design: the thirteen hearts fanned across the
+  top as a pool that empties as they are dealt, the Q♠ and 10♦ beneath it
+  showing who holds them, then one row per player carrying that player's four
+  buttons — hearts, Q♠, 10♦ and the Double.
 
-  Dealing is order-free: tap a card then a seat, or a seat then a card. Whichever
-  comes first arms; the second completes. It stays pure tap, so there is no
-  drag-only affordance and nothing is unreachable with a screen reader.
+  Rendered on the felt palette so it sits with the rest of the app; the cards
+  themselves stay bone-white, because they are cards.
+
+  There is no "select a player first" step any more: every button belongs to the
+  player whose row it is in, so what you tap is what happens. That also removes
+  the need for a separate validity checklist — the pool shows the hearts still
+  to deal and the two cards show whether the Q and 10 are placed.
+
+  One vertical scroll, so it works in landscape without a separate layout.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,18 +37,19 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="@drawable/ic_close"
             app:title="@string/select_cards">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonReset"
-                style="@style/Widget.Le5a.Button.Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/Widget.Le5a.Button.Icon"
+                android:layout_width="@dimen/touch_min"
+                android:layout_height="@dimen/touch_min"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/space_xs"
-                android:text="@string/reset"
-                app:icon="@drawable/ic_undo" />
+                android:contentDescription="@string/reset"
+                app:icon="@drawable/ic_undo"
+                app:iconTint="@color/text_primary" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -66,168 +72,215 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/screen_margin"
-            android:paddingTop="@dimen/space_md">
+            android:paddingTop="@dimen/space_lg">
 
-            <include
-                android:id="@+id/roundStatus"
-                layout="@layout/view_round_status"
+            <!-- ============ The thirteen hearts, fanned ============ -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:scrollbars="none">
 
-            <!-- ==================== The table ==================== -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/tableArea"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/table_size"
-                android:layout_marginTop="@dimen/space_lg">
-
-                <View
-                    android:id="@+id/tableSurface"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@drawable/bg_table"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_percent="0.72"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- Anchor the seats orbit. Zero-sized and invisible; it exists
-                     only to give the circular constraints something to sit on. -->
-                <View
-                    android:id="@+id/tableCentre"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tableSurface"
-                    app:layout_constraintEnd_toEndOf="@id/tableSurface"
-                    app:layout_constraintStart_toStartOf="@id/tableSurface"
-                    app:layout_constraintTop_toTopOf="@id/tableSurface" />
-
-                <!-- What is armed and waiting to be dealt, or the prompt. -->
                 <LinearLayout
-                    android:id="@+id/layoutArmed"
-                    android:layout_width="@dimen/table_centre"
+                    android:id="@+id/layoutHeartPool"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/tableSurface"
-                    app:layout_constraintEnd_toEndOf="@id/tableSurface"
-                    app:layout_constraintStart_toStartOf="@id/tableSurface"
-                    app:layout_constraintTop_toTopOf="@id/tableSurface">
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/space_xs" />
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/textHeartsRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_sm"
+                android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                tools:text="Hearts 6 / 13" />
+
+            <!-- ============ Q♠ and 10♦, and who holds them ============ -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_lg"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_lg"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/Widget.Le5a.Card.Playing"
+                        android:layout_width="@dimen/assign_card_width"
+                        android:layout_height="@dimen/assign_card_height">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_queen"
+                                android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                                android:textColor="@color/ink" />
+
+                            <ImageView
+                                android:layout_width="@dimen/icon_md"
+                                android:layout_height="@dimen/icon_md"
+                                android:contentDescription="@string/cd_queen_spades"
+                                app:srcCompat="@drawable/ic_suit_spade"
+                                app:tint="@color/ink" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
 
                     <TextView
-                        android:id="@+id/textArmedLabel"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textQueenHolder"
+                        android:layout_width="@dimen/assign_card_width"
                         android:layout_height="wrap_content"
-                        android:text="@string/round_armed"
-                        android:textAppearance="@style/TextAppearance.Le5a.Overline"
-                        android:visibility="invisible"
-                        tools:visibility="visible" />
-
-                    <ImageView
-                        android:id="@+id/imageArmed"
-                        android:layout_width="@dimen/icon_lg"
-                        android:layout_height="@dimen/icon_lg"
                         android:layout_marginTop="@dimen/space_xs"
-                        android:contentDescription="@null"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/ic_suit_heart"
-                        app:tint="@color/brass_400"
-                        tools:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/textTapHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:gravity="center"
-                        android:text="@string/round_tap_hint"
+                        android:maxLines="1"
+                        android:text="@string/unassigned"
                         android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-                        android:textColor="@color/text_tertiary" />
+                        tools:text="Ahmad" />
 
                 </LinearLayout>
 
-                <!-- Seats, clockwise from the top. -->
-                <include
-                    android:id="@+id/seat1"
-                    layout="@layout/view_player_seat"
-                    android:layout_width="@dimen/seat_width"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintCircle="@id/tableCentre"
-                    app:layout_constraintCircleAngle="0"
-                    app:layout_constraintCircleRadius="@dimen/table_radius" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                <include
-                    android:id="@+id/seat2"
-                    layout="@layout/view_player_seat"
-                    android:layout_width="@dimen/seat_width"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintCircle="@id/tableCentre"
-                    app:layout_constraintCircleAngle="90"
-                    app:layout_constraintCircleRadius="@dimen/table_radius" />
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/Widget.Le5a.Card.Playing"
+                        android:layout_width="@dimen/assign_card_width"
+                        android:layout_height="@dimen/assign_card_height">
 
-                <include
-                    android:id="@+id/seat3"
-                    layout="@layout/view_player_seat"
-                    android:layout_width="@dimen/seat_width"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintCircle="@id/tableCentre"
-                    app:layout_constraintCircleAngle="180"
-                    app:layout_constraintCircleRadius="@dimen/table_radius" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                <include
-                    android:id="@+id/seat4"
-                    layout="@layout/view_player_seat"
-                    android:layout_width="@dimen/seat_width"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintCircle="@id/tableCentre"
-                    app:layout_constraintCircleAngle="270"
-                    app:layout_constraintCircleRadius="@dimen/table_radius" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_ten"
+                                android:textAppearance="@style/TextAppearance.Le5a.Score.Large"
+                                android:textColor="@color/ink_red" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageView
+                                android:layout_width="@dimen/icon_md"
+                                android:layout_height="@dimen/icon_md"
+                                android:contentDescription="@string/cd_ten_diamonds"
+                                app:srcCompat="@drawable/ic_suit_diamond"
+                                app:tint="@color/ink_red" />
 
-            <!-- ==================== Card rail ==================== -->
-            <include
-                android:id="@+id/cardRail"
-                layout="@layout/view_card_rail"
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/textTenHolder"
+                        android:layout_width="@dimen/assign_card_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xs"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/unassigned"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                        tools:text="Sara" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Double takes the whole round, so it replaces the pool state. -->
+            <TextView
+                android:id="@+id/textDoubleNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_lg" />
+                android:layout_marginTop="@dimen/space_lg"
+                android:background="@drawable/bg_pill_danger"
+                android:gravity="center"
+                android:padding="@dimen/space_md"
+                android:text="@string/double_subtitle"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_lg"
+                android:background="@drawable/divider_fade" />
+
+            <!-- ==================== Player rows ==================== -->
+            <include
+                android:id="@+id/rowPlayer1"
+                layout="@layout/view_player_scoring_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowPlayer2"
+                layout="@layout/view_player_scoring_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowPlayer3"
+                layout="@layout/view_player_scoring_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowPlayer4"
+                layout="@layout/view_player_scoring_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/textHeartsHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/space_sm"
-                android:drawablePadding="@dimen/space_xs"
-                android:gravity="center_vertical"
+                android:layout_marginTop="@dimen/space_lg"
                 android:text="@string/hearts_hint"
                 android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
-                android:textColor="@color/text_tertiary"
-                app:drawableStartCompat="@drawable/ic_info"
-                app:drawableTint="@color/text_tertiary" />
-
-            <!-- ==================== Taken this round ==================== -->
-            <TextView
-                android:id="@+id/labelSelectedActions"
-                style="@style/Widget.Le5a.SectionHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_xl"
-                android:text="@string/selected_actions" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupActions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_sm"
-                app:chipSpacingHorizontal="@dimen/space_sm"
-                app:chipSpacingVertical="@dimen/space_xs" />
+                android:textColor="@color/text_tertiary" />
 
         </LinearLayout>
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textRoundTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_xs"
+        android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+        app:layout_constraintBottom_toTopOf="@id/buttonSave"
+        app:layout_constraintEnd_toEndOf="@id/buttonSave"
+        app:layout_constraintStart_toStartOf="@id/buttonSave"
+        tools:text="24 / 36" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSave"

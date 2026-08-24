@@ -58,6 +58,11 @@
          small-phone-safe sizes; values-sw360dp opts larger screens up and
          values-land trades height back on short windows. -->
     <dimen name="action_card_height">96dp</dimen>
+    <dimen name="heart_pip_width">26dp</dimen>
+    <dimen name="heart_pip_height">38dp</dimen>
+    <dimen name="heart_pip_overlap">-7dp</dimen>
+    <dimen name="assign_card_width">56dp</dimen>
+    <dimen name="assign_card_height">76dp</dimen>
     <dimen name="table_radius">96dp</dimen>
     <dimen name="table_size">252dp</dimen>
     <dimen name="seat_width">80dp</dimen>
