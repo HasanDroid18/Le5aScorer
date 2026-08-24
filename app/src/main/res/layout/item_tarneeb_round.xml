@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One Tarneeb round.
+
+  Reads left to right the way the round is described out loud: round number,
+  who bid what and whether they got it, then each team's tricks, points and
+  running total. Column widths are shared with the header in
+  fragment_tarneeb_scoreboard so the two line up structurally.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card.Playing"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/screen_margin"
+    android:layout_marginVertical="@dimen/space_xs"
+    app:cardElevation="@dimen/elev_raised">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_md">
+
+        <TextView
+            android:id="@+id/textRound"
+            android:layout_width="@dimen/scoreboard_round_col"
+            android:layout_height="@dimen/scoreboard_round_col"
+            android:background="@drawable/bg_round_badge"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+            android:textColor="@color/ink"
+            tools:text="1" />
+
+        <!-- The bid, and whether it stood up. -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/scoreboard_gutter"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textBidder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/ink"
+                tools:text="Us" />
+
+            <TextView
+                android:id="@+id/textBidResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                tools:text="Bid 9 · made" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/cellTeamA"
+            layout="@layout/view_tarneeb_score_cell"
+            android:layout_width="@dimen/tarneeb_score_col"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/cellTeamB"
+            layout="@layout/view_tarneeb_score_cell"
+            android:layout_width="@dimen/tarneeb_score_col"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_sm" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonEdit"
+            style="@style/Widget.Le5a.Button.Icon"
+            android:layout_width="@dimen/scoreboard_action_col"
+            android:layout_height="@dimen/scoreboard_action_col"
+            android:layout_marginStart="@dimen/scoreboard_gutter"
+            android:contentDescription="@string/edit_round"
+            app:icon="@drawable/ic_edit"
+            app:iconTint="@color/ink_muted"
+            app:rippleColor="@color/bone_shade" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

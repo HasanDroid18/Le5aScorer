@@ -53,15 +53,19 @@ class ScreenshotTest {
         // background coroutine, so pulling the file out from under it would be a
         // race rather than a reset.
         val matchId = ScreenshotSeed.seed(context)
+        ScreenshotSeed.seedTarneeb(context)
 
         launchApp()
+        shot("01-home")
+
+        click(By.descContains("Leekha"))
         waitForList()
-        shot("01-match-list")
+        shot("02-match-list")
 
         // Completed tab: empty state.
         click(By.text("Completed"))
         waitFor(By.textContains("No completed games"))
-        shot("02-empty-state")
+        shot("03-empty-state")
         click(By.text("In Progress"))
         waitForList()
 
@@ -70,18 +74,18 @@ class ScreenshotTest {
         // most important surfaces in this run.
         click(id("buttonMenu"))
         waitFor(By.text("Duplicate"))
-        shot("03-overflow-menu")
+        shot("04-overflow-menu")
 
         click(By.text("Delete"))
         waitFor(By.textContains("permanently removed"))
-        shot("04-delete-dialog")
+        shot("05-delete-dialog")
         click(By.text("Cancel"))
         waitForList()
 
         // New match: recent-player chips plus the four name fields.
         click(id("fab"))
         waitFor(id("editPlayer1"))
-        shot("05-new-match")
+        shot("06-new-match")
         device.pressBack()
         waitForList()
 
@@ -89,24 +93,24 @@ class ScreenshotTest {
         // this redesign specifically claims to have fixed.
         click(By.textContains("Ahmad"))
         waitFor(By.text("Scoreboard"))
-        shot("06-scoreboard")
+        shot("07-scoreboard")
 
         // Round entry, nothing dealt: the heart pool full, both honour cards
         // unclaimed, Save disabled.
         click(id("buttonAddRound"))
         waitFor(id("buttonSave"))
-        shot("07-round-entry-empty")
+        shot("08-round-entry-empty")
 
         // Every player row carries the same four button ids, so findObject
         // returns the first row's — which is what we want: this deals to
         // player 1 and leaves the other three rows untouched for contrast.
         repeat(6) { click(id("buttonRowHearts")) }
-        shot("08-round-entry-hearts")
+        shot("09-round-entry-hearts")
 
         click(id("buttonRowQueen"))
         click(id("buttonRowTen"))
         device.waitForIdle(IDLE_MS)
-        shot("09-round-entry-dealt")
+        shot("10-round-entry-dealt")
 
         // Landscape. There is no layout-land for this screen any more — the
         // rebuilt design is a single scrolling column, so landscape is the same
@@ -114,7 +118,7 @@ class ScreenshotTest {
         device.setOrientationLeft()
         device.waitForIdle(IDLE_MS)
         waitFor(id("buttonSave"))
-        shot("10-round-entry-landscape")
+        shot("11-round-entry-landscape")
         device.setOrientationNatural()
         device.waitForIdle(IDLE_MS)
 
@@ -126,7 +130,7 @@ class ScreenshotTest {
         // Settings — the share icon here used to be invisible.
         click(By.desc("Settings"))
         waitFor(By.textContains("Contact Support"))
-        shot("11-settings")
+        shot("12-settings")
         device.pressBack()
         waitForList()
 
@@ -142,7 +146,55 @@ class ScreenshotTest {
         waitFor(By.text("Scoreboard"))
         ScreenshotSeed.seedToGameOver(context, matchId)
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
-        shot("12-end-game")
+        shot("13-end-game")
+
+        // ============ Tarneeb ============
+        // The end-game dialog is deliberately not cancelable, so back would do
+        // nothing here — dismiss it through its own button.
+        click(By.textContains("Show Round Scores"))
+        waitFor(By.text("Scoreboard"))
+        device.pressBack()
+        waitForList()
+        device.pressBack()
+        waitFor(By.descContains("Tarneeb"), timeout = LONG_TIMEOUT)
+
+        click(By.descContains("Tarneeb"))
+        waitFor(By.textContains("Us"), timeout = LONG_TIMEOUT)
+        shot("14-tarneeb-list")
+
+        click(By.textContains("Us"))
+        waitFor(id("buttonAddRound"))
+        shot("15-tarneeb-scoreboard")
+
+        click(id("buttonAddRound"))
+        waitFor(id("buttonSave"))
+        shot("16-tarneeb-round-entry")
+
+        // findObject returns the first row's stepper, so this gives team A every
+        // trick: all thirteen assigned, which both completes the round and shows
+        // the sweep bonus in the preview.
+        repeat(TarneebTricks.ALL) { click(id("buttonTricksUp")) }
+        device.waitForIdle(IDLE_MS)
+        shot("17-tarneeb-round-filled")
+
+        device.pressBack()
+        waitFor(id("buttonAddRound"))
+        device.pressBack()
+        waitFor(By.textContains("Us"), timeout = LONG_TIMEOUT)
+        device.pressBack()
+        waitFor(By.descContains("Tarneeb"), timeout = LONG_TIMEOUT)
+
+        // Rules, reached from Settings on the picker.
+        click(By.desc("Settings"))
+        waitFor(By.textContains("Game Rules"))
+        click(By.textContains("Game Rules"))
+        waitFor(By.textContains("Leekha is a partnership"), timeout = LONG_TIMEOUT)
+        shot("18-rules")
+    }
+
+    /** Thirteen tricks are dealt in a Tarneeb hand. */
+    private object TarneebTricks {
+        const val ALL = 13
     }
 
     // ================================================================
@@ -159,11 +211,11 @@ class ScreenshotTest {
         // and blamed whichever selector it checked next — which cost a run to
         // work out.
         waitFor(By.pkg(pkg).depth(0), timeout = LONG_TIMEOUT)
-        // Wait on the tab label, not on the app name: the splash shows the app
-        // name too, so that selector matches while the Lottie is still running
-        // and hands back a screen that is about to be replaced. Only the match
-        // list has tabs.
-        waitFor(By.text("In Progress"), timeout = LONG_TIMEOUT)
+        // Wait on a game tile, not on the app name: the splash shows the app name
+        // too, so that selector matches while the Lottie is still running and
+        // hands back a screen that is about to be replaced. Only the picker has
+        // game tiles.
+        waitFor(By.descContains("Tarneeb"), timeout = LONG_TIMEOUT)
     }
 
     private fun id(name: String): BySelector = By.res(pkg, name)

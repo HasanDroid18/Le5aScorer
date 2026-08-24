@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One headed block of rule text.
+
+  No id on the root: included many times, and <include> replaces an included
+  root's own id with the include's.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textSectionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Title"
+        android:textColor="@color/brass_400"
+        tools:text="Scoring" />
+
+    <TextView
+        android:id="@+id/textSectionBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:lineSpacingMultiplier="1.25"
+        android:textAppearance="@style/TextAppearance.Le5a.Body"
+        android:textColor="@color/text_secondary"
+        tools:text="The winning team adds the points equal to the tricks collected." />
+
+</LinearLayout>

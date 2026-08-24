@@ -11,12 +11,12 @@ import javax.inject.Inject
 class GetMatchesUseCase @Inject constructor(
     private val repository: LeekhaRepository
 ) {
-    fun getInProgressMatches(): Flow<List<Match>> {
-        return repository.getMatchesByStatus(MatchStatus.IN_PROGRESS)
+    fun getInProgressMatches(scoreRule: ScoreRule = ScoreRule.INDIVIDUAL): Flow<List<Match>> {
+        return repository.getMatchesByStatus(MatchStatus.IN_PROGRESS, scoreRule)
     }
 
-    fun getCompletedMatches(): Flow<List<Match>> {
-        return repository.getMatchesByStatus(MatchStatus.COMPLETED)
+    fun getCompletedMatches(scoreRule: ScoreRule = ScoreRule.INDIVIDUAL): Flow<List<Match>> {
+        return repository.getMatchesByStatus(MatchStatus.COMPLETED, scoreRule)
     }
 }
 

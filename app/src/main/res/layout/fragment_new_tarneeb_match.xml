@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  New Tarneeb match setup.
+
+  Two teams, not four players: partners sit across from each other and score
+  together, so a team is the unit that has a name and a total. Deliberately a
+  separate layout from fragment_new_match rather than a mode inside it — the two
+  screens share only the sticky-button chrome, and folding them together would
+  put four hidden views on the screen that is meant to be the simpler one.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_felt_table">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/tarneeb_new_match" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/sticky_button_clearance"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingTop="@dimen/space_lg">
+
+            <!-- ==================== Teams ==================== -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Le5a.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tarneeb_teams_section"
+                        android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                    <!-- Recent teams, hidden until there is history to offer. -->
+                    <TextView
+                        android:id="@+id/textRecentTeamsLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:text="@string/tarneeb_recent_teams"
+                        android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                        android:textColor="@color/text_secondary"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/scrollRecentTeams"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_sm"
+                        android:clipToPadding="false"
+                        android:scrollbars="none"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupRecentTeams"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:chipSpacingHorizontal="@dimen/space_sm"
+                            app:singleLine="true" />
+
+                    </HorizontalScrollView>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutTeamA"
+                        style="@style/Widget.Le5a.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_lg"
+                        android:hint="@string/tarneeb_team_a"
+                        app:endIconMode="clear_text"
+                        app:placeholderText="@string/tarneeb_team_hint_a"
+                        app:startIconDrawable="@drawable/ic_people">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/editTeamA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:completionThreshold="1"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName|textCapWords"
+                            android:maxLines="1"
+                            android:popupBackground="@drawable/bg_popup_menu"
+                            tools:text="Us" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutTeamB"
+                        style="@style/Widget.Le5a.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:hint="@string/tarneeb_team_b"
+                        app:endIconMode="clear_text"
+                        app:placeholderText="@string/tarneeb_team_hint_b"
+                        app:startIconDrawable="@drawable/ic_people">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/editTeamB"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:completionThreshold="1"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPersonName|textCapWords"
+                            android:maxLines="1"
+                            android:popupBackground="@drawable/bg_popup_menu"
+                            tools:text="Them" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ==================== Target ==================== -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Le5a.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tarneeb_target_label"
+                        android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleTerminalScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        app:checkedButton="@id/button41"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <Button
+                            android:id="@+id/button31"
+                            style="@style/Widget.Le5a.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/cd_tarneeb_target_31"
+                            android:text="@string/tarneeb_target_31" />
+
+                        <Button
+                            android:id="@+id/button41"
+                            style="@style/Widget.Le5a.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/cd_tarneeb_target_41"
+                            android:text="@string/tarneeb_target_41" />
+
+                        <Button
+                            android:id="@+id/button61"
+                            style="@style/Widget.Le5a.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/cd_tarneeb_target_61"
+                            android:text="@string/tarneeb_target_61" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Fade so content dissolves under the sticky button instead of being cut. -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sticky_button_clearance"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_fade"
+        android:translationZ="@dimen/elev_raised" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonCreate"
+        style="@style/Widget.Le5a.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/screen_margin"
+        android:contentDescription="@string/cd_create_match"
+        android:enabled="false"
+        android:text="@string/tarneeb_create_match"
+        app:elevation="@dimen/elev_float"
+        app:icon="@drawable/ic_card_stack"
+        app:iconGravity="textStart" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

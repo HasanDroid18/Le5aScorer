@@ -74,4 +74,20 @@
     <dimen name="fab_scroll_clearance">88dp</dimen>
     <dimen name="sticky_button_clearance">104dp</dimen>
 
+
+    <!-- Home game tiles. Height rather than aspect ratio so two rows always fit
+         a short screen without the grid scrolling. -->
+    <dimen name="game_tile_height">150dp</dimen>
+    <dimen name="game_tile_icon">40dp</dimen>
+
+
+    <!-- Width reserved for a stepper's number so the +/- buttons do not shuffle
+         sideways as the value changes width. -->
+    <dimen name="tarneeb_stepper_value">48dp</dimen>
+
+
+    <!-- A Tarneeb score column. Two teams rather than four players, so each
+         column can afford to be wider and carry three figures. -->
+    <dimen name="tarneeb_score_col">60dp</dimen>
+
 </resources>

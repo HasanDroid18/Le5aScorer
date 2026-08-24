@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Landscape is short. The home grid is two rows tall, so the tiles have to give
+  up height or the second row falls off the bottom.
+-->
+<resources>
+    <dimen name="game_tile_height">108dp</dimen>
+    <dimen name="game_tile_icon">32dp</dimen>
+</resources>

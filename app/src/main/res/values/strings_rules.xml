@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Long-form rule text, kept out of strings.xml so that file stays scannable.
+
+  These are reference documents, not UI copy: they are shown verbatim on the
+  Rules screen and are the authority the scoring engines implement. If a rule
+  changes here, ScoreEngine or TarneebScoreEngine changes with it.
+-->
+<resources>
+
+    <!-- ==================== Leekha ==================== -->
+    <string name="rules_leekha_title">Leekha</string>
+    <string name="rules_leekha_intro">Leekha is a partnership card game played by 4 players. It uses a standard deck of cards without jokers, and the game concludes when a player reaches 101 points or more, making the opposing team the winner.</string>
+
+    <string name="rules_leekha_cards_title">Cards and Distribution</string>
+    <string name="rules_leekha_cards">Each player is dealt 13 cards at the beginning of the game, and cards are arranged from weakest to strongest as follows:\n\n2 – 3 – 4 – 5 – 6 – 7 – 8 – 9 – 10 – J – Q – K – A.</string>
+
+    <string name="rules_leekha_play_title">How to Play</string>
+    <string name="rules_leekha_play">1. Each player selects 3 cards and passes them, alternating between the player to their right and left in each round.\n\n2. The player to the right of the dealer starts by playing any card, and other players must play a card of the same type if they have it, or any card if they don’t.\n\n3. The winner of the round takes the Leekha (the pile) and starts the next round.\n\n4. Players try to avoid collecting specific cards:\n\n• Queen of spades.\n• 10 of diamonds.\n• All cards of hearts.\n\n5. The round ends when players run out of cards.</string>
+
+    <string name="rules_leekha_principle_title">Leekha Principle</string>
+    <string name="rules_leekha_principle">Players are obligated to apply the “Leekha” principle on the app when holding a 10 of diamonds or a queen of spades, and do not have a card of the initially played suit. In this case, they must play either of these cards. Leekha applies only to the 10 of diamonds and the queen of spades. If a player has both cards and Leekha applies, they can choose which one to play.</string>
+
+    <!-- ==================== Tarneeb ==================== -->
+    <string name="rules_tarneeb_title">Tarneeb</string>
+    <string name="rules_tarneeb_intro">Tarneeb is a four-player partnership card game where players sit across from each other, forming two teams. It is played with a standard deck of playing cards (52 cards, excluding jokers) and follows a counterclockwise direction.</string>
+
+    <string name="rules_tarneeb_cards_title">Cards and Distribution</string>
+    <string name="rules_tarneeb_cards">Players choose the first dealer randomly, and after each game, the dealing passes to the player on the right. The cards are shuffled, and each player is dealt 13 cards. Players arrange their cards by suit and rank, making it easier to identify the Tarneeb suit. The Tarneeb suit is determined by the player based on the cards they hold, with the Tarneeb card being the strongest card in the game (the suits are: spades, clubs, hearts, and diamonds).\n\nCards in Tarneeb are ranked from weakest to strongest as follows:\n\n• 2-3-4-5-6-7-8-9-10-J-Q-K-A for Tarneeb suit.\n• 2-3-4-5-6-7-8-9-10-J-Q-K-A for other suits.</string>
+
+    <string name="rules_tarneeb_bidding_title">Bidding</string>
+    <string name="rules_tarneeb_bidding">• Bidding starts with the player to the right of the dealer, who declares the number of tricks, or “Lamas” they believe their team can win. The minimum bid is 1 (7 tricks), and the maximum is 7 (13 tricks), known as “Kabbout”.\n\n• The turn passes counterclockwise, with each player having the chance to bid, considering that each bid must be higher than the previous one.\n\n• If a player doesn’t want to bid in a particular round, they can request to “pass” and are excluded from bidding in that round.\n\n• The player with the highest bid chooses the Tarneeb suit and starts playing.</string>
+
+    <string name="rules_tarneeb_play_title">How to Play</string>
+    <string name="rules_tarneeb_play">1. The player who won the bid announces the Tarneeb suit, throws any card on the table, and other players must play cards of the same suit.\n\n2. If a player doesn’t have a card of the same suit, they can play any other card. If the chosen card is from the Tarneeb suit, it becomes the highest card.\n\n3. The player with the highest card wins the tricks, and in the presence of a Tarneeb card, the player with the Tarneeb card wins. If there is more than one Tarneeb card, the player with the highest Tarneeb card wins, and the next card is played.\n\n4. The round ends when players run out of cards.</string>
+
+    <string name="rules_tarneeb_scoring_title">Scoring</string>
+    <string name="rules_tarneeb_scoring">• The winning team, which successfully bids and collects the declared number of tricks or more, adds the points equal to the tricks collected to their score.\n\n• If the bidding team fails to collect the declared number of tricks, points are deducted from their score, and the opposing team adds the collected tricks to their score.\n\n• If a team wins all 13 tricks without bidding them, 16 points are added to their total score.\n\n• If a team bids and wins all 13 tricks, 26 points are added to their total score.\n\n• If a team bids 13 tricks and fails to win them, 16 points are deducted from their total score.\n\n• The game ends when one team’s total score reaches 31, 41, or 61 points, and that team is declared the winner.</string>
+
+</resources>

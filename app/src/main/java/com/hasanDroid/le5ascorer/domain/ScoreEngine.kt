@@ -198,6 +198,10 @@ class ScoreEngine {
             ActionType.HEART -> HEART_POINTS * count
             ActionType.Q_SPADES -> BNT_BASTON_POINTS * count
             ActionType.TEN_DIAMONDS -> TEN_DENARE_POINTS * count
+            // Tarneeb rounds share this table but not this engine: their bid and
+            // trick counts are not Leekha points and must never be summed as if
+            // they were. TarneebScoreEngine reads them instead.
+            ActionType.TARNEEB_BID, ActionType.TARNEEB_TRICKS -> 0
         }
     }
 }

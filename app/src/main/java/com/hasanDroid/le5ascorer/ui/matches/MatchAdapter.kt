@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hasanDroid.le5ascorer.R
+import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.data.local.entity.MatchStatus
 import com.hasanDroid.le5ascorer.databinding.ItemMatchBinding
 import com.hasanDroid.le5ascorer.databinding.ViewStandingRowBinding
@@ -72,10 +73,17 @@ class MatchAdapter(
         )
 
         /**
-         * All four players with a bar showing progress toward the target.
+         * Every contender with a bar showing progress toward the target.
          *
-         * Reaching the target is how you lose, so the fullest bar marks the
-         * player in most trouble and the shortest marks whoever is safest.
+         * Four players for Leekha, two teams for Tarneeb — the row count follows
+         * the data, and rows with no one in them are hidden.
+         *
+         * The accent flips between the games, because the target means opposite
+         * things: in Leekha reaching it is how you *lose*, so the fullest bar is
+         * the player in most trouble; in Tarneeb it is how you *win*, so the
+         * fullest bar is the team about to take it. Painting both the same way
+         * would tell Tarneeb players the leader is losing.
+         *
          * Before the first round there are no scores, so the card falls back to
          * a plain list of names.
          */
@@ -93,6 +101,7 @@ class MatchAdapter(
 
             val most = scores.max()
             val fewest = scores.min()
+            val mostIsWinning = match.scoreRule == ScoreRule.TARNEEB
 
             standingRows().forEachIndexed { index, row ->
                 val player = match.players.getOrNull(index)
@@ -106,13 +115,15 @@ class MatchAdapter(
                 row.textStandingScore.text = score.toString()
 
                 row.progressStanding.max = match.terminalScore
-                row.progressStanding.progress = score.coerceAtMost(match.terminalScore)
+                // Tarneeb totals go negative on a failed bid, and a negative
+                // progress value throws.
+                row.progressStanding.progress = score.coerceIn(0, match.terminalScore)
 
                 // Everyone level means nobody is ahead or behind, so no accent.
                 val accent = when {
                     most == fewest -> R.color.text_tertiary
-                    score == most -> R.color.danger
-                    score == fewest -> R.color.success
+                    score == most -> if (mostIsWinning) R.color.success else R.color.danger
+                    score == fewest -> if (mostIsWinning) R.color.danger else R.color.success
                     else -> R.color.text_tertiary
                 }
                 row.pipStanding.backgroundTintList = colorState(accent)

@@ -21,6 +21,7 @@ import com.hasanDroid.le5ascorer.databinding.FragmentRoundEntryBinding
 import com.hasanDroid.le5ascorer.databinding.ViewHeartPipBinding
 import com.hasanDroid.le5ascorer.databinding.ViewPlayerScoringRowBinding
 import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
+import com.hasanDroid.le5ascorer.ui.common.applySystemBarMargins
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -79,7 +80,7 @@ class RoundEntryFragment : Fragment() {
 
     private fun applyInsets() {
         binding.appBarLayout.applySystemBarInsets(top = true)
-        binding.buttonSave.applySystemBarInsets(bottom = true, sides = false)
+        binding.buttonSave.applySystemBarMargins(bottom = true, sides = false)
     }
 
     private fun setupToolbar() {

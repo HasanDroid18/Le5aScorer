@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One team's figures for one Tarneeb round: tricks taken, points awarded, and
+  the running total after the round.
+
+  Three numbers rather than one because in Tarneeb they genuinely differ — nine
+  tricks can be worth +9, +16 or nothing at all depending on who bid what.
+
+  No id on the root: included twice per row, and <include> replaces an included
+  root's own id with the include's.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/tarneeb_score_col"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textCellTricks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Overline"
+        android:textColor="@color/ink_muted"
+        tools:text="9 tricks" />
+
+    <TextView
+        android:id="@+id/textCellPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+        android:textColor="@color/ink"
+        tools:text="+9" />
+
+    <TextView
+        android:id="@+id/textCellTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Le5a.Score.Small"
+        android:textColor="@color/ink_muted"
+        tools:text="24" />
+
+</LinearLayout>
