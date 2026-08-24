@@ -80,9 +80,11 @@ class MatchUseCases @Inject constructor(
     private val getPlayerSuggestionsUseCase: GetPlayerSuggestionsUseCase,
     private val saveLoserImageUseCase: SaveLoserImageUseCase
 ) {
-    fun getInProgressMatches(): Flow<List<Match>> = getMatchesUseCase.getInProgressMatches()
+    fun getInProgressMatches(scoreRule: ScoreRule = ScoreRule.INDIVIDUAL): Flow<List<Match>> =
+        getMatchesUseCase.getInProgressMatches(scoreRule)
 
-    fun getCompletedMatches(): Flow<List<Match>> = getMatchesUseCase.getCompletedMatches()
+    fun getCompletedMatches(scoreRule: ScoreRule = ScoreRule.INDIVIDUAL): Flow<List<Match>> =
+        getMatchesUseCase.getCompletedMatches(scoreRule)
 
     suspend fun createMatch(
         player1Name: String,

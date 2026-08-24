@@ -27,21 +27,24 @@ class MatchListViewModel @Inject constructor(
     val uiState: StateFlow<MatchListUiState> = _uiState
 
     /**
-     * Which game's matches this list shows. Set once by the fragment from its
-     * navigation argument, before collection starts — the same list screen
-     * serves Leekha and Tarneeb, and they must never show each other's matches.
+     * Which game's matches this list shows, and — because it is null until set —
+     * whether collection has started. One field rather than a value plus a
+     * separate "started" flag, which are two facts that can disagree.
+     *
+     * The same list screen serves Leekha and Tarneeb, and they must never show
+     * each other's matches. The fragment supplies this from its navigation
+     * argument in onViewCreated; the ViewModel outlives a rotation, so the
+     * second call is a no-op rather than a second collector on the same flows.
      */
-    private var scoreRule: ScoreRule = ScoreRule.INDIVIDUAL
-    private var started = false
+    private var scoreRule: ScoreRule? = null
 
     fun start(scoreRule: ScoreRule) {
-        if (started) return
-        started = true
+        if (this.scoreRule != null) return
         this.scoreRule = scoreRule
-        loadMatches()
+        loadMatches(scoreRule)
     }
 
-    private fun loadMatches() {
+    private fun loadMatches(scoreRule: ScoreRule) {
         viewModelScope.launch {
             combine(
                 matchUseCases.getInProgressMatches(scoreRule),
