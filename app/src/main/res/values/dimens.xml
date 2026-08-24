@@ -86,8 +86,13 @@
     <dimen name="tarneeb_stepper_value">48dp</dimen>
 
 
-    <!-- A Tarneeb score column. Two teams rather than four players, so each
-         column can afford to be wider and carry three figures. -->
-    <dimen name="tarneeb_score_col">60dp</dimen>
+    <!-- A Tarneeb score column's floor. The columns are weighted so they shrink
+         with the screen; this stops them collapsing under three digits. -->
+    <dimen name="tarneeb_score_col_min">40dp</dimen>
+
+    <!-- The round badge on a Tarneeb row. Its own dimen rather than the shared
+         scoreboard_round_col, so narrowing it here leaves Leekha's board alone.
+         Base is sized for a 320dp screen; values-sw360dp opts back up. -->
+    <dimen name="tarneeb_round_col">36dp</dimen>
 
 </resources>

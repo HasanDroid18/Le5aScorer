@@ -4,16 +4,24 @@
   the running total after the round.
 
   Three numbers rather than one because in Tarneeb they genuinely differ — nine
-  tricks can be worth +9, +16 or nothing at all depending on who bid what.
+  tricks can be worth +9, +16 or nothing at all depending on who bid what. The
+  header legend names them, so the lines carry bare numbers: "13 tricks" does
+  not fit a column this narrow, and the word adds nothing the legend has not
+  already said.
+
+  Width comes from the <include>, which gives this a weight so the column
+  shrinks with the screen instead of squeezing the team name beside it.
 
   No id on the root: included twice per row, and <include> replaces an included
   root's own id with the include's.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/tarneeb_score_col"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:gravity="center_horizontal"
+    android:minWidth="@dimen/tarneeb_score_col_min"
     android:orientation="vertical">
 
     <TextView
@@ -22,7 +30,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Le5a.Overline"
         android:textColor="@color/ink_muted"
-        tools:text="9 tricks" />
+        tools:text="9" />
 
     <TextView
         android:id="@+id/textCellPoints"

@@ -74,7 +74,10 @@ class TarneebRoundAdapter(
             val points = result.roundPoints.getOrElse(team) { 0 }
             val total = result.cumulative.getOrElse(team) { 0 }
 
-            cell.textCellTricks.text = context.getString(R.string.tarneeb_row_tricks, tricks)
+            // The number alone: the header legend already reads
+            // "Tricks · points · total", and "13 tricks" does not fit a column
+            // this narrow. The content description below still says the word.
+            cell.textCellTricks.text = tricks.toString()
             cell.textCellPoints.applyPoints(points)
             cell.textCellTotal.text = total.toString()
 

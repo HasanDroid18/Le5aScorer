@@ -18,6 +18,8 @@ data class TarneebRoundUiState(
     val bid: Int = TarneebScoreEngine.MIN_BID,
     /** Tricks won, indexed by team. Always sums to 13 or less while editing. */
     val tricks: List<Int> = listOf(0, 0),
+    /** True while an existing round is being read back for editing. */
+    val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val saved: Boolean = false
 ) {
@@ -46,19 +48,33 @@ class TarneebRoundEntryViewModel @Inject constructor(
         _uiState.value = TarneebRoundUiState(
             matchId = matchId,
             roundId = roundId,
-            teamNames = teamNames
+            teamNames = teamNames,
+            // Editing reads the stored round asynchronously, and that read
+            // overwrites exactly the three fields the user can change. Without
+            // this the controls are live during the read and any tap made in
+            // that window is silently discarded.
+            isLoading = roundId != null
         )
 
         // Editing an existing round: load what was stored so the screen opens on
         // the round as it stands rather than blank.
         if (roundId != null) {
             viewModelScope.launch {
-                val round = repository.getRoundWithActions(roundId) ?: return@launch
-                val entry = engine.readRound(round.actions) ?: return@launch
+                val round = repository.getRoundWithActions(roundId)
+                val entry = round?.actions?.let(engine::readRound)
+                if (entry == null) {
+                    // Nothing readable stored. Fall back to a blank round rather
+                    // than leaving the screen permanently inert — Save will
+                    // still replace the existing round, which is the recovery
+                    // path if its actions were ever lost.
+                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    return@launch
+                }
                 _uiState.value = _uiState.value.copy(
                     bidderTeam = entry.bidderTeam,
                     bid = entry.bid,
-                    tricks = entry.tricks.toList()
+                    tricks = entry.tricks.toList(),
+                    isLoading = false
                 )
             }
         }
@@ -77,21 +93,49 @@ class TarneebRoundEntryViewModel @Inject constructor(
     /**
      * Moves one trick to or from a team.
      *
-     * The thirteen tricks are a fixed pool, so a team can never hold more than
-     * are left unassigned — that is enforced here rather than validated after
-     * the fact, which means the screen can never reach an impossible state.
+     * Adding takes from the unassigned pool while there is one, and once every
+     * trick is spoken for it takes one **from the other team** instead. That
+     * second half is what makes an existing round editable: editing always opens
+     * on a complete round, so a rule that only ever drew from an empty pool left
+     * both "+" buttons dead and the split unchangeable.
+     *
+     * The thirteen tricks stay fully accounted for either way — the screen can
+     * never reach a total that is not 13 or less — so validation stays a
+     * property of the control rather than a check after the fact.
      */
     fun changeTricks(team: Int, delta: Int) {
         val state = _uiState.value
-        val current = state.tricks.getOrElse(team) { 0 }
-        val otherTotal = state.assigned - current
-        val next = (current + delta)
-            .coerceIn(0, TarneebScoreEngine.TRICKS_PER_ROUND - otherTotal)
-        if (next == current) return
+        if (team !in state.tricks.indices || delta == 0) return
 
-        _uiState.value = state.copy(
-            tricks = state.tricks.mapIndexed { index, value -> if (index == team) next else value }
-        )
+        val other = 1 - team
+        val current = state.tricks[team]
+        val otherCurrent = state.tricks.getOrElse(other) { 0 }
+        val updated = state.tricks.toMutableList()
+
+        if (delta > 0) {
+            val fromPool = minOf(delta, state.remaining)
+            val fromOther = minOf(delta - fromPool, otherCurrent)
+            if (fromPool + fromOther == 0) return
+            updated[team] = current + fromPool + fromOther
+            if (fromOther > 0) updated[other] = otherCurrent - fromOther
+        } else {
+            // Removing simply returns tricks to the pool; it never touches the
+            // other team, so a round can always be taken back apart.
+            val next = (current + delta).coerceAtLeast(0)
+            if (next == current) return
+            updated[team] = next
+        }
+
+        _uiState.value = state.copy(tricks = updated)
+    }
+
+    /**
+     * Whether this team's "+" can do anything: either the pool has a trick left,
+     * or the other team has one to hand over.
+     */
+    fun canAddTrick(team: Int): Boolean {
+        val state = _uiState.value
+        return state.remaining > 0 || state.tricks.getOrElse(1 - team) { 0 } > 0
     }
 
     /** Gives every unassigned trick to one team — the usual way to finish. */

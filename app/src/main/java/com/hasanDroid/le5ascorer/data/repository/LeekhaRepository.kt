@@ -1,5 +1,7 @@
 package com.hasanDroid.le5ascorer.data.repository
 
+import androidx.room.withTransaction
+import com.hasanDroid.le5ascorer.data.local.LeekhaDatabase
 import com.hasanDroid.le5ascorer.data.local.dao.*
 import com.hasanDroid.le5ascorer.data.local.entity.*
 import com.hasanDroid.le5ascorer.domain.TarneebScoreEngine
@@ -16,7 +18,8 @@ class LeekhaRepository @Inject constructor(
     private val matchDao: MatchDao,
     private val roundDao: RoundDao,
     private val scoreActionDao: ScoreActionDao,
-    private val tarneebScoreEngine: TarneebScoreEngine
+    private val tarneebScoreEngine: TarneebScoreEngine,
+    private val database: LeekhaDatabase
 ) {
 
     // Player operations
@@ -217,10 +220,22 @@ class LeekhaRepository @Inject constructor(
     }
 
     fun observeMatchDetail(matchId: Long): Flow<MatchDetail?> {
+        // The score_actions flow is here to make editing a round visible.
+        //
+        // Room re-emits a Flow only when a table that flow's own query reads is
+        // written. The actions below are fetched imperatively inside this block,
+        // so score_actions was in nobody's observed set — and editing a round
+        // writes *only* score_actions. The save succeeded, the screen never
+        // changed, and the corrected figures appeared only after adding another
+        // round or leaving and re-entering the match.
+        //
+        // getMatchesByStatus already carries the same third flow for the same
+        // reason; this one was missed. It affects both games.
         return combine(
             matchDao.observeMatchById(matchId),
-            roundDao.getRoundsByMatchId(matchId)
-        ) { matchEntity, roundEntities ->
+            roundDao.getRoundsByMatchId(matchId),
+            scoreActionDao.observeAllScoreActions()
+        ) { matchEntity, roundEntities, _ ->
             if (matchEntity == null) return@combine null
 
             val players = listOfNotNull(
@@ -279,42 +294,50 @@ class LeekhaRepository @Inject constructor(
     }
 
     // Round operations
-    suspend fun addRound(matchId: Long, actions: List<ScoreAction>) {
-        val roundCount = roundDao.getRoundCount(matchId)
+    /**
+     * Appends a round and its actions as one unit.
+     *
+     * Transactional because a round row with no actions is not a partial save,
+     * it is a corrupt one: Tarneeb drops such a round from the scoreboard
+     * entirely and Leekha scores it as zero, and neither is recoverable through
+     * the UI. This runs on viewModelScope, which is cancelled the moment the
+     * user leaves the screen, so being interrupted between the two writes is a
+     * real possibility rather than a theoretical one.
+     *
+     * The count-then-insert of roundIndex is inside the transaction for the same
+     * reason — two rounds saved at once would otherwise be able to claim the
+     * same index.
+     */
+    suspend fun addRound(matchId: Long, actions: List<ScoreAction>) = database.withTransaction {
         val roundEntity = RoundEntity(
             matchId = matchId,
-            roundIndex = roundCount
+            roundIndex = roundDao.getRoundCount(matchId)
         )
 
         val roundId = roundDao.insert(roundEntity)
-
-        val actionEntities = actions.map {
-            ScoreActionEntity(
-                roundId = roundId,
-                receiverIndex = it.receiverIndex,
-                actionType = it.actionType,
-                delta = it.delta
-            )
-        }
-
-        scoreActionDao.insertAll(actionEntities)
+        scoreActionDao.insertAll(actions.toEntities(roundId))
     }
 
-    suspend fun updateRound(roundId: Long, actions: List<ScoreAction>) {
-        // Delete old actions
-        scoreActionDao.deleteByRoundId(roundId)
-
-        // Insert new actions
-        val actionEntities = actions.map {
-            ScoreActionEntity(
-                roundId = roundId,
-                receiverIndex = it.receiverIndex,
-                actionType = it.actionType,
-                delta = it.delta
-            )
+    /**
+     * Replaces a round's actions in place, keeping its row and its position.
+     *
+     * Transactional for the reason above, and more sharply so: this deletes
+     * before it inserts, so an interruption in between leaves the round with no
+     * actions at all and silently removes it from the scoreboard.
+     */
+    suspend fun updateRound(roundId: Long, actions: List<ScoreAction>) =
+        database.withTransaction {
+            scoreActionDao.deleteByRoundId(roundId)
+            scoreActionDao.insertAll(actions.toEntities(roundId))
         }
 
-        scoreActionDao.insertAll(actionEntities)
+    private fun List<ScoreAction>.toEntities(roundId: Long): List<ScoreActionEntity> = map {
+        ScoreActionEntity(
+            roundId = roundId,
+            receiverIndex = it.receiverIndex,
+            actionType = it.actionType,
+            delta = it.delta
+        )
     }
 
     suspend fun getRoundWithActions(roundId: Long): Round? {
