@@ -25,13 +25,39 @@ concurrency:
 
 jobs:
   screenshots:
-    runs-on: ubuntu-latest
+    # Pinned rather than ubuntu-latest. The emulator booted here in 72s on
+    # 19 Aug and has not come up once since — across two different system
+    # images, which rules the image out. The symptom is not a slow boot: adb
+    # reports "device 'emulator-5554' not found" for the entire wait, so the
+    # emulator process is never alive to be waited on. A runner-image rollout
+    # in that window is the remaining explanation, and android-emulator-runner
+    # is known-good on 22.04.
+    #
+    # If this pin ever stops resolving, the diagnostics step below prints what
+    # the runner actually is, so the next failure is readable rather than
+    # another round of guessing.
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+
+      # Cheap, and it runs before the four-minute build so an environment
+      # problem is visible immediately rather than 20 minutes in.
+      - name: Runner diagnostics
+        run: |
+          echo "===== runner ====="
+          cat /etc/os-release | head -3
+          uname -a
+          echo "===== kvm ====="
+          ls -l /dev/kvm || echo "NO /dev/kvm"
+          egrep -c '(vmx|svm)' /proc/cpuinfo || echo "no virtualisation flags"
+          echo "===== sdk ====="
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/emulator/emulator" || echo "no emulator binary"
+          "$ANDROID_HOME/emulator/emulator" -version 2>&1 | head -3 || true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
