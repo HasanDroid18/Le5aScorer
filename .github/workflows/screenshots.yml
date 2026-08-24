@@ -138,6 +138,15 @@ jobs:
             if [ $STATUS -ne 0 ]; then
               echo "===================== test results ====================="
               find app/build/outputs/androidTest-results -name '*.xml' -exec cat {} + | head -120 || true
+              # The walk dumps the window hierarchy whenever a selector misses.
+              # Printing just the resource ids that were actually on screen is
+              # what distinguishes "the screen never came up" from "the view is
+              # there but GONE" — the two are identical in the hierarchy, and
+              # guessing between them has cost several runs.
+              if [ -f docs/screenshots/hierarchy-on-failure.xml ]; then
+                echo "================ ids on the failing screen ============"
+                grep -o 'resource-id="[^"]*"' docs/screenshots/hierarchy-on-failure.xml | sort -u | head -60 || true
+              fi
               echo "===================== crash log ======================="
               adb logcat -d -s AndroidRuntime:E TestRunner:I System.err:W | tail -80 || true
             fi

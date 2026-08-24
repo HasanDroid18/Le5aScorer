@@ -55,7 +55,12 @@ class ScreenshotTest {
         val matchId = ScreenshotSeed.seed(context)
 
         launchApp()
-        waitFor(id("recyclerViewInProgress"))
+        // Anchor on the tab container, never on recyclerViewInProgress: the
+        // fragment sets the list to GONE while it is empty, so waiting on the
+        // list means waiting on data as well as on the screen — and a GONE view
+        // is absent from the hierarchy, so the failure reads as "screen never
+        // appeared" when the screen was there all along.
+        waitForList()
         shot("01-match-list")
 
         // Completed tab: empty state.
@@ -63,7 +68,7 @@ class ScreenshotTest {
         waitFor(id("layoutCompleted"))
         shot("02-empty-state")
         click(By.text("In Progress"))
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // The overflow menu and the delete dialog both rendered as white boxes
         // before the theme was reparented to Material3 Dark, so they are the two
@@ -76,19 +81,19 @@ class ScreenshotTest {
         waitFor(By.textContains("permanently removed"))
         shot("04-delete-dialog")
         click(By.text("Cancel"))
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // New match: recent-player chips plus the four name fields.
         click(id("fab"))
         waitFor(id("editPlayer1"))
         shot("05-new-match")
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // Scoreboard — the screen whose column alignment and tabular figures
         // this redesign specifically claims to have fixed.
         click(By.textContains("Ahmad"))
-        waitFor(id("recyclerView"))
+        waitFor(id("cardPlayerNames"))
         shot("06-scoreboard")
 
         // Round entry, nothing dealt: the heart pool full, both honour cards
@@ -119,20 +124,28 @@ class ScreenshotTest {
         device.waitForIdle(IDLE_MS)
 
         device.pressBack()
-        waitFor(id("recyclerView"))
+        waitFor(id("cardPlayerNames"))
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // Settings — the share icon here used to be invisible.
         click(By.desc("Settings"))
         waitFor(id("layoutContactSupport"))
         shot("11-settings")
         device.pressBack()
-        waitFor(id("recyclerViewInProgress"))
+        waitForList()
 
         // End of match: banner, confetti and dialog.
-        ScreenshotSeed.seedToGameOver(context, matchId)
+        //
+        // Open the scoreboard first and push the match over the line while it is
+        // on screen. Seeding first would finish the match before we navigate,
+        // and a finished match leaves the In Progress tab — so the click that
+        // opens it would be looking on the wrong tab. This way the banner and
+        // dialog also arrive live, through the Flow, which is what they do in
+        // real use.
         click(By.textContains("Ahmad"))
+        waitFor(id("cardPlayerNames"))
+        ScreenshotSeed.seedToGameOver(context, matchId)
         waitFor(By.text("Game Over"), timeout = LONG_TIMEOUT)
         shot("12-end-game")
     }
@@ -153,9 +166,40 @@ class ScreenshotTest {
 
     private fun id(name: String): BySelector = By.res(pkg, name)
 
+    /**
+     * Waits for the In Progress tab, then for the seeded card actually to be on
+     * it.
+     *
+     * Two waits rather than one because they fail for different reasons and the
+     * distinction is the whole diagnosis: layoutInProgress is the container and
+     * is present whatever the data does, so a miss there means the screen never
+     * arrived. The card text only appears once the seeded matches have reached
+     * the UI, so a miss there means seeding did not land — which is worth a
+     * longer timeout, since it waits on a Room write propagating through a Flow
+     * rather than on a layout pass.
+     */
+    private fun waitForList() {
+        waitFor(id("layoutInProgress"))
+        waitFor(By.textContains("Ahmad"), timeout = LONG_TIMEOUT)
+    }
+
+    /**
+     * Waits for a selector, and on failure writes the window hierarchy next to
+     * the screenshots before throwing.
+     *
+     * Without the dump, a miss says only which id was not found — and a view
+     * that is merely GONE is indistinguishable from one that was never
+     * inflated, since neither appears in the hierarchy. The dump makes the
+     * difference readable from CI instead of guessable.
+     */
     private fun waitFor(selector: BySelector, timeout: Long = TIMEOUT) {
         val found = device.wait(Until.hasObject(selector), timeout)
-        check(found) { "timed out waiting for $selector" }
+        if (!found) {
+            runCatching {
+                device.dumpWindowHierarchy(File(outputDir, "hierarchy-on-failure.xml"))
+            }
+            error("timed out waiting for $selector")
+        }
     }
 
     private fun click(selector: BySelector) {
