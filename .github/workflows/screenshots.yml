@@ -76,11 +76,15 @@ jobs:
       - name: Capture screenshots on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          # API 33 with the plain AOSP image rather than google_apis: the app has
-          # no Play-services dependency, and the smaller image boots noticeably
-          # more reliably on CI. A previous run timed out waiting for boot.
-          api-level: 33
-          target: default
+          # API 34 / google_apis, which is the combination that actually boots
+          # here — it came up in 72s. A previous run timed out and this was
+          # switched to API 33 / default on the theory that the smaller AOSP
+          # image would be steadier; instead it never booted once, twice in a
+          # row. That was the regression, not a flake, so it is reverted.
+          # The raised boot timeout and -no-snapshot-save stay: they were the
+          # other half of that change and neither is implicated.
+          api-level: 34
+          target: google_apis
           arch: x86_64
           profile: pixel_6
           disable-animations: true
