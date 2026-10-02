@@ -21,7 +21,13 @@ enum class ScoreRule {
     INDIVIDUAL,
 
     /** Tarneeb: two partnerships, bid-and-trick scoring. */
-    TARNEEB
+    TARNEEB,
+
+    /**
+     * Trix: two partnerships, four kingdoms of five contracts. Seats 1+2 are
+     * one team and 3+4 the other; terminalScore holds the setup (see TrixSetup).
+     */
+    TRIX
 }
 
 enum class MatchStatus {

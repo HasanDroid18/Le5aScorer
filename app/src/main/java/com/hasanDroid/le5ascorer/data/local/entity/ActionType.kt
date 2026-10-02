@@ -20,11 +20,25 @@ package com.hasanDroid.le5ascorer.data.local.entity
  *
  * Points are never stored — TarneebScoreEngine derives them, so editing a round
  * recomputes cleanly. Leekha makes the same choice.
+ *
+ * The TRIX_* values encode one Trix contract per round, by the same reasoning.
+ * Which of them a round holds says which contract it was:
+ *  - TRIX_KING      ×1  receiverIndex = team that took it, delta = doubled (0/1)
+ *  - TRIX_QUEEN     ×4  receiverIndex = team, delta = suit * 2 + doubled
+ *                       (suit 0 ♠, 1 ♥, 2 ♦, 3 ♣)
+ *  - TRIX_DIAMONDS  ×2  receiverIndex = team, delta = diamonds taken
+ *  - TRIX_LTOOSH    ×2  receiverIndex = team, delta = tricks taken
+ *  - TRIX_POSITION  ×4  receiverIndex = seat, delta = finishing place 1..4
  */
 enum class ActionType {
     HEART,
     Q_SPADES,
     TEN_DIAMONDS,
     TARNEEB_BID,
-    TARNEEB_TRICKS
+    TARNEEB_TRICKS,
+    TRIX_KING,
+    TRIX_QUEEN,
+    TRIX_DIAMONDS,
+    TRIX_LTOOSH,
+    TRIX_POSITION
 }
