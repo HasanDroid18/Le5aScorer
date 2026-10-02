@@ -4,7 +4,7 @@
   so the app can be translated without touching code.
 -->
 <resources>
-    <string name="app_name">Le5a Scorer</string>
+    <string name="app_name">Leekha, Tarneeb, Trix Scorer</string>
 
     <!-- ==================== Match list ==================== -->
     <string name="in_progress">In Progress</string>
@@ -160,7 +160,7 @@
 
 
     <!-- ==================== Home / game picker ==================== -->
-    <string name="home_title">Le5a Scorer</string>
+    <string name="home_title">Leekha, Tarneeb, Trix Scorer</string>
     <string name="home_subtitle">Pick a game to score</string>
     <string name="game_leekha">Leekha</string>
     <string name="game_leekha_subtitle">4 players · avoid the points</string>
@@ -242,16 +242,16 @@
     <string name="app_version">Version</string>
     <string name="app_version_format">%1$s (%2$d)</string>
     <string name="support_email">hasantahadroid@gmail.com</string>
-    <string name="support_subject">Le5a Scorer — Support</string>
+    <string name="support_subject">Leekha, Tarneeb, Trix Scorer — Support</string>
     <string name="support_chooser_title">Contact support</string>
     <string name="support_no_email_app">No email app found</string>
     <string name="share_chooser_title">Deal us some love</string>
     <string name="share_failed">Unable to open rating or sharing</string>
-    <string name="share_text">I’m keeping score with Le5a Scorer.\nFast rounds, clean scoreboard.\n\nDeal yourself a download:\n%s</string>
+    <string name="share_text">I’m keeping score with Leekha, Tarneeb, Trix Scorer.\nFast rounds, clean scoreboard.\n\nDeal yourself a download:\n%s</string>
 
     <!-- Support email body. Placeholders: app version, Android release, SDK,
          manufacturer, model, locale. -->
-    <string name="support_email_body">Hi Support Team,\n\nPlease describe your issue below:\n--------------------------------\n\n\nDiagnostics (auto-filled):\n• App: Le5a Scorer %1$s\n• Android: %2$s (SDK %3$d)\n• Device: %4$s %5$s\n• Locale: %6$s</string>
+    <string name="support_email_body">Hi Support Team,\n\nPlease describe your issue below:\n--------------------------------\n\n\nDiagnostics (auto-filled):\n• App: Leekha, Tarneeb, Trix Scorer %1$s\n• Android: %2$s (SDK %3$d)\n• Device: %4$s %5$s\n• Locale: %6$s</string>
 
     <!-- ==================== Splash ==================== -->
     <string name="version_format">v%s</string>
