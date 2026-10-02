@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  The app opens on the game picker. Leekha and Tarneeb each own a match list,
+  The app opens on the game picker. Leekha, Tarneeb and Trix each own a match list,
   and both are served by the same MatchListFragment with a gameMode argument —
   the two lists differ only in which matches they show and what the toolbar
   says, so a second copy of the screen would be duplication with no payoff.
@@ -47,6 +47,12 @@
         <action
             android:id="@+id/action_matchListFragment_to_tarneebScoreboardFragment"
             app:destination="@id/tarneebScoreboardFragment" />
+        <action
+            android:id="@+id/action_matchListFragment_to_newTrixMatchFragment"
+            app:destination="@id/newTrixMatchFragment" />
+        <action
+            android:id="@+id/action_matchListFragment_to_trixScoreboardFragment"
+            app:destination="@id/trixScoreboardFragment" />
     </fragment>
 
     <!-- ==================== Leekha ==================== -->
@@ -142,6 +148,16 @@
     </fragment>
 
     <!-- ==================== Trix ==================== -->
+
+    <fragment
+        android:id="@+id/newTrixMatchFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.trix.NewTrixMatchFragment"
+        android:label="@string/trix_new_match">
+        <action
+            android:id="@+id/action_newTrixMatchFragment_to_trixScoreboardFragment"
+            app:destination="@id/trixScoreboardFragment"
+            app:popUpTo="@id/matchListFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/trixScoreboardFragment"

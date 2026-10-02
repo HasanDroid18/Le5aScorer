@@ -90,11 +90,11 @@ class HomeFragment : Fragment() {
         ) { comingSoon(R.string.game_400) }
 
         bind(
-            binding.tileHand,
-            R.drawable.ic_hand_fan,
-            R.string.game_hand,
-            R.string.game_coming_soon_subtitle
-        ) { comingSoon(R.string.game_hand) }
+            binding.tileTrix,
+            R.drawable.ic_star,
+            R.string.game_trix,
+            R.string.game_trix_subtitle
+        ) { openGame(ScoreRule.TRIX) }
     }
 
     private fun bind(
@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
         tile.root.setOnClickListener { onClick() }
     }
 
-    /** Both playable games share one list screen, told apart by this argument. */
+    /** Every playable game shares one list screen, told apart by this argument. */
     private fun openGame(mode: ScoreRule) {
         findNavController().navigate(
             HomeFragmentDirections.actionHomeFragmentToMatchListFragment(mode.name)

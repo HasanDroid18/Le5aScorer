@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  New Trix game. Step one names the four players by team and sets doubling;
+  step two asks who holds the 7 of Hearts. Both steps live here and swap
+  visibility, so Back on step two returns to step one with everything intact.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_felt_table">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/trix_new_match" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/sticky_button_clearance"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingTop="@dimen/space_lg">
+
+            <!-- ==================== Step 1 ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutSetup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Le5a.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/card_padding">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/trix_team_a"
+                            android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Le5a.TextInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/space_sm"
+                                android:layout_weight="1"
+                                android:hint="@string/player_1">
+
+                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                    android:id="@+id/editPlayer1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:completionThreshold="1"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="textPersonName|textCapWords"
+                                    android:maxLines="1"
+                                    android:popupBackground="@drawable/bg_popup_menu"
+                                    tools:text="Hasan" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Le5a.TextInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_sm"
+                                android:layout_weight="1"
+                                android:hint="@string/player_2">
+
+                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                    android:id="@+id/editPlayer2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:completionThreshold="1"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="textPersonName|textCapWords"
+                                    android:maxLines="1"
+                                    android:popupBackground="@drawable/bg_popup_menu"
+                                    tools:text="Hsen" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_lg"
+                            android:text="@string/trix_team_b"
+                            android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Le5a.TextInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/space_sm"
+                                android:layout_weight="1"
+                                android:hint="@string/player_3">
+
+                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                    android:id="@+id/editPlayer3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:completionThreshold="1"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="textPersonName|textCapWords"
+                                    android:maxLines="1"
+                                    android:popupBackground="@drawable/bg_popup_menu"
+                                    tools:text="Ali" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Le5a.TextInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_sm"
+                                android:layout_weight="1"
+                                android:hint="@string/player_4">
+
+                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                    android:id="@+id/editPlayer4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:completionThreshold="1"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textPersonName|textCapWords"
+                                    android:maxLines="1"
+                                    android:popupBackground="@drawable/bg_popup_menu"
+                                    tools:text="Meso" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textNameError"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:text="@string/duplicate_player_names"
+                            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                            android:textColor="@color/danger"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Le5a.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/card_padding">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/trix_rules_section"
+                            android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchDoubling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:minHeight="@dimen/touch_min"
+                            android:text="@string/trix_doubling"
+                            android:textAppearance="@style/TextAppearance.Le5a.Title" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/trix_doubling_hint"
+                            android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                            android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ==================== Step 2 ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutOpener"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/trix_opener_title"
+                    android:textAppearance="@style/TextAppearance.Le5a.Headline" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:gravity="center"
+                    android:text="@string/trix_opener_subtitle"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xl"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonOpener0"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:layout_weight="1"
+                        android:checkable="true"
+                        tools:text="Hasan" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonOpener1"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginStart="@dimen/space_sm"
+                        android:layout_weight="1"
+                        android:checkable="true"
+                        tools:text="Hsen" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonOpener2"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:layout_weight="1"
+                        android:checkable="true"
+                        tools:text="Ali" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonOpener3"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/action_card_height"
+                        android:layout_marginStart="@dimen/space_sm"
+                        android:layout_weight="1"
+                        android:checkable="true"
+                        tools:text="Meso" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sticky_button_clearance"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_fade"
+        android:translationZ="@dimen/elev_raised" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonStart"
+        style="@style/Widget.Le5a.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/screen_margin"
+        android:enabled="false"
+        android:text="@string/trix_start_game"
+        app:elevation="@dimen/elev_float"
+        app:icon="@drawable/ic_card_stack"
+        app:iconGravity="textStart" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

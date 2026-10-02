@@ -167,7 +167,6 @@
     <string name="game_tarneeb">Tarneeb</string>
     <string name="game_tarneeb_subtitle">2 teams · bid and take tricks</string>
     <string name="game_400">400</string>
-    <string name="game_hand">Hand</string>
     <string name="game_coming_soon_subtitle">Coming soon</string>
     <!-- %s is the game name. -->
     <string name="coming_soon_toast">%s scoring is coming soon</string>

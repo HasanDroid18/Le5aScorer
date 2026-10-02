@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 /**
  * The match list for one game.
  *
- * Serves both Leekha and Tarneeb. The two lists differ only in which matches
+ * Serves Leekha, Tarneeb and Trix. The lists differ only in which matches
  * they show, what the toolbar says, and where the add button goes, so they share
  * a screen rather than a copy of one — the gameMode argument decides.
  */
@@ -45,8 +45,6 @@ class MatchListFragment : Fragment() {
     private val gameMode: ScoreRule by lazy {
         runCatching { ScoreRule.valueOf(args.gameMode) }.getOrDefault(ScoreRule.INDIVIDUAL)
     }
-
-    private val isTarneeb get() = gameMode == ScoreRule.TARNEEB
 
     private lateinit var inProgressAdapter: MatchAdapter
     private lateinit var completedAdapter: MatchAdapter
@@ -83,7 +81,13 @@ class MatchListFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setTitle(if (isTarneeb) R.string.game_tarneeb else R.string.game_leekha)
+        binding.toolbar.setTitle(
+            when (gameMode) {
+                ScoreRule.TARNEEB -> R.string.game_tarneeb
+                ScoreRule.TRIX -> R.string.game_trix
+                ScoreRule.INDIVIDUAL -> R.string.game_leekha
+            }
+        )
         // This screen used to be the start destination and had nowhere to go
         // back to. It sits behind the game picker now, so it needs the arrow.
         binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
@@ -148,11 +152,12 @@ class MatchListFragment : Fragment() {
 
     private fun buildAdapter() = MatchAdapter(
         onMatchClick = { match ->
-            val directions = if (isTarneeb) {
-                MatchListFragmentDirections
+            val directions = when (gameMode) {
+                ScoreRule.TARNEEB -> MatchListFragmentDirections
                     .actionMatchListFragmentToTarneebScoreboardFragment(match.id)
-            } else {
-                MatchListFragmentDirections
+                ScoreRule.TRIX -> MatchListFragmentDirections
+                    .actionMatchListFragmentToTrixScoreboardFragment(match.id)
+                ScoreRule.INDIVIDUAL -> MatchListFragmentDirections
                     .actionMatchListFragmentToScoreboardFragment(match.id)
             }
             findNavController().navigate(directions)
@@ -164,10 +169,10 @@ class MatchListFragment : Fragment() {
     private fun setupFab() {
         binding.fab.setOnClickListener {
             findNavController().navigate(
-                if (isTarneeb) {
-                    R.id.action_matchListFragment_to_newTarneebMatchFragment
-                } else {
-                    R.id.action_matchListFragment_to_newMatchFragment
+                when (gameMode) {
+                    ScoreRule.TARNEEB -> R.id.action_matchListFragment_to_newTarneebMatchFragment
+                    ScoreRule.TRIX -> R.id.action_matchListFragment_to_newTrixMatchFragment
+                    ScoreRule.INDIVIDUAL -> R.id.action_matchListFragment_to_newMatchFragment
                 }
             )
         }

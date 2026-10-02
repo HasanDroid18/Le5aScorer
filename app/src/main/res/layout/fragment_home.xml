@@ -96,7 +96,7 @@
                     android:layout_weight="1" />
 
                 <include
-                    android:id="@+id/tileHand"
+                    android:id="@+id/tileTrix"
                     layout="@layout/view_game_tile"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/game_tile_height"
