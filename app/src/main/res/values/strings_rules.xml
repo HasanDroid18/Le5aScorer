@@ -4,7 +4,7 @@
 
   These are reference documents, not UI copy: they are shown verbatim on the
   Rules screen and are the authority the scoring engines implement. If a rule
-  changes here, ScoreEngine or TarneebScoreEngine changes with it.
+  changes here, ScoreEngine, TarneebScoreEngine or TrixScoreEngine changes with it.
 -->
 <resources>
 
@@ -36,5 +36,31 @@
 
     <string name="rules_tarneeb_scoring_title">Scoring</string>
     <string name="rules_tarneeb_scoring">• The winning team, which successfully bids and collects the declared number of tricks or more, adds the points equal to the tricks collected to their score.\n\n• If the bidding team fails to collect the declared number of tricks, points are deducted from their score, and the opposing team adds the collected tricks to their score.\n\n• If a team wins all 13 tricks without bidding them, 16 points are added to their total score.\n\n• If a team bids and wins all 13 tricks, 26 points are added to their total score.\n\n• If a team bids 13 tricks and fails to win them, 16 points are deducted from their total score.\n\n• The game ends when one team’s total score reaches 31, 41, or 61 points, and that team is declared the winner.</string>
+
+
+    <!-- ==================== Trix ==================== -->
+    <string name="rules_trix_title">Trix</string>
+    <string name="rules_trix_intro">Two teams of two play 4 kingdoms, each consisting of 5 contracts. Partners sit opposite each other. The team with the highest total score after all kingdoms (or after an early game over) wins.</string>
+
+    <string name="rules_trix_setup_title">Setup</string>
+    <string name="rules_trix_setup">• Team A: Players 1 &amp; 2 (partners).\n• Team B: Players 3 &amp; 4 (partners).\n• The player holding the 7 of Hearts opens the first kingdom.\n• Kingdom ownership rotates clockwise: P1 → P3 → P2 → P4 → P1.</string>
+
+    <string name="rules_trix_kingdoms_title">Kingdoms and Contracts</string>
+    <string name="rules_trix_kingdoms">Each kingdom has 5 contracts: King of Hearts, Queens, Diamonds, Ltoosh and Trix. The kingdom owner chooses the order in which they are played. Every contract must be played exactly once per kingdom.\n\nScores are tracked per team. A complete kingdom always sums to zero across both teams.</string>
+
+    <string name="rules_trix_penalties_title">Penalty Contracts</string>
+    <string name="rules_trix_penalties">• King of Hearts: the team that takes the King of Hearts receives −75 points.\n\n• Queens: each of the 4 queens is tracked separately. The team that takes a queen receives −25 per queen. Maximum penalty: −100 for taking all 4.\n\n• Diamonds: there are 13 diamond cards. Each diamond gives −10 points to the team that takes it. All 13 must be distributed between the two teams (total: −130).\n\n• Ltoosh: there are 13 tricks. Each trick gives −15 points to the team that takes it. All 13 must be distributed between the two teams (total: −195).</string>
+
+    <string name="rules_trix_trix_title">Trix</string>
+    <string name="rules_trix_trix">Players finish in individual positions (1st–4th). Points are added to the player\'s team total. The Trix total always equals +500 across both teams.\n\n• 1st place: +200\n• 2nd place: +150\n• 3rd place: +100\n• 4th place: +50</string>
+
+    <string name="rules_trix_doubling_title">Doubling (Optional)</string>
+    <string name="rules_trix_doubling">When Doubling is enabled, the King of Hearts and each Queen may be doubled during play. Doubling affects only these two contracts.\n\n• King of Hearts: taker −75; doubled: taker −150, opponents +75.\n• Each Queen: taker −25; doubled: taker −50, opponents +25.\n\nDiamonds, Ltoosh and Trix are never doubled.</string>
+
+    <string name="rules_trix_early_title">Early Game Over</string>
+    <string name="rules_trix_early">Starting from Kingdom 3, the app checks after each completed contract whether the trailing team can still mathematically catch up.\n\nEach contract type has a maximum swing — the most points it could shift the score gap in a single play. If the current score gap is greater than the combined maximum swing of all remaining contracts, the trailing team cannot catch up and the game ends immediately. If the gap equals that ceiling exactly, the game continues — a tie is still mathematically possible.\n\nThis check does not apply during Kingdoms 1 or 2.</string>
+
+    <string name="rules_trix_winning_title">Winning the Game</string>
+    <string name="rules_trix_winning">After 20 contracts (or an early game over), the team with the higher total wins. If both teams are equal, it is a draw and both are declared winners.</string>
 
 </resources>

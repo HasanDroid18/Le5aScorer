@@ -15,7 +15,7 @@ import com.hasanDroid.le5ascorer.ui.common.applySystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
- * The rules for both games, one tab each.
+ * The rules for every game, one tab each.
  *
  * The text lives in values/strings_rules.xml and is the authority the scoring
  * engines implement, so it is shown verbatim rather than paraphrased. Sections
@@ -54,10 +54,17 @@ class RulesFragment : Fragment() {
     private fun setupTabs() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.rules_leekha_title))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.rules_tarneeb_title))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.rules_trix_title))
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                show(if (tab?.position == 1) TARNEEB else LEEKHA)
+                show(
+                    when (tab?.position) {
+                        1 -> TARNEEB
+                        2 -> TRIX
+                        else -> LEEKHA
+                    }
+                )
                 // Switching games should start at the top of that game's rules,
                 // not wherever the previous tab happened to be scrolled to.
                 binding.scrollView.scrollTo(0, 0)
@@ -104,6 +111,17 @@ class RulesFragment : Fragment() {
             Section(R.string.rules_tarneeb_bidding_title, R.string.rules_tarneeb_bidding),
             Section(R.string.rules_tarneeb_play_title, R.string.rules_tarneeb_play),
             Section(R.string.rules_tarneeb_scoring_title, R.string.rules_tarneeb_scoring)
+        )
+
+        val TRIX = listOf(
+            Section(R.string.rules_trix_title, R.string.rules_trix_intro),
+            Section(R.string.rules_trix_setup_title, R.string.rules_trix_setup),
+            Section(R.string.rules_trix_kingdoms_title, R.string.rules_trix_kingdoms),
+            Section(R.string.rules_trix_penalties_title, R.string.rules_trix_penalties),
+            Section(R.string.rules_trix_trix_title, R.string.rules_trix_trix),
+            Section(R.string.rules_trix_doubling_title, R.string.rules_trix_doubling),
+            Section(R.string.rules_trix_early_title, R.string.rules_trix_early),
+            Section(R.string.rules_trix_winning_title, R.string.rules_trix_winning)
         )
     }
 }
