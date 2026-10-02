@@ -5,6 +5,9 @@ import com.hasanDroid.le5ascorer.data.local.LeekhaDatabase
 import com.hasanDroid.le5ascorer.data.local.dao.*
 import com.hasanDroid.le5ascorer.data.local.entity.*
 import com.hasanDroid.le5ascorer.domain.TarneebScoreEngine
+import com.hasanDroid.le5ascorer.domain.TrixContract
+import com.hasanDroid.le5ascorer.domain.TrixScoreEngine
+import com.hasanDroid.le5ascorer.domain.TrixSetup
 import com.hasanDroid.le5ascorer.domain.model.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -19,6 +22,7 @@ class LeekhaRepository @Inject constructor(
     private val roundDao: RoundDao,
     private val scoreActionDao: ScoreActionDao,
     private val tarneebScoreEngine: TarneebScoreEngine,
+    private val trixScoreEngine: TrixScoreEngine,
     private val database: LeekhaDatabase
 ) {
 
@@ -171,12 +175,17 @@ class LeekhaRepository @Inject constructor(
                     // through the scoring rules first. Summing them blindly —
                     // which is what this did before Tarneeb existed — would put
                     // nonsense on every Tarneeb card.
-                    val cumulativeScores: List<Int> =
-                        if (matchEntity.scoreRule == ScoreRule.TARNEEB) {
+                    // Trix stores contracts, not points, and scores per team.
+                    val cumulativeScores: List<Int> = when (matchEntity.scoreRule) {
+                        ScoreRule.TARNEEB ->
                             tarneebScoreEngine.calculateScoreboard(rounds)
                                 .lastOrNull()?.cumulative
                                 ?: List(TarneebScoreEngine.TEAMS) { 0 }
-                        } else {
+                        ScoreRule.TRIX ->
+                            trixScoreEngine.calculateScoreboard(
+                                rounds, TrixSetup.decode(matchEntity.terminalScore)
+                            ).totals
+                        ScoreRule.INDIVIDUAL -> {
                             val totals = IntArray(4)
                             rounds.sortedBy { it.roundIndex }.forEach { round ->
                                 round.actions.forEach { action ->
@@ -187,6 +196,7 @@ class LeekhaRepository @Inject constructor(
                             }
                             totals.toList()
                         }
+                    }
 
                     // Who is "leading" also flips with the game. Leekha's target
                     // is what you are trying to avoid, so the most points is the
@@ -415,6 +425,36 @@ class LeekhaRepository @Inject constructor(
                 delta = won
             )
         }
+
+    // ==================== Trix ====================
+
+    /**
+     * A Trix match: four players in seat order, Team A = seats 1+2 and
+     * Team B = seats 3+4. terminalScore carries the setup; see TrixSetup.
+     */
+    suspend fun createTrixMatch(playerNames: List<String>, setup: TrixSetup): Long {
+        val ids = playerNames.map { getOrCreatePlayer(it) }
+        return matchDao.insert(
+            MatchEntity(
+                terminalScore = setup.encode(),
+                scoreRule = ScoreRule.TRIX,
+                player1Id = ids[0],
+                player2Id = ids[1],
+                player3Id = ids[2],
+                player4Id = ids[3]
+            )
+        )
+    }
+
+    /** Appends one contract; its position decides which kingdom it belongs to. */
+    suspend fun addTrixRound(matchId: Long, contract: TrixContract) {
+        addRound(matchId, trixScoreEngine.toActions(contract))
+    }
+
+    /** Replaces a contract in place, keeping its position in the game. */
+    suspend fun updateTrixRound(roundId: Long, contract: TrixContract) {
+        updateRound(roundId, trixScoreEngine.toActions(contract))
+    }
 
     private companion object {
         /**

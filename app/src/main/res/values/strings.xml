@@ -257,4 +257,68 @@
     <!-- ==================== Splash ==================== -->
     <string name="version_format">v%s</string>
 
+
+    <!-- ==================== Trix ==================== -->
+    <string name="game_trix">Trix</string>
+    <string name="game_trix_subtitle">2 teams · 4 kingdoms</string>
+    <string name="trix_match_summary">Trix</string>
+    <string name="trix_match_summary_doubling">Trix · Doubling on</string>
+
+    <string name="trix_new_match">New Trix Game</string>
+    <string name="trix_team_a">Team A</string>
+    <string name="trix_team_b">Team B</string>
+    <string name="trix_rules_section">Rules</string>
+    <string name="trix_doubling">Doubling</string>
+    <string name="trix_doubling_hint">King of Hearts and Queens can be doubled</string>
+    <string name="trix_start_game">Start Game</string>
+    <string name="trix_opener_title">Who has the 7 of Hearts?</string>
+    <string name="trix_opener_subtitle">The holder opens the first kingdom</string>
+
+    <string name="trix_doubling_on">Doubling on</string>
+    <string name="trix_kingdom_owner">%s\'s Kingdom</string>
+    <string name="trix_kingdom_count">Kingdom %1$d of %2$d</string>
+    <string name="trix_enter_round">Enter Round</string>
+    <string name="trix_history_owner">%s\'s kingdom</string>
+    <string name="trix_team_wins">%s win</string>
+    <string name="trix_draw">Draw — both teams win</string>
+
+    <string name="trix_contract_king">King of Hearts</string>
+    <string name="trix_contract_queens">Queens</string>
+    <string name="trix_contract_diamonds">Diamonds</string>
+    <string name="trix_contract_ltoosh">Ltoosh</string>
+    <string name="trix_contract_trix">Trix</string>
+    <string name="trix_rule_king">Taker: −75</string>
+    <string name="trix_rule_king_doubling">Taker: −75 · Doubled: −150 (opp +75)</string>
+    <string name="trix_rule_queens">Per queen: −25</string>
+    <string name="trix_rule_queens_doubling">Per queen: −25 · Doubled: −50 (opp +25)</string>
+    <string name="trix_rule_diamonds">Per diamond: −10</string>
+    <string name="trix_rule_ltoosh">Per trick: −15</string>
+    <string name="trix_rule_trix">1st +200 · 2nd +150 · 3rd +100 · 4th +50</string>
+
+    <string name="trix_confirm_round">Confirm Round</string>
+    <string name="trix_which_team_king">Which team took the King?</string>
+    <string name="trix_doubled">Doubled?</string>
+    <string name="trix_no">No</string>
+    <string name="trix_yes">Yes</string>
+    <string name="trix_yes_doubled">Yes (×2)</string>
+    <string name="trix_assign_queens">Assign each queen</string>
+    <string name="trix_queen_spades">Q♠</string>
+    <string name="trix_queen_hearts">Q♥</string>
+    <string name="trix_queen_diamonds">Q♦</string>
+    <string name="trix_queen_clubs">Q♣</string>
+    <string name="trix_diamonds_taken">Diamonds taken</string>
+    <string name="trix_tricks_taken">Tricks taken</string>
+    <string name="trix_count_format">%1$d / %2$d</string>
+    <string name="trix_finishing_order">Finishing order</string>
+    <string name="trix_place_1">1st</string>
+    <string name="trix_place_2">2nd</string>
+    <string name="trix_place_3">3rd</string>
+    <string name="trix_place_4">4th</string>
+    <string name="trix_preview_label">This round</string>
+
+    <string name="cd_trix_standing">%1$s: %2$d points</string>
+    <string name="cd_trix_toggle_history">Show or hide played contracts</string>
+    <string name="cd_trix_count_down">One fewer for %s</string>
+    <string name="cd_trix_count_up">One more for %s</string>
+
 </resources>

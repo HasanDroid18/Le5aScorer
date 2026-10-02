@@ -16,7 +16,9 @@ import com.hasanDroid.le5ascorer.data.local.entity.ScoreRule
 import com.hasanDroid.le5ascorer.data.local.entity.MatchStatus
 import com.hasanDroid.le5ascorer.databinding.ItemMatchBinding
 import com.hasanDroid.le5ascorer.databinding.ViewStandingRowBinding
+import com.hasanDroid.le5ascorer.domain.TrixSetup
 import com.hasanDroid.le5ascorer.domain.model.Match
+import com.hasanDroid.le5ascorer.ui.trix.trixTeamNames
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -51,8 +53,18 @@ class MatchAdapter(
         ) {
             binding.root.setOnClickListener { onMatchClick(match) }
 
-            binding.textRuleSummary.text =
+            // Trix has no target; its terminalScore holds the setup instead.
+            binding.textRuleSummary.text = if (match.scoreRule == ScoreRule.TRIX) {
+                context.getString(
+                    if (TrixSetup.decode(match.terminalScore).doubling) {
+                        R.string.trix_match_summary_doubling
+                    } else {
+                        R.string.trix_match_summary
+                    }
+                )
+            } else {
                 context.getString(R.string.match_rule_summary, match.terminalScore)
+            }
 
             binding.textRounds.text = context.resources.getQuantityString(
                 R.plurals.match_round_count, match.roundCount, match.roundCount
@@ -84,36 +96,43 @@ class MatchAdapter(
          * fullest bar is the team about to take it. Painting both the same way
          * would tell Tarneeb players the leader is losing.
          *
+         * Trix scores per team, so its four players become two rows.
+         *
          * Before the first round there are no scores, so the card falls back to
          * a plain list of names.
          */
         private fun bindStandings(match: Match) {
             val scores = match.playerScores
-            val hasScores = scores.size == match.players.size && match.roundCount > 0
+            val isTrix = match.scoreRule == ScoreRule.TRIX
+            val names = match.players.map { it.name }
+                .let { if (isTrix) trixTeamNames(it) else it }
+            val hasScores = scores.size == names.size && match.roundCount > 0
 
             binding.layoutStandings.visibility = if (hasScores) View.VISIBLE else View.GONE
             binding.textPlayers.visibility = if (hasScores) View.GONE else View.VISIBLE
 
             if (!hasScores) {
-                binding.textPlayers.text = match.players.joinToString(", ") { it.name }
+                binding.textPlayers.text = names.joinToString(", ")
                 return
             }
 
             val most = scores.max()
             val fewest = scores.min()
-            val mostIsWinning = match.scoreRule == ScoreRule.TARNEEB
+            val mostIsWinning = match.scoreRule != ScoreRule.INDIVIDUAL
 
             standingRows().forEachIndexed { index, row ->
-                val player = match.players.getOrNull(index)
+                val name = names.getOrNull(index)
                 val score = scores.getOrNull(index)
-                if (player == null || score == null) {
+                if (name == null || score == null) {
                     row.root.visibility = View.GONE
                     return@forEachIndexed
                 }
                 row.root.visibility = View.VISIBLE
-                row.textStandingName.text = player.name
+                row.textStandingName.text = name
                 row.textStandingScore.text = score.toString()
 
+                // Trix has no target to fill a bar toward.
+                row.progressStanding.visibility = if (isTrix) View.GONE else View.VISIBLE
                 row.progressStanding.max = match.terminalScore
                 // Tarneeb totals go negative on a failed bid, and a negative
                 // progress value throws.
