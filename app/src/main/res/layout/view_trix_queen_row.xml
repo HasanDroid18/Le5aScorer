@@ -3,6 +3,10 @@
   One queen in Trix contract entry: which team took it, and whether it was
   doubled. No id on the root — included four times, and <include> replaces an
   included root's own id with the include's.
+
+  The buttons do not save their own state: their ids repeat across the four
+  rows, so a restore would copy one row's answer into all of them. The
+  ViewModel holds the answers and render() puts them back.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,6 +48,7 @@
                 <Button
                     android:id="@+id/buttonQueenTeamA"
                     style="@style/Widget.Le5a.Button.Outlined"
+                    android:saveEnabled="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -54,6 +59,7 @@
                 <Button
                     android:id="@+id/buttonQueenTeamB"
                     style="@style/Widget.Le5a.Button.Outlined"
+                    android:saveEnabled="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -91,6 +97,7 @@
                 <Button
                     android:id="@+id/buttonQueenDoubledNo"
                     style="@style/Widget.Le5a.Button.Outlined"
+                    android:saveEnabled="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/trix_no" />
@@ -98,6 +105,7 @@
                 <Button
                     android:id="@+id/buttonQueenDoubledYes"
                     style="@style/Widget.Le5a.Button.Outlined"
+                    android:saveEnabled="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/trix_yes" />

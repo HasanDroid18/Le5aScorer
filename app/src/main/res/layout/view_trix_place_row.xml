@@ -2,7 +2,8 @@
 <!--
   One player's finishing place in the Trix contract. The places sit on their own
   line under the name so four buttons fit a 320dp screen. No id on the root —
-  included four times.
+  included four times, which is also why the buttons do not save their own
+  state (see view_trix_queen_row).
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -54,6 +55,7 @@
             <Button
                 android:id="@+id/buttonPlace1"
                 style="@style/Widget.Le5a.Button.Outlined"
+                android:saveEnabled="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -62,6 +64,7 @@
             <Button
                 android:id="@+id/buttonPlace2"
                 style="@style/Widget.Le5a.Button.Outlined"
+                android:saveEnabled="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -70,6 +73,7 @@
             <Button
                 android:id="@+id/buttonPlace3"
                 style="@style/Widget.Le5a.Button.Outlined"
+                android:saveEnabled="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,6 +82,7 @@
             <Button
                 android:id="@+id/buttonPlace4"
                 style="@style/Widget.Le5a.Button.Outlined"
+                android:saveEnabled="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

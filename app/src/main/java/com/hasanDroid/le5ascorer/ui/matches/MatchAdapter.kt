@@ -193,6 +193,9 @@ class MatchAdapter(
         ) {
             PopupMenu(anchor.context, anchor).apply {
                 inflate(R.menu.menu_match_item)
+                // A Trix copy would keep the old 7♥ holder, putting the wrong
+                // owner on every kingdom; a new game asks for it instead.
+                menu.findItem(R.id.action_duplicate).isVisible = match.scoreRule != ScoreRule.TRIX
                 setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.action_duplicate -> {

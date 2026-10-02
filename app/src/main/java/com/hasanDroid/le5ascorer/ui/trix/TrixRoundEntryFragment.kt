@@ -172,16 +172,22 @@ class TrixRoundEntryFragment : Fragment() {
 
     private fun render(state: TrixRoundUiState) {
         val teams = state.teamNames
+        // Enable before selecting: a disabled MaterialButton ignores setChecked,
+        // so checking while still disabled from loading would leave a stored
+        // answer unshown when editing.
         val enabled = !state.isLoading
+        binding.toggleKingTeam.isEnabled = enabled
+        binding.toggleKingDoubled.isEnabled = enabled
 
         binding.buttonKingTeamA.text = teams.getOrNull(0).orEmpty()
         binding.buttonKingTeamB.text = teams.getOrNull(1).orEmpty()
         binding.toggleKingTeam.select(state.kingTeam?.let { if (it == 1) R.id.buttonKingTeamB else R.id.buttonKingTeamA })
         binding.layoutKingDoubled.isVisible = state.doubling
         binding.toggleKingDoubled.select(if (state.kingDoubled) R.id.buttonKingDoubledYes else R.id.buttonKingDoubledNo)
-        binding.toggleKingTeam.isEnabled = enabled
 
         queenRows().forEachIndexed { suit, row ->
+            row.toggleQueenTeam.isEnabled = enabled
+            row.toggleQueenDoubled.isEnabled = enabled
             row.buttonQueenTeamA.text = teams.getOrNull(0).orEmpty()
             row.buttonQueenTeamB.text = teams.getOrNull(1).orEmpty()
             row.toggleQueenTeam.select(
@@ -191,7 +197,6 @@ class TrixRoundEntryFragment : Fragment() {
             row.toggleQueenDoubled.select(
                 if (state.queenDoubled[suit]) R.id.buttonQueenDoubledYes else R.id.buttonQueenDoubledNo
             )
-            row.toggleQueenTeam.isEnabled = enabled
         }
 
         val counted = state.counts.sum()
@@ -217,8 +222,8 @@ class TrixRoundEntryFragment : Fragment() {
         placeRows().forEachIndexed { seat, row ->
             row.textPlaceName.text = state.playerNames.getOrNull(seat).orEmpty()
             val place = state.places[seat]
-            row.togglePlace.select(place?.let { placeIds[it - 1] })
             row.togglePlace.isEnabled = enabled
+            row.togglePlace.select(place?.let { placeIds[it - 1] })
             if (place == null) {
                 row.textPlacePoints.text = ""
             } else {
