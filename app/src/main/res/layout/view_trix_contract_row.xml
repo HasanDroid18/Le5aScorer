@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One contract on the kingdom screen. Tapping selects it for Enter Round; a
+  played contract is dimmed and disabled. No id on the root — included five
+  times.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Le5a.Card.Clickable"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/card_padding">
+
+        <ImageView
+            android:id="@+id/iconContract"
+            android:layout_width="@dimen/icon_lg"
+            android:layout_height="@dimen/icon_lg"
+            android:background="@drawable/bg_well"
+            android:contentDescription="@null"
+            android:padding="@dimen/space_sm"
+            tools:srcCompat="@drawable/ic_suit_heart" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_md"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textContractTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Le5a.Title"
+                tools:text="King of Hearts" />
+
+            <TextView
+                android:id="@+id/textContractRule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/TextAppearance.Le5a.Body.Small"
+                android:textColor="@color/text_secondary"
+                tools:text="Taker: −75 · Doubled: −150 (opp +75)" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/dotSelected"
+            android:layout_width="@dimen/space_sm"
+            android:layout_height="@dimen/space_sm"
+            android:layout_marginStart="@dimen/space_sm"
+            android:background="@drawable/bg_standing_pip"
+            android:backgroundTint="@color/success"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

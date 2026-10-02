@@ -144,6 +144,23 @@
     <!-- ==================== Trix ==================== -->
 
     <fragment
+        android:id="@+id/trixScoreboardFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.trix.TrixScoreboardFragment"
+        android:label="@string/game_trix">
+        <argument
+            android:name="matchId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_trixScoreboardFragment_to_trixRoundEntryFragment"
+            app:destination="@id/trixRoundEntryFragment" />
+        <action
+            android:id="@+id/action_trixScoreboardFragment_to_matchListFragment"
+            app:destination="@id/matchListFragment"
+            app:popUpTo="@id/matchListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
         android:id="@+id/trixRoundEntryFragment"
         android:name="com.hasanDroid.le5ascorer.ui.trix.TrixRoundEntryFragment"
         android:label="@string/game_trix">
