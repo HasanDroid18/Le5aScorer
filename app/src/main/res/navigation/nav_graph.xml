@@ -141,6 +141,31 @@
             app:argType="string[]" />
     </fragment>
 
+    <!-- ==================== Trix ==================== -->
+
+    <fragment
+        android:id="@+id/trixRoundEntryFragment"
+        android:name="com.hasanDroid.le5ascorer.ui.trix.TrixRoundEntryFragment"
+        android:label="@string/game_trix">
+        <argument
+            android:name="matchId"
+            app:argType="long" />
+        <!-- A TrixContractType name. -->
+        <argument
+            android:name="contractType"
+            app:argType="string" />
+        <argument
+            android:name="playerNames"
+            app:argType="string[]" />
+        <argument
+            android:name="doubling"
+            app:argType="boolean" />
+        <argument
+            android:name="roundId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
     <!-- ==================== Shared ==================== -->
 
     <fragment

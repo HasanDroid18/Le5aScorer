@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Trix contract entry. One panel per contract; the fragment shows the one being
+  played. Diamonds and Ltoosh share a panel — both are thirteen of something
+  split between two teams — and reuse Tarneeb's stepper row for it.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_felt_table">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_bar"
+        android:elevation="@dimen/elev_flat">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_close"
+            tools:title="King of Hearts" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/sticky_button_clearance"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingTop="@dimen/space_lg">
+
+            <!-- ============ King of Hearts ============ -->
+            <LinearLayout
+                android:id="@+id/panelKing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trix_which_team_king"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleKingTeam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/buttonKingTeamA"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="Hasan &amp; Hsen" />
+
+                    <Button
+                        android:id="@+id/buttonKingTeamB"
+                        style="@style/Widget.Le5a.Button.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="Ali &amp; Meso" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <LinearLayout
+                    android:id="@+id/layoutKingDoubled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xl"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trix_doubled"
+                        android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleKingDoubled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        app:checkedButton="@id/buttonKingDoubledNo"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <Button
+                            android:id="@+id/buttonKingDoubledNo"
+                            style="@style/Widget.Le5a.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/trix_no" />
+
+                        <Button
+                            android:id="@+id/buttonKingDoubledYes"
+                            style="@style/Widget.Le5a.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/trix_yes_doubled" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ============ Queens ============ -->
+            <LinearLayout
+                android:id="@+id/panelQueens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trix_assign_queens"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <!-- An <include> overriding any layout param must declare width
+                     and height too, or inflation throws. -->
+                <include
+                    android:id="@+id/rowQueenSpades"
+                    layout="@layout/view_trix_queen_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md" />
+
+                <include
+                    android:id="@+id/rowQueenHearts"
+                    layout="@layout/view_trix_queen_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+                <include
+                    android:id="@+id/rowQueenDiamonds"
+                    layout="@layout/view_trix_queen_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+                <include
+                    android:id="@+id/rowQueenClubs"
+                    layout="@layout/view_trix_queen_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+            </LinearLayout>
+
+            <!-- ============ Diamonds / Ltoosh ============ -->
+            <LinearLayout
+                android:id="@+id/panelCounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textCountsLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.Le5a.Overline"
+                        tools:text="Diamonds taken" />
+
+                    <TextView
+                        android:id="@+id/textCountBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Le5a.Label.Small"
+                        tools:text="13 / 13" />
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/rowCountA"
+                    layout="@layout/view_tarneeb_team_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md" />
+
+                <include
+                    android:id="@+id/rowCountB"
+                    layout="@layout/view_tarneeb_team_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+            </LinearLayout>
+
+            <!-- ============ Trix ============ -->
+            <LinearLayout
+                android:id="@+id/panelTrix"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trix_finishing_order"
+                    android:textAppearance="@style/TextAppearance.Le5a.Overline" />
+
+                <include
+                    android:id="@+id/rowPlace0"
+                    layout="@layout/view_trix_place_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md" />
+
+                <include
+                    android:id="@+id/rowPlace1"
+                    layout="@layout/view_trix_place_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+                <include
+                    android:id="@+id/rowPlace2"
+                    layout="@layout/view_trix_place_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+                <include
+                    android:id="@+id/rowPlace3"
+                    layout="@layout/view_trix_place_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm" />
+
+            </LinearLayout>
+
+            <!-- ============ What it pays ============ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPreview"
+                style="@style/Widget.Le5a.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/felt_850"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/trix_preview_label"
+                        android:textAppearance="@style/TextAppearance.Le5a.Label" />
+
+                    <TextView
+                        android:id="@+id/textPreviewA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:minWidth="@dimen/tarneeb_stepper_value"
+                        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                        tools:text="−150" />
+
+                    <TextView
+                        android:id="@+id/textPreviewB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_md"
+                        android:gravity="end"
+                        android:minWidth="@dimen/tarneeb_stepper_value"
+                        android:textAppearance="@style/TextAppearance.Le5a.Score.Medium"
+                        tools:text="+75" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sticky_button_clearance"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_fade"
+        android:translationZ="@dimen/elev_raised" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonConfirm"
+        style="@style/Widget.Le5a.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/screen_margin"
+        android:layout_marginBottom="@dimen/screen_margin"
+        android:enabled="false"
+        android:text="@string/trix_confirm_round"
+        app:elevation="@dimen/elev_float"
+        app:icon="@drawable/ic_check"
+        app:iconGravity="textStart" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
